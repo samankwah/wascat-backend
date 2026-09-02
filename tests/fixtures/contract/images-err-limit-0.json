@@ -1,0 +1,25 @@
+{
+  "name": "images-err-limit-0",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?limit=0",
+    "url": "https://wascat.example.org/api/v1/images?limit=0"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "limit": [
+          "Number must be greater than or equal to 1"
+        ]
+      }
+    }
+  }
+}

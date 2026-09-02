@@ -1,0 +1,33 @@
+{
+  "name": "releases-first",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/collections/vid1/releases",
+    "url": "https://wascat.example.org/api/v1/collections/vid1/releases"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "version": "1.0",
+        "images": 323,
+        "size": "10.4 MB",
+        "current": true
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "collection": "vid1",
+      "count": 1
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/collections/vid1/releases"
+    }
+  }
+}

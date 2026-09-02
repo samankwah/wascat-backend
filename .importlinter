@@ -1,0 +1,27 @@
+[importlinter]
+root_package = wascat
+include_external_packages = True
+
+[importlinter:contract:layers]
+name = Layered architecture
+type = layers
+layers =
+    wascat.api
+    wascat.domains
+    wascat.storage | wascat.jobs
+    wascat.core
+
+[importlinter:contract:future-domains-stay-isolated]
+name = Catalogue and the planned science domains do not import each other
+type = independence
+modules =
+    wascat.domains.catalog
+    wascat.domains.meteorology
+    wascat.domains.climate
+    wascat.domains.advisory
+
+# ingest, iam, vocab and audit are deliberately absent from the independence
+# contract above: ingest writes catalogue rows, catalogue reads vocabulary
+# terms, and every admin mutation records an audit event. Those couplings are
+# real and intended. The contract exists to keep meteorology, climate and
+# advisory greenfield when they land.

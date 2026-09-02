@@ -1,0 +1,362 @@
+{
+  "recordedAt": "2026-09-02T22:43:24.290Z",
+  "source": "wascat-frontend Next.js route handlers, recorded before the FastAPI migration",
+  "origin": "https://wascat.example.org",
+  "note": "meta.generatedAt is normalised to <GENERATED_AT>. Every other byte is contract.",
+  "cases": [
+    {
+      "name": "images-default",
+      "path": "/api/v1/images",
+      "status": 200,
+      "file": "images-default.json"
+    },
+    {
+      "name": "images-limit-1",
+      "path": "/api/v1/images?limit=1",
+      "status": 200,
+      "file": "images-limit-1.json"
+    },
+    {
+      "name": "images-limit-100",
+      "path": "/api/v1/images?limit=100",
+      "status": 200,
+      "file": "images-limit-100.json"
+    },
+    {
+      "name": "images-sort-oldest",
+      "path": "/api/v1/images?limit=5&sort=oldest",
+      "status": 200,
+      "file": "images-sort-oldest.json"
+    },
+    {
+      "name": "images-sort-newest",
+      "path": "/api/v1/images?limit=5&sort=newest",
+      "status": 200,
+      "file": "images-sort-newest.json"
+    },
+    {
+      "name": "images-video-vid1",
+      "path": "/api/v1/images?video=vid1&limit=3",
+      "status": 200,
+      "file": "images-video-vid1.json"
+    },
+    {
+      "name": "images-video-vid11",
+      "path": "/api/v1/images?video=vid11&limit=3",
+      "status": 200,
+      "file": "images-video-vid11.json"
+    },
+    {
+      "name": "images-collection-vid5",
+      "path": "/api/v1/images?collection=vid5&limit=3",
+      "status": 200,
+      "file": "images-collection-vid5.json"
+    },
+    {
+      "name": "images-release-1-0",
+      "path": "/api/v1/images?release=1.0&limit=3",
+      "status": 200,
+      "file": "images-release-1-0.json"
+    },
+    {
+      "name": "images-segmented-true",
+      "path": "/api/v1/images?segmented=true&limit=3",
+      "status": 200,
+      "file": "images-segmented-true.json"
+    },
+    {
+      "name": "images-segmented-false",
+      "path": "/api/v1/images?segmented=false&limit=3",
+      "status": 200,
+      "file": "images-segmented-false.json"
+    },
+    {
+      "name": "images-oktas-0",
+      "path": "/api/v1/images?oktas=0&limit=3",
+      "status": 200,
+      "file": "images-oktas-0.json"
+    },
+    {
+      "name": "images-oktas-4",
+      "path": "/api/v1/images?oktas=4&limit=3",
+      "status": 200,
+      "file": "images-oktas-4.json"
+    },
+    {
+      "name": "images-oktas-8",
+      "path": "/api/v1/images?oktas=8&limit=3",
+      "status": 200,
+      "file": "images-oktas-8.json"
+    },
+    {
+      "name": "images-oktas-min-0",
+      "path": "/api/v1/images?oktasMin=0&limit=3",
+      "status": 200,
+      "file": "images-oktas-min-0.json"
+    },
+    {
+      "name": "images-oktas-min-5",
+      "path": "/api/v1/images?oktasMin=5&limit=3",
+      "status": 200,
+      "file": "images-oktas-min-5.json"
+    },
+    {
+      "name": "images-oktas-max-2",
+      "path": "/api/v1/images?oktasMax=2&limit=3",
+      "status": 200,
+      "file": "images-oktas-max-2.json"
+    },
+    {
+      "name": "images-oktas-range-full",
+      "path": "/api/v1/images?oktasMin=0&oktasMax=8&limit=3",
+      "status": 200,
+      "file": "images-oktas-range-full.json"
+    },
+    {
+      "name": "images-oktas-range-narrow",
+      "path": "/api/v1/images?oktasMin=3&oktasMax=5&limit=3",
+      "status": 200,
+      "file": "images-oktas-range-narrow.json"
+    },
+    {
+      "name": "images-artifact-source",
+      "path": "/api/v1/images?artifact=source&limit=3",
+      "status": 200,
+      "file": "images-artifact-source.json"
+    },
+    {
+      "name": "images-artifact-mask",
+      "path": "/api/v1/images?artifact=mask&limit=3",
+      "status": 200,
+      "file": "images-artifact-mask.json"
+    },
+    {
+      "name": "images-q-vid1-substring",
+      "path": "/api/v1/images?q=vid1&limit=5",
+      "status": 200,
+      "file": "images-q-vid1-substring.json"
+    },
+    {
+      "name": "images-q-exact-id",
+      "path": "/api/v1/images?q=WAS-V01-F5&limit=3",
+      "status": 200,
+      "file": "images-q-exact-id.json"
+    },
+    {
+      "name": "images-q-overcast-label",
+      "path": "/api/v1/images?q=overcast&limit=3",
+      "status": 200,
+      "file": "images-q-overcast-label.json"
+    },
+    {
+      "name": "images-q-unsegmented-tag",
+      "path": "/api/v1/images?q=unsegmented&limit=3",
+      "status": 200,
+      "file": "images-q-unsegmented-tag.json"
+    },
+    {
+      "name": "images-q-source-plus-mask",
+      "path": "/api/v1/images?q=source%20%2B%20mask&limit=3",
+      "status": 200,
+      "file": "images-q-source-plus-mask.json"
+    },
+    {
+      "name": "images-q-no-match",
+      "path": "/api/v1/images?q=zzzznotpresent&limit=3",
+      "status": 200,
+      "file": "images-q-no-match.json"
+    },
+    {
+      "name": "images-from-date",
+      "path": "/api/v1/images?from=2024-01-01&limit=3",
+      "status": 200,
+      "file": "images-from-date.json"
+    },
+    {
+      "name": "images-to-date",
+      "path": "/api/v1/images?to=2030-01-01&limit=3",
+      "status": 200,
+      "file": "images-to-date.json"
+    },
+    {
+      "name": "images-season-harmattan",
+      "path": "/api/v1/images?season=Harmattan&limit=3",
+      "status": 200,
+      "file": "images-season-harmattan.json"
+    },
+    {
+      "name": "images-time-morning",
+      "path": "/api/v1/images?time=Morning&limit=3",
+      "status": 200,
+      "file": "images-time-morning.json"
+    },
+    {
+      "name": "images-location-kumasi",
+      "path": "/api/v1/images?location=Kumasi&limit=3",
+      "status": 200,
+      "file": "images-location-kumasi.json"
+    },
+    {
+      "name": "images-cursor-malformed",
+      "path": "/api/v1/images?cursor=not-a-real-cursor&limit=2",
+      "status": 200,
+      "file": "images-cursor-malformed.json"
+    },
+    {
+      "name": "images-cursor-empty",
+      "path": "/api/v1/images?cursor=&limit=2",
+      "status": 200,
+      "file": "images-cursor-empty.json"
+    },
+    {
+      "name": "images-err-oktas-9",
+      "path": "/api/v1/images?oktas=9",
+      "status": 400,
+      "file": "images-err-oktas-9.json"
+    },
+    {
+      "name": "images-err-oktas-negative",
+      "path": "/api/v1/images?oktas=-1",
+      "status": 400,
+      "file": "images-err-oktas-negative.json"
+    },
+    {
+      "name": "images-err-limit-101",
+      "path": "/api/v1/images?limit=101",
+      "status": 400,
+      "file": "images-err-limit-101.json"
+    },
+    {
+      "name": "images-err-limit-0",
+      "path": "/api/v1/images?limit=0",
+      "status": 400,
+      "file": "images-err-limit-0.json"
+    },
+    {
+      "name": "images-err-video-format",
+      "path": "/api/v1/images?video=video1",
+      "status": 400,
+      "file": "images-err-video-format.json"
+    },
+    {
+      "name": "images-err-season-unknown",
+      "path": "/api/v1/images?season=Summer",
+      "status": 400,
+      "file": "images-err-season-unknown.json"
+    },
+    {
+      "name": "images-err-segmented-maybe",
+      "path": "/api/v1/images?segmented=maybe",
+      "status": 400,
+      "file": "images-err-segmented-maybe.json"
+    },
+    {
+      "name": "images-err-sort-unknown",
+      "path": "/api/v1/images?sort=random",
+      "status": 400,
+      "file": "images-err-sort-unknown.json"
+    },
+    {
+      "name": "images-err-from-not-a-date",
+      "path": "/api/v1/images?from=notadate",
+      "status": 400,
+      "file": "images-err-from-not-a-date.json"
+    },
+    {
+      "name": "images-err-multiple",
+      "path": "/api/v1/images?oktas=9&limit=101&video=nope",
+      "status": 400,
+      "file": "images-err-multiple.json"
+    },
+    {
+      "name": "image-paired",
+      "path": "/api/v1/images/WAS-V01-F5",
+      "status": 200,
+      "file": "image-paired.json"
+    },
+    {
+      "name": "image-mask-only",
+      "path": "/api/v1/images/WAS-V01-F85",
+      "status": 200,
+      "file": "image-mask-only.json"
+    },
+    {
+      "name": "image-source-only",
+      "path": "/api/v1/images/WAS-V01-F2",
+      "status": 200,
+      "file": "image-source-only.json"
+    },
+    {
+      "name": "image-not-found",
+      "path": "/api/v1/images/WAS-RKV-00000",
+      "status": 404,
+      "file": "image-not-found.json"
+    },
+    {
+      "name": "collections-all",
+      "path": "/api/v1/collections",
+      "status": 200,
+      "file": "collections-all.json"
+    },
+    {
+      "name": "collection-first",
+      "path": "/api/v1/collections/vid1",
+      "status": 200,
+      "file": "collection-first.json"
+    },
+    {
+      "name": "collection-last",
+      "path": "/api/v1/collections/vid11",
+      "status": 200,
+      "file": "collection-last.json"
+    },
+    {
+      "name": "collection-not-found",
+      "path": "/api/v1/collections/reykjavik-all-sky",
+      "status": 404,
+      "file": "collection-not-found.json"
+    },
+    {
+      "name": "releases-first",
+      "path": "/api/v1/collections/vid1/releases",
+      "status": 200,
+      "file": "releases-first.json"
+    },
+    {
+      "name": "releases-not-found",
+      "path": "/api/v1/collections/nope/releases",
+      "status": 404,
+      "file": "releases-not-found.json"
+    },
+    {
+      "name": "facets",
+      "path": "/api/v1/facets",
+      "status": 200,
+      "file": "facets.json"
+    },
+    {
+      "name": "image-overcast",
+      "path": "/api/v1/images/WAS-V04-F21",
+      "status": 200,
+      "file": "image-overcast.json"
+    },
+    {
+      "name": "images-cursor-page-0",
+      "path": "/api/v1/images?limit=2",
+      "status": 200,
+      "file": "images-cursor-page-0.json"
+    },
+    {
+      "name": "images-cursor-page-1",
+      "path": "/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjJ9",
+      "status": 200,
+      "file": "images-cursor-page-1.json"
+    },
+    {
+      "name": "images-cursor-page-2",
+      "path": "/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjR9",
+      "status": 200,
+      "file": "images-cursor-page-2.json"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "collection-first",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/collections/vid1",
+    "url": "https://wascat.example.org/api/v1/collections/vid1"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": {
+      "slug": "vid1",
+      "title": "Capture sequence vid1",
+      "shortTitle": "vid1",
+      "kicker": "ALL-SKY CLOUD SEGMENTATION · VID1",
+      "description": "323 all-sky frames from capture sequence vid1. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+      "coverage": "Frames 2–3,611 · 223 of 323 segmented",
+      "videoIds": [
+        "vid1"
+      ],
+      "images": 323,
+      "artifacts": 493,
+      "withSource": 270,
+      "segmented": 223,
+      "image": "/frames/vid1/5-source.jpg",
+      "imageAlt": "All-sky camera frame 5 of sequence vid1, measured at 4/8 cloud cover.",
+      "releases": [
+        {
+          "version": "1.0",
+          "images": 323,
+          "size": "10.4 MB",
+          "current": true
+        }
+      ]
+    },
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/collections/vid1"
+    }
+  }
+}

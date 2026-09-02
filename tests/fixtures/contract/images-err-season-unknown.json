@@ -1,0 +1,25 @@
+{
+  "name": "images-err-season-unknown",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?season=Summer",
+    "url": "https://wascat.example.org/api/v1/images?season=Summer"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "season": [
+          "Invalid enum value. Expected 'Harmattan' | 'Dry season' | 'Wet season' | 'Transition', received 'Summer'"
+        ]
+      }
+    }
+  }
+}

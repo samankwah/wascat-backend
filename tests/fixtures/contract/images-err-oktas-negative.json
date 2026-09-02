@@ -1,0 +1,25 @@
+{
+  "name": "images-err-oktas-negative",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?oktas=-1",
+    "url": "https://wascat.example.org/api/v1/images?oktas=-1"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "oktas": [
+          "Number must be greater than or equal to 0"
+        ]
+      }
+    }
+  }
+}

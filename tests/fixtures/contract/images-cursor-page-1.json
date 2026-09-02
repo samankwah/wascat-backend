@@ -1,0 +1,103 @@
+{
+  "name": "images-cursor-page-1",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjJ9",
+    "url": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjJ9"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "id": "WAS-V11-F2095",
+        "collection": "vid11",
+        "release": "1.0",
+        "videoId": "vid11",
+        "frameIndex": 2095,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid11/2095-source.jpg",
+        "sourceUrl": "/frames/vid11/2095-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 2095 of sequence vid11, not yet segmented.",
+        "tags": [
+          "vid11",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid11/2095-source.jpg",
+            "objectKey": "frames/vid11/2095-source.jpg",
+            "bytes": 21528,
+            "checksum": "52b6196a92657dac8efd5e4098f889f00fb0d3bd5fbb2ea2a75c123bd7bb6a84",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "011-0002095"
+      },
+      {
+        "id": "WAS-V11-F2074",
+        "collection": "vid11",
+        "release": "1.0",
+        "videoId": "vid11",
+        "frameIndex": 2074,
+        "cloudFraction": 0.979005,
+        "cloudCoverOktas": 8,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid11/2074-source.jpg",
+        "sourceUrl": "/frames/vid11/2074-source.jpg",
+        "maskUrl": "/frames/vid11/2074-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 2074 of sequence vid11, measured at 8/8 · Overcast cloud cover.",
+        "tags": [
+          "vid11",
+          "8/8 · Overcast",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid11/2074-source.jpg",
+            "objectKey": "frames/vid11/2074-source.jpg",
+            "bytes": 21556,
+            "checksum": "f82168506a8335dcf2b771800639f09dddc63cd994977e0b2cc81b080b864ce3",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/vid11/2074-mask.jpg",
+            "objectKey": "frames/vid11/2074-mask.jpg",
+            "bytes": 13712,
+            "checksum": "efebc847d1933335e77553fd7abdadb6a4689e1f0d8bcaed5ddede0835a18646",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "011-0002074"
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 2,
+      "total": 2422,
+      "limit": 2,
+      "nextCursor": "eyJvZmZzZXQiOjR9"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjJ9",
+      "next": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjR9"
+    }
+  }
+}

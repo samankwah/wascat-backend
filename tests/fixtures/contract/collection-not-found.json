@@ -1,0 +1,20 @@
+{
+  "name": "collection-not-found",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/collections/reykjavik-all-sky",
+    "url": "https://wascat.example.org/api/v1/collections/reykjavik-all-sky"
+  },
+  "status": 404,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "not_found",
+      "message": "Collection not found"
+    }
+  }
+}

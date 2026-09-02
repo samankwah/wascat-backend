@@ -1,0 +1,61 @@
+{
+  "name": "images-limit-1",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?limit=1",
+    "url": "https://wascat.example.org/api/v1/images?limit=1"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "id": "WAS-V11-F2120",
+        "collection": "vid11",
+        "release": "1.0",
+        "videoId": "vid11",
+        "frameIndex": 2120,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid11/2120-source.jpg",
+        "sourceUrl": "/frames/vid11/2120-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 2120 of sequence vid11, not yet segmented.",
+        "tags": [
+          "vid11",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid11/2120-source.jpg",
+            "objectKey": "frames/vid11/2120-source.jpg",
+            "bytes": 21496,
+            "checksum": "30b073cef7de7a6f78074c9a37f5fc2b0b625b14b7898a4219d4e7cd0ee7b2f0",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "011-0002120"
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 1,
+      "total": 2422,
+      "limit": 1,
+      "nextCursor": "eyJvZmZzZXQiOjF9"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?limit=1",
+      "next": "https://wascat.example.org/api/v1/images?limit=1&cursor=eyJvZmZzZXQiOjF9"
+    }
+  }
+}

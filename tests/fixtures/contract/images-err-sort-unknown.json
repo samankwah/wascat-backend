@@ -1,0 +1,25 @@
+{
+  "name": "images-err-sort-unknown",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?sort=random",
+    "url": "https://wascat.example.org/api/v1/images?sort=random"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "sort": [
+          "Invalid enum value. Expected 'newest' | 'oldest', received 'random'"
+        ]
+      }
+    }
+  }
+}

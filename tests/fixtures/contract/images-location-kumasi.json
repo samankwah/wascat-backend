@@ -1,0 +1,29 @@
+{
+  "name": "images-location-kumasi",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?location=Kumasi&limit=3",
+    "url": "https://wascat.example.org/api/v1/images?location=Kumasi&limit=3"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 0,
+      "total": 0,
+      "limit": 3,
+      "nextCursor": null
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?location=Kumasi&limit=3",
+      "next": null
+    }
+  }
+}

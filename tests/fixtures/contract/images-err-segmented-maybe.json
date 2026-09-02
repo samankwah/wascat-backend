@@ -1,0 +1,25 @@
+{
+  "name": "images-err-segmented-maybe",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?segmented=maybe",
+    "url": "https://wascat.example.org/api/v1/images?segmented=maybe"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "segmented": [
+          "Invalid enum value. Expected 'true' | 'false', received 'maybe'"
+        ]
+      }
+    }
+  }
+}

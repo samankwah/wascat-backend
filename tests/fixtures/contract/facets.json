@@ -1,0 +1,234 @@
+{
+  "name": "facets",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/facets",
+    "url": "https://wascat.example.org/api/v1/facets"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": {
+      "collections": [
+        {
+          "value": "vid1",
+          "label": "vid1",
+          "count": 323
+        },
+        {
+          "value": "vid2",
+          "label": "vid2",
+          "count": 688
+        },
+        {
+          "value": "vid3",
+          "label": "vid3",
+          "count": 166
+        },
+        {
+          "value": "vid4",
+          "label": "vid4",
+          "count": 132
+        },
+        {
+          "value": "vid5",
+          "label": "vid5",
+          "count": 136
+        },
+        {
+          "value": "vid6",
+          "label": "vid6",
+          "count": 119
+        },
+        {
+          "value": "vid7",
+          "label": "vid7",
+          "count": 206
+        },
+        {
+          "value": "vid8",
+          "label": "vid8",
+          "count": 161
+        },
+        {
+          "value": "vid9",
+          "label": "vid9",
+          "count": 68
+        },
+        {
+          "value": "vid10",
+          "label": "vid10",
+          "count": 219
+        },
+        {
+          "value": "vid11",
+          "label": "vid11",
+          "count": 204
+        }
+      ],
+      "sequences": [
+        {
+          "value": "vid1",
+          "count": 323
+        },
+        {
+          "value": "vid2",
+          "count": 688
+        },
+        {
+          "value": "vid3",
+          "count": 166
+        },
+        {
+          "value": "vid4",
+          "count": 132
+        },
+        {
+          "value": "vid5",
+          "count": 136
+        },
+        {
+          "value": "vid6",
+          "count": 119
+        },
+        {
+          "value": "vid7",
+          "count": 206
+        },
+        {
+          "value": "vid8",
+          "count": 161
+        },
+        {
+          "value": "vid9",
+          "count": 68
+        },
+        {
+          "value": "vid10",
+          "count": 219
+        },
+        {
+          "value": "vid11",
+          "count": 204
+        }
+      ],
+      "cloudCoverOktas": [
+        {
+          "value": 0,
+          "label": "0/8 · Clear",
+          "count": 0
+        },
+        {
+          "value": 1,
+          "label": "1/8",
+          "count": 0
+        },
+        {
+          "value": 2,
+          "label": "2/8",
+          "count": 0
+        },
+        {
+          "value": 3,
+          "label": "3/8",
+          "count": 0
+        },
+        {
+          "value": 4,
+          "label": "4/8",
+          "count": 134
+        },
+        {
+          "value": 5,
+          "label": "5/8",
+          "count": 474
+        },
+        {
+          "value": 6,
+          "label": "6/8",
+          "count": 191
+        },
+        {
+          "value": 7,
+          "label": "7/8",
+          "count": 94
+        },
+        {
+          "value": 8,
+          "label": "8/8 · Overcast",
+          "count": 467
+        }
+      ],
+      "segmentation": [
+        {
+          "value": "segmented",
+          "label": "Has a cloud mask",
+          "count": 1360
+        },
+        {
+          "value": "unsegmented",
+          "label": "Not yet segmented",
+          "count": 1062
+        }
+      ],
+      "artifacts": [
+        {
+          "value": "source",
+          "count": 2078
+        },
+        {
+          "value": "mask",
+          "count": 1360
+        }
+      ],
+      "seasons": [
+        {
+          "value": "Harmattan",
+          "count": 0
+        },
+        {
+          "value": "Dry season",
+          "count": 0
+        },
+        {
+          "value": "Wet season",
+          "count": 0
+        },
+        {
+          "value": "Transition",
+          "count": 0
+        }
+      ],
+      "timesOfDay": [
+        {
+          "value": "Morning",
+          "count": 0
+        },
+        {
+          "value": "Midday",
+          "count": 0
+        },
+        {
+          "value": "Afternoon",
+          "count": 0
+        },
+        {
+          "value": "Evening",
+          "count": 0
+        }
+      ],
+      "locations": []
+    },
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/facets"
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "name": "images-oktas-4",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?oktas=4&limit=3",
+    "url": "https://wascat.example.org/api/v1/images?oktas=4&limit=3"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "id": "WAS-V02-F9742",
+        "collection": "vid2",
+        "release": "1.0",
+        "videoId": "vid2",
+        "frameIndex": 9742,
+        "cloudFraction": 0.556918,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid2/9742-source.jpg",
+        "sourceUrl": "/frames/vid2/9742-source.jpg",
+        "maskUrl": "/frames/vid2/9742-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 9742 of sequence vid2, measured at 4/8 cloud cover.",
+        "tags": [
+          "vid2",
+          "4/8",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid2/9742-source.jpg",
+            "objectKey": "frames/vid2/9742-source.jpg",
+            "bytes": 23658,
+            "checksum": "42d77db1494f45c4f2ae67e86370ee29dacf2a4c328a6b51ef2d3788a238cff5",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/vid2/9742-mask.jpg",
+            "objectKey": "frames/vid2/9742-mask.jpg",
+            "bytes": 15106,
+            "checksum": "958a2b2ba18ff61a887024bc21e99281b9747897bd441bc3694541b392f1e814",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "002-0009742"
+      },
+      {
+        "id": "WAS-V02-F9614",
+        "collection": "vid2",
+        "release": "1.0",
+        "videoId": "vid2",
+        "frameIndex": 9614,
+        "cloudFraction": 0.541608,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid2/9614-mask.jpg",
+        "maskUrl": "/frames/vid2/9614-mask.jpg",
+        "hasSource": false,
+        "hasMask": true,
+        "alt": "Binary cloud segmentation mask for frame 9614 of sequence vid2, measured at 4/8 cloud cover.",
+        "tags": [
+          "vid2",
+          "4/8",
+          "mask only"
+        ],
+        "artifacts": [
+          {
+            "type": "mask",
+            "url": "/frames/vid2/9614-mask.jpg",
+            "objectKey": "frames/vid2/9614-mask.jpg",
+            "bytes": 14341,
+            "checksum": "9da46c6d4618e1fe1ed1ee410d6623f4ff6816891e0373df218fe0d878dc05ed",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "002-0009614"
+      },
+      {
+        "id": "WAS-V02-F9604",
+        "collection": "vid2",
+        "release": "1.0",
+        "videoId": "vid2",
+        "frameIndex": 9604,
+        "cloudFraction": 0.521931,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid2/9604-mask.jpg",
+        "maskUrl": "/frames/vid2/9604-mask.jpg",
+        "hasSource": false,
+        "hasMask": true,
+        "alt": "Binary cloud segmentation mask for frame 9604 of sequence vid2, measured at 4/8 cloud cover.",
+        "tags": [
+          "vid2",
+          "4/8",
+          "mask only"
+        ],
+        "artifacts": [
+          {
+            "type": "mask",
+            "url": "/frames/vid2/9604-mask.jpg",
+            "objectKey": "frames/vid2/9604-mask.jpg",
+            "bytes": 13474,
+            "checksum": "db3508f45600a5cdc846d4f9a8c141252cbe029960aec86fd2ff4456de848c3a",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "002-0009604"
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 3,
+      "total": 134,
+      "limit": 3,
+      "nextCursor": "eyJvZmZzZXQiOjN9"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?oktas=4&limit=3",
+      "next": "https://wascat.example.org/api/v1/images?oktas=4&limit=3&cursor=eyJvZmZzZXQiOjN9"
+    }
+  }
+}

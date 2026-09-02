@@ -1,0 +1,25 @@
+{
+  "name": "images-err-from-not-a-date",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?from=notadate",
+    "url": "https://wascat.example.org/api/v1/images?from=notadate"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "from": [
+          "Invalid date"
+        ]
+      }
+    }
+  }
+}

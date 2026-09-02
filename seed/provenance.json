@@ -1,0 +1,37 @@
+{
+  "_readme": [
+    "Per-sequence provenance for the all-sky capture videos.",
+    "",
+    "'frames' and 'geometry' are measured from the delivered files and are filled in.",
+    "Everything else is editorial and must come from the capture team. Leave a field",
+    "as null or \"\" and the ingest OMITS it from the catalog rather than inventing a",
+    "value: the site, coordinates, timestamps, instrument, licence and citation will",
+    "simply not appear in the UI or the API until they are supplied here.",
+    "",
+    "startedAt  ISO-8601 UTC instant of frameIndex 0, e.g. \"2026-03-14T09:00:00Z\".",
+    "frameIntervalSeconds  seconds between consecutive frameIndex values.",
+    "           Both are required to derive a real capturedAt per frame.",
+    "site       human-readable capture site, e.g. \"Kumasi, Ghana\".",
+    "latitude / longitude  decimal degrees of the camera.",
+    "instrument All-sky camera make/model.",
+    "collection Slug grouping sequences captured at the same site. Sequences that",
+    "           share a slug become one catalogue collection. Defaults to the video."
+  ],
+  "license": null,
+  "citation": null,
+  "doi": null,
+  "release": "1.0",
+  "sequences": {
+    "vid1":  { "frames": 170, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid2":  { "frames": 454, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid3":  { "frames": 49,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid4":  { "frames": 23,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid5":  { "frames": 26,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid6":  { "frames": 15,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid7":  { "frames": 73,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid8":  { "frames": 45,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid9":  { "frames": 3,   "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid10": { "frames": 90,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "vid11": { "frames": 68,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null }
+  }
+}

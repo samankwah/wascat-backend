@@ -1,0 +1,25 @@
+{
+  "name": "images-err-video-format",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?video=video1",
+    "url": "https://wascat.example.org/api/v1/images?video=video1"
+  },
+  "status": 400,
+  "headers": {
+    "x-ratelimit-limit": null,
+    "x-ratelimit-remaining": null,
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "invalid_query",
+      "message": "One or more query parameters are invalid.",
+      "details": {
+        "video": [
+          "Invalid"
+        ]
+      }
+    }
+  }
+}

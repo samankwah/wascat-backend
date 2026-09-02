@@ -1,0 +1,88 @@
+name: wascat
+
+# The default `docker compose up -d` starts infrastructure only. The API runs
+# natively via `uv run`, which gives a real debugger and instant reload without
+# bind-mount file-watching pain on Windows. Use `--profile full` to run the API
+# in a container too, for a production-shaped smoke test.
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: wascat
+      POSTGRES_PASSWORD: wascat
+      POSTGRES_DB: wascat
+    ports: ["5432:5432"]
+    # Postgres 18 stores data in a major-version subdirectory and expects the
+    # mount one level up. Mounting /var/lib/postgresql/data (the pre-18
+    # convention) makes the image refuse to start.
+    volumes: ["wascat-db:/var/lib/postgresql"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wascat -d wascat"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: wascat
+      MINIO_ROOT_PASSWORD: wascat-dev-secret
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # web console
+    volumes: ["wascat-minio:/data"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  createbuckets:
+    image: minio/mc:latest
+    depends_on:
+      minio: { condition: service_healthy }
+    # frames/ and derivatives/ are world-readable because they are exactly what
+    # the public site renders in <img> tags. uploads/ and bundles/ stay private.
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 wascat wascat-dev-secret &&
+      mc mb --ignore-existing local/wascat &&
+      mc anonymous set download local/wascat/frames &&
+      mc anonymous set download local/wascat/derivatives &&
+      mc ilm rule add --expire-days 1 --prefix uploads/staging/ local/wascat 2>/dev/null || true;
+      echo 'wascat bucket ready'"
+    restart: "no"
+
+  api:
+    profiles: ["full"]
+    build:
+      context: .
+      target: runtime
+    environment:
+      WASCAT_ENVIRONMENT: local
+      WASCAT_DATABASE_URL: postgresql+asyncpg://wascat:wascat@postgres:5432/wascat
+      WASCAT_S3_ENDPOINT_URL: http://minio:9000
+      WASCAT_S3_BUCKET: wascat
+      WASCAT_S3_ACCESS_KEY: wascat
+      WASCAT_S3_SECRET_KEY: wascat-dev-secret
+      WASCAT_PUBLIC_ASSET_BASE_URL: http://localhost:9000/wascat
+      WASCAT_PUBLIC_BASE_URL: http://localhost:3000
+      WASCAT_SECRET_KEY: dev-only-change-me
+      WASCAT_COOKIE_SECURE: "false"
+      WASCAT_ADMIN_ORIGINS: '["http://localhost:3000"]'
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      createbuckets: { condition: service_completed_successfully }
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn wascat.main:app --host 0.0.0.0 --port 8000
+             --proxy-headers --forwarded-allow-ips='*'"
+
+volumes:
+  wascat-db:
+  wascat-minio:

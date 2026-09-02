@@ -1,0 +1,218 @@
+{
+  "name": "images-sort-oldest",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?limit=5&sort=oldest",
+    "url": "https://wascat.example.org/api/v1/images?limit=5&sort=oldest"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "id": "WAS-V01-F2",
+        "collection": "vid1",
+        "release": "1.0",
+        "videoId": "vid1",
+        "frameIndex": 2,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid1/2-source.jpg",
+        "sourceUrl": "/frames/vid1/2-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 2 of sequence vid1, not yet segmented.",
+        "tags": [
+          "vid1",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid1/2-source.jpg",
+            "objectKey": "frames/vid1/2-source.jpg",
+            "bytes": 22711,
+            "checksum": "273111b4551709f24e40da6051d2a2541ad822b2531469e78a1c048103cb60df",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0000002"
+      },
+      {
+        "id": "WAS-V01-F5",
+        "collection": "vid1",
+        "release": "1.0",
+        "videoId": "vid1",
+        "frameIndex": 5,
+        "cloudFraction": 0.525588,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid1/5-source.jpg",
+        "sourceUrl": "/frames/vid1/5-source.jpg",
+        "maskUrl": "/frames/vid1/5-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 5 of sequence vid1, measured at 4/8 cloud cover.",
+        "tags": [
+          "vid1",
+          "4/8",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid1/5-source.jpg",
+            "objectKey": "frames/vid1/5-source.jpg",
+            "bytes": 23133,
+            "checksum": "fb6cbaea816563ba02382b504754e86db2b7aad4766019acda2b0505cd33f19e",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/vid1/5-mask.jpg",
+            "objectKey": "frames/vid1/5-mask.jpg",
+            "bytes": 21265,
+            "checksum": "aa45c66b3da4208721eb06d4a410343d6e8e3e609402bd11bf8a40adf2362028",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0000005"
+      },
+      {
+        "id": "WAS-V01-F36",
+        "collection": "vid1",
+        "release": "1.0",
+        "videoId": "vid1",
+        "frameIndex": 36,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid1/36-source.jpg",
+        "sourceUrl": "/frames/vid1/36-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 36 of sequence vid1, not yet segmented.",
+        "tags": [
+          "vid1",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid1/36-source.jpg",
+            "objectKey": "frames/vid1/36-source.jpg",
+            "bytes": 23465,
+            "checksum": "6fa5d2920b11c809d51e8563bdd43ede99c851cc3c95c3ff5455534610ab1eeb",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0000036"
+      },
+      {
+        "id": "WAS-V01-F46",
+        "collection": "vid1",
+        "release": "1.0",
+        "videoId": "vid1",
+        "frameIndex": 46,
+        "cloudFraction": 0.568998,
+        "cloudCoverOktas": 5,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid1/46-source.jpg",
+        "sourceUrl": "/frames/vid1/46-source.jpg",
+        "maskUrl": "/frames/vid1/46-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 46 of sequence vid1, measured at 5/8 cloud cover.",
+        "tags": [
+          "vid1",
+          "5/8",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid1/46-source.jpg",
+            "objectKey": "frames/vid1/46-source.jpg",
+            "bytes": 23496,
+            "checksum": "07f57f74cab78231e1d7583e5bf25b65866c53a29b4d37a7e0e84aca9a4c2e28",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/vid1/46-mask.jpg",
+            "objectKey": "frames/vid1/46-mask.jpg",
+            "bytes": 23254,
+            "checksum": "55a768605e3a558a58a1199efe77bfdc831a990431fe5194860998b5bc152c7a",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0000046"
+      },
+      {
+        "id": "WAS-V01-F53",
+        "collection": "vid1",
+        "release": "1.0",
+        "videoId": "vid1",
+        "frameIndex": 53,
+        "cloudFraction": 0.57144,
+        "cloudCoverOktas": 5,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/vid1/53-source.jpg",
+        "sourceUrl": "/frames/vid1/53-source.jpg",
+        "maskUrl": "/frames/vid1/53-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 53 of sequence vid1, measured at 5/8 cloud cover.",
+        "tags": [
+          "vid1",
+          "5/8",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/vid1/53-source.jpg",
+            "objectKey": "frames/vid1/53-source.jpg",
+            "bytes": 23390,
+            "checksum": "1ea99ce4b0eb2a840225c84e522b5008f7f0a5cb2ad950350d801a5700240f96",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/vid1/53-mask.jpg",
+            "objectKey": "frames/vid1/53-mask.jpg",
+            "bytes": 22558,
+            "checksum": "b45b1e3cfe987ee403569df91e813222ceefaf065fc4457fdfdaea30419fe6ae",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0000053"
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 5,
+      "total": 2422,
+      "limit": 5,
+      "nextCursor": "eyJvZmZzZXQiOjV9"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?limit=5&sort=oldest",
+      "next": "https://wascat.example.org/api/v1/images?limit=5&sort=oldest&cursor=eyJvZmZzZXQiOjV9"
+    }
+  }
+}

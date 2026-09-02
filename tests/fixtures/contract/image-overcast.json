@@ -1,0 +1,56 @@
+{
+  "name": "image-overcast",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images/WAS-V04-F21",
+    "url": "https://wascat.example.org/api/v1/images/WAS-V04-F21"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": {
+      "id": "WAS-V04-F21",
+      "collection": "vid4",
+      "release": "1.0",
+      "videoId": "vid4",
+      "frameIndex": 21,
+      "cloudFraction": 0.990995,
+      "cloudCoverOktas": 8,
+      "maskScale": 1,
+      "width": 640,
+      "height": 360,
+      "image": "/frames/vid4/21-mask.jpg",
+      "maskUrl": "/frames/vid4/21-mask.jpg",
+      "hasSource": false,
+      "hasMask": true,
+      "alt": "Binary cloud segmentation mask for frame 21 of sequence vid4, measured at 8/8 · Overcast cloud cover.",
+      "tags": [
+        "vid4",
+        "8/8 · Overcast",
+        "mask only"
+      ],
+      "artifacts": [
+        {
+          "type": "mask",
+          "url": "/frames/vid4/21-mask.jpg",
+          "objectKey": "frames/vid4/21-mask.jpg",
+          "bytes": 12401,
+          "checksum": "46b3fa32dc2003a4cc2d124ae3927d90ddd5bf4666ab6e289f3b7bcd42d279c6",
+          "mediaType": "image/jpeg"
+        }
+      ],
+      "sortKey": "004-0000021"
+    },
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images/WAS-V04-F21"
+    }
+  }
+}

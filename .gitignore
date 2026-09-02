@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Seed imagery. The delivered frame archive is ~447 MB and is loaded into
+# object storage by `wascat db seed` / `wascat ingest backfill`; it is never
+# committed. The small generated JSON under seed/ IS committed, because the
+# pipeline port is regression-tested against it.
+seed/frames/
+tests/fixtures/frames/*.jpg
+
+# Local artefacts
+*.log
+build/
+dist/
