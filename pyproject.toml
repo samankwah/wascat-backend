@@ -124,6 +124,12 @@ asyncio_default_fixture_loop_scope = "session"
 asyncio_default_test_loop_scope = "session"
 testpaths = ["tests"]
 addopts = "-q --strict-markers --strict-config"
+filterwarnings = [
+    # The development secret is deliberately short. Production is refused at
+    # startup by Settings._refuse_dev_defaults_in_production, so the warning
+    # has nothing left to tell us here.
+    "ignore:The HMAC key is:UserWarning",
+]
 markers = [
     "golden: reproduces numbers recorded in seed/catalog.generated.json",
     "contract: replays a response recorded from the pre-migration Next.js API",

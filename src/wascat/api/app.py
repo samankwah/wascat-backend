@@ -12,11 +12,11 @@ from fastapi.routing import APIRoute
 # other by name, so a partial import fails at first query rather than at start.
 import wascat.models  # noqa: F401
 from wascat.api.middleware import CorsPolicyMiddleware, RequestContextMiddleware
+from wascat.api.routes import admin_public_router, admin_router, public_router
 from wascat.core.config import get_settings
 from wascat.core.db import dispose_engine
 from wascat.core.envelope import CanonicalJSONResponse
 from wascat.core.errors import register_exception_handlers
-from wascat.domains.catalog.router import router as catalog_router
 
 TAGS_METADATA = [
     {
@@ -25,6 +25,10 @@ TAGS_METADATA = [
             "Public, unauthenticated access to the archive: image records, "
             "collections, releases and filter facets."
         ),
+    },
+    {
+        "name": "admin:auth",
+        "description": "Signing in and out of the dashboard.",
     },
     {"name": "admin", "description": "Authenticated dashboard operations."},
 ]
@@ -75,7 +79,9 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
 
-    app.include_router(catalog_router)
+    app.include_router(public_router)
+    app.include_router(admin_public_router)
+    app.include_router(admin_router)
 
     @app.get("/api/v1/health", tags=["catalog"], summary="Liveness probe")
     async def health() -> dict[str, str]:

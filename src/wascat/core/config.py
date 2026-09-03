@@ -109,6 +109,14 @@ class Settings(BaseSettings):
                 f"{', '.join(unsafe)} still hold development defaults in "
                 f"environment={self.environment!r}. Set them explicitly."
             )
+        # HMAC-SHA256 keys shorter than the 32-byte digest add no security
+        # over a 32-byte one and PyJWT warns about them; refusing is clearer
+        # than a warning nobody reads in production logs.
+        if len(self.secret_key.encode()) < 32:
+            raise ValueError(
+                "WASCAT_SECRET_KEY must be at least 32 bytes. Generate one with: "
+                'python -c "import secrets; print(secrets.token_urlsafe(48))"'
+            )
         if not self.public_base_url:
             # Without it, links.self leaks the internal origin the frontend
             # proxies to. See risk R7.

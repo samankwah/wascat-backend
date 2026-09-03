@@ -20,6 +20,7 @@ import wascat.models  # noqa: F401
 from wascat.cli.db import db_app
 from wascat.cli.doctor import doctor_command
 from wascat.cli.ingest import ingest_app
+from wascat.cli.users import users_app
 
 app = typer.Typer(
     name="wascat",
@@ -30,6 +31,7 @@ app = typer.Typer(
 
 app.add_typer(db_app, name="db", help="Migrations and seeding.")
 app.add_typer(ingest_app, name="ingest", help="Load imagery into the archive.")
+app.add_typer(users_app, name="users", help="Administrator accounts.")
 app.command("doctor", help="Check that this machine is ready to run the backend.")(doctor_command)
 
 OUT_OPTION = typer.Option(Path("openapi.json"), "--out", "-o", help="Where to write the schema.")
