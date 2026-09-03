@@ -19,6 +19,15 @@ from wascat.core.pagination import decode_cursor
 from wascat.domains.catalog import repository, service
 from wascat.domains.catalog.facets import build_facets
 from wascat.domains.catalog.query import parse_image_query
+from wascat.domains.catalog.schemas import (
+    ERROR_RESPONSES,
+    CollectionEnvelope,
+    CollectionListEnvelope,
+    FacetsEnvelope,
+    ImageEnvelope,
+    ImagePage,
+    ReleaseListEnvelope,
+)
 
 router = APIRouter(prefix="/api/v1", tags=["catalog"])
 
@@ -34,7 +43,11 @@ def _with_cursor(request: Request, cursor: str) -> str:
     return f"{base}?{query}"
 
 
-@router.get("/images", summary="Search image records")
+@router.get(
+    "/images",
+    summary="Search image records",
+    responses={200: {"model": ImagePage}, **ERROR_RESPONSES},
+)
 async def list_images(
     request: Request, session: AsyncSession = SessionDep
 ) -> CanonicalJSONResponse:
@@ -57,7 +70,11 @@ async def list_images(
     )
 
 
-@router.get("/images/{record_id}", summary="One image record")
+@router.get(
+    "/images/{record_id}",
+    summary="One image record",
+    responses={200: {"model": ImageEnvelope}, **ERROR_RESPONSES},
+)
 async def get_image(
     record_id: str, request: Request, session: AsyncSession = SessionDep
 ) -> CanonicalJSONResponse:
@@ -67,7 +84,11 @@ async def get_image(
     return envelope(request, service.render_record(row))
 
 
-@router.get("/collections", summary="All collections")
+@router.get(
+    "/collections",
+    summary="All collections",
+    responses={200: {"model": CollectionListEnvelope}},
+)
 async def list_collections(
     request: Request, session: AsyncSession = SessionDep
 ) -> CanonicalJSONResponse:
@@ -75,7 +96,11 @@ async def list_collections(
     return envelope(request, payload, meta={"count": len(payload)})
 
 
-@router.get("/collections/{slug}", summary="One collection")
+@router.get(
+    "/collections/{slug}",
+    summary="One collection",
+    responses={200: {"model": CollectionEnvelope}, **ERROR_RESPONSES},
+)
 async def get_collection(
     slug: str, request: Request, session: AsyncSession = SessionDep
 ) -> CanonicalJSONResponse:
@@ -85,7 +110,11 @@ async def get_collection(
     return envelope(request, await service.render_collection(session, collection))
 
 
-@router.get("/collections/{slug}/releases", summary="Release history")
+@router.get(
+    "/collections/{slug}/releases",
+    summary="Release history",
+    responses={200: {"model": ReleaseListEnvelope}, **ERROR_RESPONSES},
+)
 async def list_releases(
     slug: str, request: Request, session: AsyncSession = SessionDep
 ) -> CanonicalJSONResponse:
@@ -101,6 +130,10 @@ async def list_releases(
     )
 
 
-@router.get("/facets", summary="Filter facets and their counts")
+@router.get(
+    "/facets",
+    summary="Filter facets and their counts",
+    responses={200: {"model": FacetsEnvelope}},
+)
 async def get_facets(request: Request, session: AsyncSession = SessionDep) -> CanonicalJSONResponse:
     return envelope(request, await build_facets(session))

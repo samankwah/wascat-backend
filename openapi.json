@@ -1,0 +1,1453 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "WASCAT API",
+    "description": "The West African Sky Archive: all-sky camera frames paired with binary cloud-segmentation masks, and the cloud cover measured from them.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/v1/images": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Search image records",
+        "operationId": "catalog_list_images",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "One or more query parameters are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/images/{record_id}": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "One image record",
+        "operationId": "catalog_get_image",
+        "parameters": [
+          {
+            "name": "record_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Record Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "One or more query parameters are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collections": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "All collections",
+        "operationId": "catalog_list_collections",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionListEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collections/{slug}": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "One collection",
+        "operationId": "catalog_get_collection",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "One or more query parameters are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collections/{slug}/releases": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Release history",
+        "operationId": "catalog_list_releases",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseListEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "One or more query parameters are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/facets": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Filter facets and their counts",
+        "operationId": "catalog_get_facets",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacetsEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Liveness probe",
+        "operationId": "catalog_health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Catalog Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ArtifactOut": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "source",
+              "mask"
+            ],
+            "title": "Type"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "Where the file is served from."
+          },
+          "objectKey": {
+            "type": "string",
+            "title": "Objectkey",
+            "description": "Key within the object store."
+          },
+          "bytes": {
+            "type": "integer",
+            "title": "Bytes"
+          },
+          "checksum": {
+            "type": "string",
+            "title": "Checksum",
+            "description": "SHA-256 of the delivered file."
+          },
+          "mediaType": {
+            "type": "string",
+            "title": "Mediatype"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "url",
+          "objectKey",
+          "bytes",
+          "checksum",
+          "mediaType"
+        ],
+        "title": "ArtifactOut"
+      },
+      "CollectionEnvelope": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CollectionOut"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "CollectionEnvelope"
+      },
+      "CollectionListEnvelope": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionSummaryOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/CountMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "CollectionListEnvelope"
+      },
+      "CollectionOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "shortTitle": {
+            "type": "string",
+            "title": "Shorttitle"
+          },
+          "kicker": {
+            "type": "string",
+            "title": "Kicker"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "coverage": {
+            "type": "string",
+            "title": "Coverage"
+          },
+          "videoIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Videoids"
+          },
+          "images": {
+            "type": "integer",
+            "title": "Images"
+          },
+          "artifacts": {
+            "type": "integer",
+            "title": "Artifacts"
+          },
+          "withSource": {
+            "type": "integer",
+            "title": "Withsource"
+          },
+          "segmented": {
+            "type": "integer",
+            "title": "Segmented",
+            "description": "Records carrying a mask, and so a measurement."
+          },
+          "image": {
+            "type": "string",
+            "title": "Image"
+          },
+          "imageAlt": {
+            "type": "string",
+            "title": "Imagealt"
+          },
+          "releases": {
+            "items": {
+              "$ref": "#/components/schemas/ReleaseOut"
+            },
+            "type": "array",
+            "title": "Releases",
+            "default": []
+          },
+          "locationName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Locationname"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "coordinates": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Coordinates"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrument": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          },
+          "citation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation"
+          },
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "title",
+          "shortTitle",
+          "kicker",
+          "description",
+          "coverage",
+          "videoIds",
+          "images",
+          "artifacts",
+          "withSource",
+          "segmented",
+          "image",
+          "imageAlt"
+        ],
+        "title": "CollectionOut"
+      },
+      "CollectionSummaryOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "shortTitle": {
+            "type": "string",
+            "title": "Shorttitle"
+          },
+          "kicker": {
+            "type": "string",
+            "title": "Kicker"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "coverage": {
+            "type": "string",
+            "title": "Coverage"
+          },
+          "videoIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Videoids"
+          },
+          "images": {
+            "type": "integer",
+            "title": "Images"
+          },
+          "artifacts": {
+            "type": "integer",
+            "title": "Artifacts"
+          },
+          "withSource": {
+            "type": "integer",
+            "title": "Withsource"
+          },
+          "segmented": {
+            "type": "integer",
+            "title": "Segmented",
+            "description": "Records carrying a mask, and so a measurement."
+          },
+          "image": {
+            "type": "string",
+            "title": "Image"
+          },
+          "imageAlt": {
+            "type": "string",
+            "title": "Imagealt"
+          },
+          "releases": {
+            "items": {
+              "$ref": "#/components/schemas/ReleaseOut"
+            },
+            "type": "array",
+            "title": "Releases",
+            "default": []
+          },
+          "locationName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Locationname"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "coordinates": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Coordinates"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instrument": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          },
+          "citation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation"
+          },
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          },
+          "currentRelease": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReleaseOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "title",
+          "shortTitle",
+          "kicker",
+          "description",
+          "coverage",
+          "videoIds",
+          "images",
+          "artifacts",
+          "withSource",
+          "segmented",
+          "image",
+          "imageAlt"
+        ],
+        "title": "CollectionSummaryOut",
+        "description": "The listing shape: the release history replaced by the current one."
+      },
+      "Coordinates": {
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "title": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "Longitude"
+          }
+        },
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "title": "Coordinates"
+      },
+      "CountMeta": {
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "title": "Apiversion",
+            "default": "1.0"
+          },
+          "generatedAt": {
+            "type": "string",
+            "title": "Generatedat"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generatedAt",
+          "count"
+        ],
+        "title": "CountMeta"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail"
+      },
+      "ErrorEnvelope": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorEnvelope"
+      },
+      "FacetValue": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Value"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "count"
+        ],
+        "title": "FacetValue"
+      },
+      "FacetsEnvelope": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FacetsOut"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "FacetsEnvelope"
+      },
+      "FacetsOut": {
+        "properties": {
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Collections"
+          },
+          "sequences": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Sequences"
+          },
+          "cloudCoverOktas": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Cloudcoveroktas"
+          },
+          "segmentation": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Segmentation"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Artifacts"
+          },
+          "seasons": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Seasons"
+          },
+          "timesOfDay": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Timesofday"
+          },
+          "locations": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Locations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "collections",
+          "sequences",
+          "cloudCoverOktas",
+          "segmentation",
+          "artifacts",
+          "seasons",
+          "timesOfDay",
+          "locations"
+        ],
+        "title": "FacetsOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImageEnvelope": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ImageRecordOut"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "ImageEnvelope"
+      },
+      "ImagePage": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ImageRecordOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "ImagePage"
+      },
+      "ImageRecordOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection"
+          },
+          "release": {
+            "type": "string",
+            "title": "Release"
+          },
+          "videoId": {
+            "type": "string",
+            "title": "Videoid"
+          },
+          "frameIndex": {
+            "type": "integer",
+            "title": "Frameindex"
+          },
+          "cloudFraction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cloudfraction"
+          },
+          "cloudCoverOktas": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cloudcoveroktas"
+          },
+          "maskScale": {
+            "type": "number",
+            "title": "Maskscale",
+            "description": "Scale at which the mask was delivered relative to its frame. 1 for a correctly registered sequence; greater where the mask was rendered larger and the viewer must scale it back."
+          },
+          "width": {
+            "type": "integer",
+            "title": "Width"
+          },
+          "height": {
+            "type": "integer",
+            "title": "Height"
+          },
+          "image": {
+            "type": "string",
+            "title": "Image",
+            "description": "Primary listing image: the frame, else the mask."
+          },
+          "sourceUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourceurl"
+          },
+          "maskUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maskurl"
+          },
+          "hasSource": {
+            "type": "boolean",
+            "title": "Hassource"
+          },
+          "hasMask": {
+            "type": "boolean",
+            "title": "Hasmask"
+          },
+          "alt": {
+            "type": "string",
+            "title": "Alt"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/ArtifactOut"
+            },
+            "type": "array",
+            "title": "Artifacts"
+          },
+          "sortKey": {
+            "type": "string",
+            "title": "Sortkey",
+            "description": "Capture time when known, sequence position otherwise."
+          },
+          "capturedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capturedat"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "coordinates": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Coordinates"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "season": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Season"
+          },
+          "timeOfDay": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeofday"
+          },
+          "instrument": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "collection",
+          "release",
+          "videoId",
+          "frameIndex",
+          "maskScale",
+          "width",
+          "height",
+          "image",
+          "hasSource",
+          "hasMask",
+          "alt",
+          "tags",
+          "artifacts",
+          "sortKey"
+        ],
+        "title": "ImageRecordOut",
+        "description": "One frame.\n\n``cloudFraction`` and ``cloudCoverOktas`` are absent, not null, on a frame\nthat carries no mask: cloud cover is measured from the mask, so without one\nthere is no measurement to report. They are never defaulted to zero, which\nwould invent a clear sky."
+      },
+      "Links": {
+        "properties": {
+          "self": {
+            "type": "string",
+            "title": "Self"
+          }
+        },
+        "type": "object",
+        "required": [
+          "self"
+        ],
+        "title": "Links"
+      },
+      "Meta": {
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "title": "Apiversion",
+            "default": "1.0"
+          },
+          "generatedAt": {
+            "type": "string",
+            "title": "Generatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generatedAt"
+        ],
+        "title": "Meta"
+      },
+      "PageLinks": {
+        "properties": {
+          "self": {
+            "type": "string",
+            "title": "Self"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next"
+          }
+        },
+        "type": "object",
+        "required": [
+          "self"
+        ],
+        "title": "PageLinks"
+      },
+      "PageMeta": {
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "title": "Apiversion",
+            "default": "1.0"
+          },
+          "generatedAt": {
+            "type": "string",
+            "title": "Generatedat"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextcursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generatedAt",
+          "count",
+          "total",
+          "limit"
+        ],
+        "title": "PageMeta"
+      },
+      "ReleaseListEnvelope": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ReleaseOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ReleaseMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "ReleaseListEnvelope"
+      },
+      "ReleaseMeta": {
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "title": "Apiversion",
+            "default": "1.0"
+          },
+          "generatedAt": {
+            "type": "string",
+            "title": "Generatedat"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generatedAt",
+          "collection",
+          "count"
+        ],
+        "title": "ReleaseMeta"
+      },
+      "ReleaseOut": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "images": {
+            "type": "integer",
+            "title": "Images"
+          },
+          "size": {
+            "type": "string",
+            "title": "Size",
+            "description": "Human-readable total, e.g. '10.4 MB'."
+          },
+          "current": {
+            "type": "boolean",
+            "title": "Current"
+          },
+          "publishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "images",
+          "size",
+          "current"
+        ],
+        "title": "ReleaseOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "catalog",
+      "description": "Public, unauthenticated access to the archive: image records, collections, releases and filter facets."
+    },
+    {
+      "name": "admin",
+      "description": "Authenticated dashboard operations."
+    }
+  ]
+}
