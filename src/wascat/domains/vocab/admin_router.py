@@ -7,7 +7,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Request
 
-from wascat.api.deps import SessionDep, require_permission
+from wascat.core.deps import SessionDep, require_permission
 from wascat.core.envelope import CanonicalJSONResponse, envelope
 from wascat.core.errors import NotFoundError
 from wascat.core.security.tokens import AccessClaims

@@ -12,8 +12,8 @@ from typing import Annotated, Any, cast
 
 from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 
-from wascat.api.deps import SessionDep, StoreDep, require_permission
 from wascat.core.config import get_settings
+from wascat.core.deps import SessionDep, require_permission
 from wascat.core.envelope import CanonicalJSONResponse, envelope
 from wascat.core.errors import (
     ConflictError,
@@ -41,6 +41,7 @@ from wascat.domains.iam.models import (
     CATALOG_WRITE,
     RELEASE_PUBLISH,
 )
+from wascat.storage.deps import StoreDep
 
 router = APIRouter(tags=["admin:catalog"])
 

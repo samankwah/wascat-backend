@@ -11,7 +11,6 @@ from fastapi.routing import APIRoute
 # Importing the registry configures every mapper; relationships reference each
 # other by name, so a partial import fails at first query rather than at start.
 import wascat.models  # noqa: F401
-from wascat.api.deps import close_store
 from wascat.api.middleware import CorsPolicyMiddleware, RequestContextMiddleware
 from wascat.api.routes import admin_public_router, admin_router, public_router
 from wascat.core.config import get_settings
@@ -19,6 +18,7 @@ from wascat.core.db import dispose_engine
 from wascat.core.envelope import CanonicalJSONResponse
 from wascat.core.errors import register_exception_handlers
 from wascat.core.logging import configure_logging
+from wascat.storage.factory import close_store
 
 TAGS_METADATA = [
     {

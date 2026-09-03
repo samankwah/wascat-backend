@@ -16,13 +16,13 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Cookie, Request, Response
 from pydantic import BaseModel, Field
 
-from wascat.api.deps import (
+from wascat.core.config import get_settings
+from wascat.core.deps import (
     ACCESS_COOKIE_NAME,
     REFRESH_COOKIE_NAME,
     CurrentClaims,
     SessionDep,
 )
-from wascat.core.config import get_settings
 from wascat.core.envelope import CanonicalJSONResponse, envelope
 from wascat.core.errors import UnauthorizedError
 from wascat.core.security.csrf import CSRF_COOKIE_NAME, issue_csrf_token

@@ -1,0 +1,84 @@
+"""Shared request dependencies.
+
+These live in ``core`` rather than ``api`` because the domain routers need
+them, and a domain importing from the API layer inverts the architecture -
+``api`` composes domains, not the other way round.
+
+Each one is a thin annotation over something the layer below already owns: a
+session over ``core.db``, a store over ``storage``, a permission check over
+``core.security``. The API layer adds the CSRF check and route assembly on
+top, which is genuinely API-shaped and stays there.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Awaitable, Callable
+from typing import Annotated
+
+from fastapi import Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from wascat.core.db import get_session
+from wascat.core.errors import ForbiddenError, UnauthorizedError
+from wascat.core.security.tokens import AccessClaims, InvalidTokenError, decode_access_token
+
+ACCESS_COOKIE_NAME = "wascat_at"
+REFRESH_COOKIE_NAME = "wascat_rt"
+
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+def _bearer_token(request: Request) -> str | None:
+    header = request.headers.get("authorization", "")
+    scheme, _, token = header.partition(" ")
+    return token if scheme.lower() == "bearer" and token else None
+
+
+async def current_claims(request: Request) -> AccessClaims:
+    """The signed claims of whoever is making this request.
+
+    A cookie or a bearer token; the difference matters only for CSRF, which is
+    why it is recorded on the request rather than collapsed here.
+    """
+    bearer = _bearer_token(request)
+    token = bearer or request.cookies.get(ACCESS_COOKIE_NAME)
+    if not token:
+        raise UnauthorizedError
+
+    try:
+        claims = decode_access_token(token)
+    except InvalidTokenError as exc:
+        raise UnauthorizedError("Your session has expired. Sign in again.") from exc
+
+    request.state.authenticated_by = "bearer" if bearer else "cookie"
+    request.state.claims = claims
+    return claims
+
+
+CurrentClaims = Annotated[AccessClaims, Depends(current_claims)]
+
+
+def require_permission(*permissions: str) -> Callable[..., Awaitable[AccessClaims]]:
+    """Require every named permission.
+
+    Checked against the signed claims, so it costs no query. The database
+    enforces its own rules regardless - this decides who may ask, not what is
+    allowed to be true.
+    """
+
+    async def dependency(claims: CurrentClaims) -> AccessClaims:
+        missing = [name for name in permissions if name not in claims.permissions]
+        if missing:
+            raise ForbiddenError(
+                f"This action needs the {', '.join(missing)} permission."
+                if len(missing) == 1
+                else f"This action needs the {', '.join(missing)} permissions."
+            )
+        return claims
+
+    return dependency
+
+
+# The store dependency lives in storage.factory: core sits below storage in
+# the layering and must not know which backends exist. The API layer wires it
+# up, and the domain routers take it as StoreDep from there.
