@@ -18,6 +18,7 @@ from wascat.api.deps import current_claims, verify_csrf
 from wascat.domains.catalog.admin_router import router as catalog_admin_router
 from wascat.domains.catalog.router import router as catalog_router
 from wascat.domains.iam.auth_router import router as auth_router
+from wascat.domains.vocab.admin_router import router as vocab_admin_router
 
 public_router = APIRouter()
 public_router.include_router(catalog_router)
@@ -33,5 +34,6 @@ admin_router = APIRouter(
     dependencies=[Depends(current_claims), Depends(verify_csrf)],
 )
 admin_router.include_router(catalog_admin_router)
+admin_router.include_router(vocab_admin_router)
 
 __all__ = ["admin_public_router", "admin_router", "public_router"]
