@@ -463,6 +463,26 @@
             "title": "Releases",
             "default": []
           },
+          "meanCloudCoverOktas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meancloudcoveroktas",
+            "description": "Mean measured cover across the segmented frames."
+          },
+          "maskRegistration": {
+            "items": {
+              "$ref": "#/components/schemas/MaskRegistration"
+            },
+            "type": "array",
+            "title": "Maskregistration",
+            "default": []
+          },
           "locationName": {
             "anyOf": [
               {
@@ -622,6 +642,26 @@
             },
             "type": "array",
             "title": "Releases",
+            "default": []
+          },
+          "meanCloudCoverOktas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meancloudcoveroktas",
+            "description": "Mean measured cover across the segmented frames."
+          },
+          "maskRegistration": {
+            "items": {
+              "$ref": "#/components/schemas/MaskRegistration"
+            },
+            "type": "array",
+            "title": "Maskregistration",
             "default": []
           },
           "locationName": {
@@ -1219,6 +1259,30 @@
           "self"
         ],
         "title": "Links"
+      },
+      "MaskRegistration": {
+        "properties": {
+          "videoId": {
+            "type": "string",
+            "title": "Videoid"
+          },
+          "scale": {
+            "type": "number",
+            "title": "Scale",
+            "description": "Mask size relative to the frame it segments. 1 when registered."
+          },
+          "corrected": {
+            "type": "boolean",
+            "title": "Corrected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "videoId",
+          "scale",
+          "corrected"
+        ],
+        "title": "MaskRegistration"
       },
       "Meta": {
         "properties": {

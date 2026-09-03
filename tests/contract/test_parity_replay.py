@@ -116,7 +116,12 @@ async def client(seeded_engine) -> AsyncIterator[httpx.AsyncClient]:  # type: ig
 # Anything not listed here is compared exactly.
 
 OPAQUE_FIELDS = {"nextCursor", "next"}
-ADDITIVE_FIELDS = {"publishedAt"}
+# 3. Two aggregates on a collection: `meanCloudCoverOktas` and
+#    `maskRegistration`. The collection page derived both by walking the whole
+#    bundled catalogue, which it no longer holds; the database produces them in
+#    the query that already counts the frames. Additive, and the alternative
+#    was shipping every record to the browser to average it there.
+ADDITIVE_FIELDS = {"publishedAt", "meanCloudCoverOktas", "maskRegistration"}
 
 
 def normalise(value: Any) -> Any:

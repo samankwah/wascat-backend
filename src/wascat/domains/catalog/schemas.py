@@ -100,6 +100,15 @@ class ReleaseOut(BaseModel):
     publishedAt: str | None = None  # noqa: N815
 
 
+class MaskRegistration(BaseModel):
+    videoId: str  # noqa: N815
+    scale: Annotated[
+        float,
+        Field(description="Mask size relative to the frame it segments. 1 when registered."),
+    ]
+    corrected: bool
+
+
 class CollectionOut(BaseModel):
     slug: str
     title: str
@@ -115,6 +124,12 @@ class CollectionOut(BaseModel):
     image: str
     imageAlt: str  # noqa: N815
     releases: list[ReleaseOut] = []
+
+    meanCloudCoverOktas: Annotated[  # noqa: N815
+        float | None,
+        Field(description="Mean measured cover across the segmented frames."),
+    ] = None
+    maskRegistration: list[MaskRegistration] = []  # noqa: N815
 
     locationName: str | None = None  # noqa: N815
     location: str | None = None

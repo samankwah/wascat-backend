@@ -48,6 +48,8 @@ async def render_collection(session: AsyncSession, collection: Collection) -> di
         max_frame=stats.max_frame,
         cover_image=rendered_cover["image"] if rendered_cover else None,
         cover_alt=rendered_cover["alt"] if rendered_cover else None,
+        mean_oktas=stats.mean_oktas,
+        mask_registration=stats.mask_registration,
         releases=[
             release_to_json(
                 release,

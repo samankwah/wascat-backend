@@ -121,6 +121,13 @@ class CollectionStats:
     min_frame: int | None
     max_frame: int | None
     total_bytes: int
+    #: Mean measured cloud cover across the segmented frames, or None when the
+    #: sequence has no measurement yet. Averaged in SQL because the page used
+    #: to average the whole in-memory catalogue, which it no longer holds.
+    mean_oktas: float | None
+    #: Per-sequence mask registration: the scale each sequence's masks were
+    #: delivered at relative to the frames they segment.
+    mask_registration: list[tuple[str, float]]
 
 
 async def collection_stats(session: AsyncSession, collection_id: Any) -> CollectionStats:
@@ -136,11 +143,14 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         func.count(ImageRecord.id).filter(ImageRecord.has_mask),
         func.min(ImageRecord.frame_index),
         func.max(ImageRecord.frame_index),
+        func.avg(ImageRecord.cloud_cover_oktas),
     ).where(
         ImageRecord.collection_id == collection_id,
         ImageRecord.retired_at.is_(None),
     )
-    images, with_source, segmented, min_frame, max_frame = (await session.execute(stmt)).one()
+    images, with_source, segmented, min_frame, max_frame, mean_oktas = (
+        await session.execute(stmt)
+    ).one()
 
     artifact_stmt = (
         select(func.count(Artifact.id), func.coalesce(func.sum(Artifact.bytes), 0))
@@ -164,6 +174,20 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
     )
     video_ids = list((await session.execute(video_stmt)).scalars().all())
 
+    registration_stmt = (
+        select(ImageRecord.video_id, func.max(ImageRecord.mask_scale))
+        .where(
+            ImageRecord.collection_id == collection_id,
+            ImageRecord.retired_at.is_(None),
+        )
+        .group_by(ImageRecord.video_id, ImageRecord.video_number)
+        .order_by(ImageRecord.video_number)
+    )
+    mask_registration = [
+        (video_id, float(scale))
+        for video_id, scale in (await session.execute(registration_stmt)).all()
+    ]
+
     return CollectionStats(
         video_ids=video_ids,
         images=images or 0,
@@ -173,6 +197,8 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         min_frame=min_frame,
         max_frame=max_frame,
         total_bytes=int(total_bytes or 0),
+        mean_oktas=float(mean_oktas) if mean_oktas is not None else None,
+        mask_registration=mask_registration,
     )
 
 

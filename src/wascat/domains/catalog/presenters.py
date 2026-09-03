@@ -243,6 +243,8 @@ def collection_to_json(
     cover_image: str | None,
     cover_alt: str | None,
     releases: list[dict[str, Any]],
+    mean_oktas: float | None = None,
+    mask_registration: list[tuple[str, float]] | None = None,
 ) -> dict[str, Any]:
     sequence_label = ", ".join(video_ids)
     location_name = collection.location_name
@@ -269,6 +271,17 @@ def collection_to_json(
         "image": cover_image or "",
         "imageAlt": cover_alt or "",
         "releases": releases,
+        # Added by the migration. The collection page used to average the whole
+        # in-memory catalogue to get this; the database can do it in the same
+        # query that produces the counts.
+        "meanCloudCoverOktas": None if mean_oktas is None else js_number(round(mean_oktas, 6)),
+        # Which sequences had their masks delivered at a different scale from
+        # the frames they segment. Masks are stored exactly as delivered; the
+        # viewer scales the overlay back so the two line up.
+        "maskRegistration": [
+            {"videoId": video_id, "scale": js_number(scale), "corrected": scale > 1}
+            for video_id, scale in (mask_registration or [])
+        ],
     }
 
     if location_name:
