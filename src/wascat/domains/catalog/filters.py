@@ -21,13 +21,29 @@ from typing import Any
 
 from sqlalchemy import Select, and_, exists, func, or_, select
 
-from wascat.domains.catalog.models import Artifact, Collection, ImageRecord, Release
+from wascat.domains.catalog.models import (
+    Artifact,
+    Collection,
+    ImageRecord,
+    Release,
+    ReleaseStatus,
+)
 from wascat.domains.catalog.query import ImageQuery
 
 
-def apply_filters(stmt: Select[Any], query: ImageQuery) -> Select[Any]:
-    """Narrow a statement over image_records according to the query."""
+def apply_filters(
+    stmt: Select[Any], query: ImageQuery, *, include_drafts: bool = False
+) -> Select[Any]:
+    """Narrow a statement over image_records according to the query.
+
+    Drafts are excluded unless asked for. A record in a draft release is
+    working state, not archive: it becomes part of what the API reports when
+    somebody publishes it, which is the whole point of having releases.
+    """
     conditions = []
+
+    if not include_drafts:
+        conditions.append(Release.status != ReleaseStatus.DRAFT)
 
     if query.q:
         # lib/search.ts used String.includes on a lowercased join, so this

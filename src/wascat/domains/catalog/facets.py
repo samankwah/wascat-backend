@@ -18,16 +18,34 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from wascat.core.jsformat import okta_label
-from wascat.domains.catalog.models import Artifact, Collection, ImageRecord
+from wascat.domains.catalog.models import (
+    Artifact,
+    Collection,
+    ImageRecord,
+    Release,
+    ReleaseStatus,
+)
 from wascat.domains.catalog.query import ARTIFACT_TYPES, SEASONS, TIMES_OF_DAY
 
 Facet = dict[str, Any]
 
 
+def _published() -> Any:
+    """Records the public archive contains.
+
+    A draft release is working state. Counting it here would make the facets
+    disagree with the listings, and would announce a release before anyone
+    published it.
+    """
+    return ImageRecord.release_id.in_(
+        select(Release.id).where(Release.status != ReleaseStatus.DRAFT)
+    )
+
+
 async def _counts_by(session: AsyncSession, column: Any) -> dict[Any, int]:
     stmt = (
         select(column, func.count(ImageRecord.id))
-        .where(ImageRecord.retired_at.is_(None))
+        .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(column)
     )
     return {key: count for key, count in (await session.execute(stmt)).all()}
@@ -44,7 +62,7 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
             func.count(ImageRecord.id),
         )
         .join(ImageRecord, ImageRecord.collection_id == Collection.id)
-        .where(ImageRecord.retired_at.is_(None))
+        .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(
             Collection.position, Collection.slug, Collection.location_name, ImageRecord.video_id
         )
@@ -69,7 +87,7 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
     # -- sequences, ordered numerically so vid10 follows vid9 -------------
     sequence_stmt = (
         select(ImageRecord.video_id, func.count(ImageRecord.id))
-        .where(ImageRecord.retired_at.is_(None))
+        .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(ImageRecord.video_id, ImageRecord.video_number)
         .order_by(ImageRecord.video_number)
     )
@@ -106,7 +124,7 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
     artifact_stmt = (
         select(Artifact.type, func.count(func.distinct(Artifact.image_id)))
         .join(ImageRecord, ImageRecord.id == Artifact.image_id)
-        .where(ImageRecord.retired_at.is_(None))
+        .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(Artifact.type)
     )
     artifact_counts: dict[str, int] = {

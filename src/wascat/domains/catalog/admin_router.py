@@ -82,7 +82,9 @@ async def list_images(request: Request, db: SessionDep, claims: CanRead) -> Cano
     # Same query contract as the public endpoint, so a filter a curator built
     # in Explore can be pasted straight into the dashboard.
     query = parse_image_query(dict(request.query_params))
-    page = await repository.list_images(db, query, decode_cursor(query.cursor))
+    # The dashboard sees drafts: a curator has to review the release they
+    # are assembling before publishing it.
+    page = await repository.list_images(db, query, decode_cursor(query.cursor), include_drafts=True)
     return envelope(
         request,
         [service.render_record(row) for row in page.rows],
@@ -101,7 +103,7 @@ async def get_image(
 ) -> CanonicalJSONResponse:
     record = await admin_service.get_record_or_404(db, record_id)
     release = await db.get(Release, record.release_id)
-    row = await repository.get_image(db, record_id)
+    row = await repository.get_image(db, record_id, include_drafts=True)
 
     return envelope(
         request,
@@ -143,7 +145,7 @@ async def update_image(
     )
     await db.commit()
 
-    row = await repository.get_image(db, record_id)
+    row = await repository.get_image(db, record_id, include_drafts=True)
     return envelope(request, service.render_record(row) if row else {"id": record.id})
 
 

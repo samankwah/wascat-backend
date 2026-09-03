@@ -43,6 +43,14 @@ class Page:
     next_cursor: str | None
 
 
+def _published_releases(collection_id: Any) -> Select[Any]:
+    """The releases a collection's public numbers are counted over."""
+    return select(Release.id).where(
+        Release.collection_id == collection_id,
+        Release.status != ReleaseStatus.DRAFT,
+    )
+
+
 def _base_select() -> Select[Any]:
     return (
         select(ImageRecord, Collection.slug, Release.version)
@@ -52,9 +60,19 @@ def _base_select() -> Select[Any]:
     )
 
 
-async def list_images(session: AsyncSession, query: ImageQuery, cursor: Cursor) -> Page:
-    """One page of records, plus the total the whole filter matches."""
-    stmt = apply_filters(_base_select(), query)
+async def list_images(
+    session: AsyncSession,
+    query: ImageQuery,
+    cursor: Cursor,
+    *,
+    include_drafts: bool = False,
+) -> Page:
+    """One page of records, plus the total the whole filter matches.
+
+    ``include_drafts`` is for the dashboard, which has to show a curator
+    the release they are assembling. The public API never sets it.
+    """
+    stmt = apply_filters(_base_select(), query, include_drafts=include_drafts)
 
     # The count runs against the same predicate but without the cursor, so
     # meta.total describes the whole result rather than what is left of it.
@@ -64,6 +82,7 @@ async def list_images(session: AsyncSession, query: ImageQuery, cursor: Cursor) 
         .join(Collection, Collection.id == ImageRecord.collection_id)
         .join(Release, Release.id == ImageRecord.release_id),
         query,
+        include_drafts=include_drafts,
     )
     total = (await session.execute(count_stmt)).scalar_one()
 
@@ -98,8 +117,12 @@ async def list_images(session: AsyncSession, query: ImageQuery, cursor: Cursor) 
     return Page(rows=rows, total=total, next_cursor=next_cursor)
 
 
-async def get_image(session: AsyncSession, record_id: str) -> RecordRow | None:
+async def get_image(
+    session: AsyncSession, record_id: str, *, include_drafts: bool = False
+) -> RecordRow | None:
     stmt = _base_select().where(ImageRecord.id == record_id, ImageRecord.retired_at.is_(None))
+    if not include_drafts:
+        stmt = stmt.where(Release.status != ReleaseStatus.DRAFT)
     row = (await session.execute(stmt)).first()
     if row is None:
         return None
@@ -147,6 +170,7 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
     ).where(
         ImageRecord.collection_id == collection_id,
         ImageRecord.retired_at.is_(None),
+        ImageRecord.release_id.in_(_published_releases(collection_id)),
     )
     images, with_source, segmented, min_frame, max_frame, mean_oktas = (
         await session.execute(stmt)
@@ -158,6 +182,7 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         .where(
             ImageRecord.collection_id == collection_id,
             ImageRecord.retired_at.is_(None),
+            ImageRecord.release_id.in_(_published_releases(collection_id)),
             Artifact.type.in_(("source", "mask")),
         )
     )
@@ -168,6 +193,7 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         .where(
             ImageRecord.collection_id == collection_id,
             ImageRecord.retired_at.is_(None),
+            ImageRecord.release_id.in_(_published_releases(collection_id)),
         )
         .group_by(ImageRecord.video_id, ImageRecord.video_number)
         .order_by(ImageRecord.video_number)
@@ -179,6 +205,7 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         .where(
             ImageRecord.collection_id == collection_id,
             ImageRecord.retired_at.is_(None),
+            ImageRecord.release_id.in_(_published_releases(collection_id)),
         )
         .group_by(ImageRecord.video_id, ImageRecord.video_number)
         .order_by(ImageRecord.video_number)
@@ -219,6 +246,7 @@ async def cover_record(session: AsyncSession, collection_id: Any) -> RecordRow |
             .where(
                 ImageRecord.collection_id == collection_id,
                 ImageRecord.retired_at.is_(None),
+                ImageRecord.release_id.in_(_published_releases(collection_id)),
                 *condition,
             )
             .order_by(ImageRecord.video_number, ImageRecord.frame_index)
