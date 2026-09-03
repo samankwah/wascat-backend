@@ -284,22 +284,18 @@ class TestDerivedColumns:
         self, session: AsyncSession
     ) -> None:
         release = await make_release(session)
+        created = []
         for video_id, frame in (("vid2", 1), ("vid10", 1)):
             record = make_record(release, video_id=video_id, frame_index=frame)
             session.add(record)
+            created.append(record)
         await session.flush()
-        keys = sorted(
-            (
-                await session.execute(
-                    __import__("sqlalchemy").text(
-                        "SELECT sort_key FROM image_records ORDER BY sort_key"
-                    )
-                )
-            )
-            .scalars()
-            .all()
-        )
-        # "vid10" must sort after "vid2", which zero padding guarantees.
+        for record in created:
+            await session.refresh(record)
+
+        # "vid10" must sort after "vid2", which zero padding guarantees; the
+        # lexical ordering of the ids themselves would put it before.
+        keys = sorted(record.sort_key for record in created)
         assert keys == ["002-0000001", "010-0000001"]
 
     async def test_search_text_reproduces_the_typescript_join(self, session: AsyncSession) -> None:

@@ -34,7 +34,7 @@ DEFAULT_TEST_URL = "postgresql+asyncpg://wascat:wascat@localhost:5432/wascat_tes
 ADMIN_URL = "postgresql+asyncpg://wascat:wascat@localhost:5432/postgres"
 
 
-def test_database_url() -> str:
+def resolve_database_url() -> str:
     return os.environ.get("WASCAT_TEST_DATABASE_URL", DEFAULT_TEST_URL)
 
 
@@ -98,7 +98,7 @@ def _migrate(url: str) -> None:
 
 @pytest.fixture(scope="session")
 async def engine():  # type: ignore[no-untyped-def]
-    url = test_database_url()
+    url = resolve_database_url()
     try:
         await _ensure_database(url)
     except OperationalError as exc:  # pragma: no cover - environment dependent

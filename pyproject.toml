@@ -84,7 +84,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "PLR2004", "S105", "S106"]
+# PLC0415: fixtures import the app after setting environment variables, so
+# the import has to happen inside the fixture rather than at module load.
+"tests/**" = ["S101", "PLR2004", "S105", "S106", "PLC0415"]
 "migrations/**" = ["E", "F401", "N999", "I001"]
 "src/wascat/domains/ingest/optics.py" = ["N806"]  # maths reads better with capitals
 # The presenter reproduces strings the site renders verbatim, including an

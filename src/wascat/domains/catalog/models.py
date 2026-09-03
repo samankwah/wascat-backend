@@ -271,7 +271,17 @@ class ImageRecord(Base):
         Index("ix_image_records_collection_sort", "collection_id", "sort_key", "id"),
         Index("ix_image_records_video_sort", "video_id", "sort_key", "id"),
         Index("ix_image_records_segmented_sort", "has_mask", "sort_key", "id"),
-        Index("ix_image_records_frame", "video_id", "frame_index", unique=True),
+        # A frame is unique *within a release*, not across the archive: a
+        # later release legitimately re-ingests vid1 frame 5, whether
+        # re-measured or re-encoded. Making this global would make the
+        # second release of any sequence impossible to create.
+        Index(
+            "ix_image_records_release_frame",
+            "release_id",
+            "video_id",
+            "frame_index",
+            unique=True,
+        ),
         # Invariants 7 and 8 as physical indexes: a record with no measurement
         # or no timestamp is simply not in the index the filter uses, so it
         # cannot be returned by a cloud-cover or date query by accident.
