@@ -27,9 +27,12 @@ import unicodedata
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from typing import Any
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, select, type_coerce, update
+from sqlalchemy.dialects.postgresql import ARRAY, TEXT
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from wascat.core.config import get_settings
 from wascat.core.errors import ConflictError, ForbiddenError, NotFoundError
@@ -43,6 +46,11 @@ from wascat.domains.vocab.models import (
 
 #: Which record column each vocabulary classifies. The denormalised label
 #: columns are what the filters read, so a rename has to update them too.
+#:
+#: CONDITION_TAG is deliberately absent: a record carries many tags in an
+#: array column rather than one label, so it is counted and merged through
+#: `condition_tags` instead. Handling it here would mean pretending an array
+#: is a scalar.
 LABEL_COLUMNS: dict[VocabKind, str] = {
     VocabKind.SEASON: "season_label",
     VocabKind.TIME_OF_DAY: "time_of_day_label",
@@ -80,12 +88,53 @@ def slugify(label: str) -> str:
     return slug
 
 
+def _has_tag(tag: str) -> Any:
+    """Records carrying one condition tag.
+
+    Written through the PostgreSQL ARRAY comparator rather than
+    ``column.any(...)``: on a mapped attribute that name resolves to the
+    relationship overload, which means something entirely different.
+    """
+    return type_coerce(ImageRecord.condition_tags, ARRAY(TEXT)).contains([tag])
+
+
+async def _tag_counts(session: AsyncSession) -> dict[str, int]:
+    """How many records carry each condition tag.
+
+    Tags are an array, so this unnests rather than grouping on a column.
+    """
+    tag = func.unnest(ImageRecord.condition_tags).label("tag")
+    stmt = (
+        select(tag, func.count())
+        .select_from(ImageRecord)
+        .where(ImageRecord.retired_at.is_(None))
+        .group_by(tag)
+    )
+    return {value: count for value, count in (await session.execute(stmt)).all()}
+
+
 async def list_terms(session: AsyncSession, kind: VocabKind) -> list[TermUsage]:
     """Every term of one kind, with the number of records using it.
 
     The count is what makes the page actionable: a term with no records can be
     removed freely, and one with four hundred cannot be removed at all.
     """
+    if kind is VocabKind.CONDITION_TAG:
+        tag_counts = await _tag_counts(session)
+        terms = (
+            (
+                await session.execute(
+                    select(VocabularyTerm)
+                    .options(selectinload(VocabularyTerm.aliases))
+                    .where(VocabularyTerm.kind == kind)
+                    .order_by(VocabularyTerm.position, VocabularyTerm.label)
+                )
+            )
+            .scalars()
+            .all()
+        )
+        return [TermUsage(term=term, records=tag_counts.get(term.label, 0)) for term in terms]
+
     label_column = getattr(ImageRecord, LABEL_COLUMNS[kind])
 
     counts: dict[str | None, int] = {
@@ -103,6 +152,9 @@ async def list_terms(session: AsyncSession, kind: VocabKind) -> list[TermUsage]:
         (
             await session.execute(
                 select(VocabularyTerm)
+                # Eager: callers render the aliases, and a lazy load here
+                # would raise MissingGreenlet in async context.
+                .options(selectinload(VocabularyTerm.aliases))
                 .where(VocabularyTerm.kind == kind)
                 .order_by(VocabularyTerm.position, VocabularyTerm.label)
             )
@@ -115,13 +167,25 @@ async def list_terms(session: AsyncSession, kind: VocabKind) -> list[TermUsage]:
 
 
 async def get_term(session: AsyncSession, term_id: uuid.UUID) -> VocabularyTerm:
-    term = await session.get(VocabularyTerm, term_id)
+    term = await session.get(
+        VocabularyTerm, term_id, options=[selectinload(VocabularyTerm.aliases)]
+    )
     if term is None:
         raise NotFoundError("Vocabulary term not found")
     return term
 
 
 async def count_usage(session: AsyncSession, term: VocabularyTerm) -> int:
+    if term.kind is VocabKind.CONDITION_TAG:
+        return (
+            await session.execute(
+                select(func.count(ImageRecord.id)).where(
+                    _has_tag(term.label),
+                    ImageRecord.retired_at.is_(None),
+                )
+            )
+        ).scalar_one()
+
     label_column = getattr(ImageRecord, LABEL_COLUMNS[term.kind])
     return (
         await session.execute(
@@ -203,10 +267,19 @@ async def rename_term(
     # breaking somebody's bookmark or a published query in a paper.
     await _record_alias(session, term, previous)
 
-    label_column = getattr(ImageRecord, LABEL_COLUMNS[term.kind])
-    await session.execute(
-        update(ImageRecord).where(label_column == previous).values({label_column: label})
-    )
+    if term.kind is VocabKind.CONDITION_TAG:
+        # A tag lives among others in an array, so it is replaced in place
+        # rather than overwriting the column.
+        await session.execute(
+            update(ImageRecord)
+            .where(_has_tag(previous))
+            .values(condition_tags=func.array_replace(ImageRecord.condition_tags, previous, label))
+        )
+    else:
+        label_column = getattr(ImageRecord, LABEL_COLUMNS[term.kind])
+        await session.execute(
+            update(ImageRecord).where(label_column == previous).values({label_column: label})
+        )
     await session.flush()
     return term
 
@@ -232,6 +305,24 @@ async def merge_terms(
             f"{loser.label!r} is one of the values the public API validates "
             "against, so it cannot be merged away."
         )
+
+    if loser.kind is VocabKind.CONDITION_TAG:
+        result = await session.execute(
+            update(ImageRecord)
+            .where(_has_tag(loser.label))
+            .values(
+                condition_tags=func.array_replace(
+                    ImageRecord.condition_tags, loser.label, winner.label
+                )
+            )
+        )
+        moved = result.rowcount if hasattr(result, "rowcount") else 0
+        loser.merged_into_id = winner.id
+        loser.retired_at = datetime.now(UTC)
+        await _record_alias(session, winner, loser.label)
+        await _record_alias(session, winner, loser.slug)
+        await session.flush()
+        return moved or 0
 
     id_column = getattr(ImageRecord, ID_COLUMNS[loser.kind])
     label_column = getattr(ImageRecord, LABEL_COLUMNS[loser.kind])
