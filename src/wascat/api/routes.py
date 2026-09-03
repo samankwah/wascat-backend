@@ -15,6 +15,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends
 
 from wascat.api.deps import current_claims, verify_csrf
+from wascat.domains.catalog.admin_router import router as catalog_admin_router
 from wascat.domains.catalog.router import router as catalog_router
 from wascat.domains.iam.auth_router import router as auth_router
 
@@ -31,5 +32,6 @@ admin_router = APIRouter(
     prefix="/api/v1/admin",
     dependencies=[Depends(current_claims), Depends(verify_csrf)],
 )
+admin_router.include_router(catalog_admin_router)
 
 __all__ = ["admin_public_router", "admin_router", "public_router"]
