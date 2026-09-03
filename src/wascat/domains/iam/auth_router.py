@@ -32,8 +32,22 @@ from wascat.domains.iam.service import Session
 router = APIRouter(prefix="/auth", tags=["admin:auth"])
 
 #: The refresh token is only ever sent to the endpoints that rotate it, so it
-#: is not attached to every API call the dashboard makes.
+#: is not attached to every API call the dashboard makes. This is where narrow
+#: scoping earns its keep: it is the long-lived credential.
 REFRESH_COOKIE_PATH = "/api/v1/admin/auth"
+
+#: The access and CSRF cookies are site-wide.
+#:
+#: Scoping them to /api/v1 was the first instinct and it was wrong: the
+#: dashboard's own pages live under /admin, and both the proxy that redirects
+#: signed-out visitors and the server-side session read run there. A cookie
+#: the page cannot see is a session the page cannot check, which pushed the
+#: decision back to the client where it does not belong.
+#:
+#: The access token is httpOnly and short-lived, so the cost of the wider path
+#: is that it rides along with requests for pages it is not needed on - not
+#: that it becomes readable.
+SESSION_COOKIE_PATH = "/"
 
 
 class Credentials(BaseModel):
@@ -67,7 +81,7 @@ def _set_session_cookies(response: Response, session: Session, csrf_token: str) 
         session.access_token,
         httponly=True,
         samesite="lax",
-        path="/api/v1",
+        path=SESSION_COOKIE_PATH,
         expires=session.access_expires_at,
         **common,
     )
@@ -90,7 +104,7 @@ def _set_session_cookies(response: Response, session: Session, csrf_token: str) 
         # is precisely what a cross-site page cannot do.
         httponly=False,
         samesite="lax",
-        path="/api/v1",
+        path=SESSION_COOKIE_PATH,
         expires=session.refresh_expires_at,
         **common,
     )
@@ -99,9 +113,9 @@ def _set_session_cookies(response: Response, session: Session, csrf_token: str) 
 def _clear_session_cookies(response: Response) -> None:
     settings = get_settings()
     for name, path in (
-        (ACCESS_COOKIE_NAME, "/api/v1"),
+        (ACCESS_COOKIE_NAME, SESSION_COOKIE_PATH),
         (REFRESH_COOKIE_NAME, REFRESH_COOKIE_PATH),
-        (CSRF_COOKIE_NAME, "/api/v1"),
+        (CSRF_COOKIE_NAME, SESSION_COOKIE_PATH),
     ):
         response.delete_cookie(name, path=path, domain=settings.cookie_domain)
 

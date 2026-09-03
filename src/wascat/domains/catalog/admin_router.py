@@ -239,6 +239,16 @@ async def list_collections(
                 "images": stats.images,
                 "segmented": stats.segmented,
                 "videoIds": stats.video_ids,
+                # The same aggregates the public payload carries, so the
+                # dashboard can show what the pipeline measured next to the
+                # fields a curator supplies.
+                "meanCloudCoverOktas": (
+                    None if stats.mean_oktas is None else round(stats.mean_oktas, 6)
+                ),
+                "maskRegistration": [
+                    {"videoId": video_id, "scale": scale, "corrected": scale > 1}
+                    for video_id, scale in stats.mask_registration
+                ],
                 "releases": [_release_json(release) for release in collection.releases],
             }
         )

@@ -226,13 +226,25 @@ class TestHttpSurface:
             if header.startswith(CSRF_COOKIE_NAME)
         )
         assert "HttpOnly" not in csrf_header
-        # The refresh token goes only to the endpoints that rotate it.
+        # The refresh token goes only to the endpoints that rotate it: it is
+        # the long-lived credential, so this is where narrow scoping matters.
         refresh_header = next(
             header
             for header in response.headers.get_list("set-cookie")
             if header.startswith(REFRESH_COOKIE_NAME)
         )
         assert "Path=/api/v1/admin/auth" in refresh_header
+
+        # The access cookie is site-wide, because the dashboard pages live at
+        # /admin and both the proxy and the server-side session read need it
+        # there. Scoping it to /api/v1 made the session invisible to the very
+        # pages it protects.
+        access_header = next(
+            header
+            for header in response.headers.get_list("set-cookie")
+            if header.startswith(ACCESS_COOKIE_NAME)
+        )
+        assert "Path=/;" in access_header or access_header.rstrip().endswith("Path=/")
 
     async def test_the_response_names_what_the_user_may_do(
         self, client: httpx.AsyncClient, user: User
