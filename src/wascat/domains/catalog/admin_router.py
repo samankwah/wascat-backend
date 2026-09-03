@@ -8,17 +8,22 @@ matters - if the change rolls back, so does the claim that it happened.
 from __future__ import annotations
 
 import uuid
-from typing import Annotated, Any
+from typing import Annotated, Any, cast
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 
-from wascat.api.deps import SessionDep, require_permission
+from wascat.api.deps import SessionDep, StoreDep, require_permission
+from wascat.core.config import get_settings
 from wascat.core.envelope import CanonicalJSONResponse, envelope
-from wascat.core.errors import ConflictError
+from wascat.core.errors import (
+    ConflictError,
+    PayloadTooLargeError,
+    UnprocessableUploadError,
+)
 from wascat.core.pagination import decode_cursor
 from wascat.core.security.tokens import AccessClaims
 from wascat.domains.audit import service as audit
-from wascat.domains.catalog import admin_service, repository, service
+from wascat.domains.catalog import admin_service, repository, service, uploads
 from wascat.domains.catalog.admin_schemas import (
     BulkImageEdit,
     CollectionCreate,
@@ -205,6 +210,134 @@ async def restore_image(
     )
     await db.commit()
     return envelope(request, {"id": record.id, "retired": False})
+
+
+# ---------------------------------------------------------------------------
+# Artifacts
+# ---------------------------------------------------------------------------
+
+#: Read in chunks with a running total, so an oversized upload is refused
+#: after a megabyte rather than after the whole thing has been buffered.
+_UPLOAD_CHUNK = 1024 * 1024
+
+
+async def _read_upload(upload: UploadFile, limit: int) -> bytes:
+    chunks: list[bytes] = []
+    total = 0
+    while chunk := await upload.read(_UPLOAD_CHUNK):
+        total += len(chunk)
+        if total > limit:
+            raise PayloadTooLargeError(
+                f"That file is larger than the {limit / 1024**2:.0f} MB limit."
+            )
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+@router.put(
+    "/images/{record_id}/artifacts/{artifact_type}",
+    summary="Attach or replace a frame or mask",
+)
+async def upload_artifact(
+    record_id: str,
+    artifact_type: str,
+    request: Request,
+    db: SessionDep,
+    store: StoreDep,
+    claims: CanWrite,
+    file: Annotated[UploadFile, File()],
+) -> CanonicalJSONResponse:
+    if artifact_type not in ("source", "mask"):
+        raise UnprocessableUploadError(
+            "An artifact is either a 'source' frame or a 'mask'. Thumbnails and "
+            "WebP renditions are generated, not uploaded."
+        )
+
+    record = await admin_service.get_record_or_404(db, record_id)
+    data = await _read_upload(file, get_settings().max_upload_bytes)
+
+    result = await uploads.replace_artifact(
+        db,
+        store,
+        record=record,
+        artifact_type=cast("uploads.PrimaryType", artifact_type),
+        data=data,
+    )
+
+    await audit.record(
+        db,
+        action=f"artifact.{'replace' if result.replaced else 'attach'}",
+        entity_type="image_record",
+        entity_id=record.id,
+        after={
+            "type": result.artifact_type,
+            "checksum": result.checksum,
+            "bytes": result.bytes,
+            "dimensions": f"{result.width}x{result.height}",
+        },
+        summary=(
+            f"{'replaced' if result.replaced else 'attached'} the "
+            f"{result.artifact_type} ({file.filename})"
+        ),
+        **_actor(request, claims),
+    )
+    await db.commit()
+
+    return envelope(
+        request,
+        {
+            "id": result.record_id,
+            "type": result.artifact_type,
+            "objectKey": result.object_key,
+            "checksum": result.checksum,
+            "bytes": result.bytes,
+            "width": result.width,
+            "height": result.height,
+            "replaced": result.replaced,
+            "derivatives": len(result.derivatives),
+            # Replacing a mask invalidates the measurement taken from the old
+            # one, so the dashboard needs to say so rather than leaving a
+            # stale number on screen.
+            "measurementCleared": result.artifact_type == "mask" and result.replaced,
+        },
+    )
+
+
+@router.delete(
+    "/images/{record_id}/artifacts/{artifact_type}",
+    summary="Remove a frame or mask",
+)
+async def remove_artifact(
+    record_id: str,
+    artifact_type: str,
+    request: Request,
+    db: SessionDep,
+    store: StoreDep,
+    claims: CanWrite,
+) -> CanonicalJSONResponse:
+    if artifact_type not in ("source", "mask"):
+        raise UnprocessableUploadError("An artifact is either a 'source' or a 'mask'.")
+
+    record = await admin_service.get_record_or_404(db, record_id)
+    await uploads.delete_artifact(
+        db,
+        store,
+        record=record,
+        artifact_type=cast("uploads.PrimaryType", artifact_type),
+    )
+
+    await audit.record(
+        db,
+        action="artifact.remove",
+        entity_type="image_record",
+        entity_id=record.id,
+        before={"type": artifact_type},
+        summary=f"removed the {artifact_type}",
+        **_actor(request, claims),
+    )
+    await db.commit()
+
+    return envelope(request, {"id": record.id, "removed": artifact_type})
 
 
 # ---------------------------------------------------------------------------

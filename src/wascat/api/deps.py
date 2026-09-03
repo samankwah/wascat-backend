@@ -8,6 +8,7 @@ from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from wascat.core.config import get_settings
 from wascat.core.db import get_session
 from wascat.core.errors import ForbiddenError, UnauthorizedError
 from wascat.core.security.csrf import (
@@ -17,6 +18,9 @@ from wascat.core.security.csrf import (
     tokens_match,
 )
 from wascat.core.security.tokens import AccessClaims, InvalidTokenError, decode_access_token
+from wascat.storage.base import ObjectStore
+from wascat.storage.local import LocalObjectStore
+from wascat.storage.s3 import S3ObjectStore
 
 ACCESS_COOKIE_NAME = "wascat_at"
 REFRESH_COOKIE_NAME = "wascat_rt"
@@ -94,3 +98,42 @@ def require_permission(*permissions: str) -> Callable[..., Awaitable[AccessClaim
         return claims
 
     return dependency
+
+
+# ---------------------------------------------------------------------------
+# Object storage
+# ---------------------------------------------------------------------------
+#
+# One client for the process, opened on first use. Creating an aiobotocore
+# client loads service models and resolves endpoints, which is slow enough
+# that doing it per request is the classic throughput bug in async S3 code.
+_store: ObjectStore | None = None
+
+
+async def get_store() -> ObjectStore:
+    global _store  # noqa: PLW0603
+    if _store is not None:
+        return _store
+
+    settings = get_settings()
+    if settings.storage_backend == "local":
+        _store = LocalObjectStore(
+            settings.local_storage_root,
+            public_base_url=settings.public_asset_base_url,
+        )
+    else:
+        s3 = S3ObjectStore.from_settings()
+        await s3.connect()
+        _store = s3
+    return _store
+
+
+async def close_store() -> None:
+    """Called from the app lifespan on shutdown."""
+    global _store  # noqa: PLW0603
+    if isinstance(_store, S3ObjectStore):
+        await _store.close()
+    _store = None
+
+
+StoreDep = Annotated[ObjectStore, Depends(get_store)]
