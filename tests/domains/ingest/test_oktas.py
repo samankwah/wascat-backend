@@ -103,18 +103,32 @@ class TestOktaLabel:
     @pytest.mark.parametrize(
         ("okta", "expected"),
         [
+            # The synoptic bands. These boundaries are what the terms mean, so
+            # a change here is a change to the reported observation, not to
+            # wording: 2/8 is "Few" and 3/8 is "Scattered", and no okta count
+            # sits between them.
             (0, "0/8 · Clear"),
-            (1, "1/8"),
-            (4, "4/8"),
-            (7, "7/8"),
+            (1, "1/8 · Few"),
+            (2, "2/8 · Few"),
+            (3, "3/8 · Scattered"),
+            (4, "4/8 · Scattered"),
+            (5, "5/8 · Broken"),
+            (6, "6/8 · Broken"),
+            (7, "7/8 · Broken"),
             (8, "8/8 · Overcast"),
         ],
     )
     def test_label(self, okta: int, expected: str) -> None:
         assert okta_label(okta) == expected
 
+    def test_every_bucket_is_named(self) -> None:
+        # The scale used to name only its two ends, leaving 1-7 as bare
+        # arithmetic. Nothing in the archive's range should read as a ratio.
+        for okta in range(9):
+            assert " · " in okta_label(okta), f"{okta} oktas has no term"
+
     def test_separator_is_a_middle_dot(self) -> None:
         # U+00B7, not a hyphen and not a full stop. It reaches the browser via
         # the record's `tags` array, so it is contract.
-        assert "·" in okta_label(0)
-        assert "·" in okta_label(8)
+        for okta in range(9):
+            assert "·" in okta_label(okta)

@@ -46,16 +46,38 @@ def oktas_from_fraction(fraction: float | Decimal) -> int:
     return min(8, max(0, js_round(float(fraction) * 8)))
 
 
+# The synoptic sky-cover terms, in eighths. An okta count is reported as an
+# amount, not just a fraction: 3/8 is "Scattered" to a meteorologist and a bare
+# ratio to everyone else. Only the two ends were named before, so the middle of
+# the scale read as arithmetic.
+#
+# The bands are the standard ones - Clear, Few (1-2), Scattered (3-4),
+# Broken (5-7), Overcast (8) - and the boundaries are not adjustable: they are
+# what "scattered" means, not a presentation choice.
+_OKTA_TERMS = {
+    0: "Clear",
+    1: "Few",
+    2: "Few",
+    3: "Scattered",
+    4: "Scattered",
+    5: "Broken",
+    6: "Broken",
+    7: "Broken",
+    8: "Overcast",
+}
+
+
 def okta_label(okta: int) -> str:
     """Human label for an okta bucket. Mirrors ``oktaLabel`` in lib/vocab.ts.
 
     The separator is U+00B7 MIDDLE DOT, not a hyphen or a full stop.
+
+    The 0 and 8 renderings are unchanged from the original TypeScript, so the
+    two labels the archive has always published still read the same; 1-7 gained
+    the term they were always missing.
     """
-    if okta == 0:
-        return "0/8 · Clear"
-    if okta == 8:
-        return "8/8 · Overcast"
-    return f"{okta}/8"
+    term = _OKTA_TERMS.get(okta)
+    return f"{okta}/8 · {term}" if term else f"{okta}/8"
 
 
 def js_number(value: float | Decimal) -> int | float:

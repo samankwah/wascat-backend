@@ -96,8 +96,20 @@ async def client(seeded_engine) -> AsyncIterator[httpx.AsyncClient]:  # type: ig
 
 
 # ---------------------------------------------------------------------------
-# The two deliberate differences
+# The deliberate differences
 # ---------------------------------------------------------------------------
+#
+# 0. Okta labels name the whole scale. The recorded implementation named only
+#    its two ends - "0/8 · Clear" and "8/8 · Overcast" - and printed 1-7 as
+#    bare fractions, so most of the archive reported a ratio where it meant an
+#    observation. They now carry the synoptic terms: Few (1-2), Scattered
+#    (3-4), Broken (5-7). The two ends are byte-identical to what was recorded.
+#
+#    This one is unlike the others below: the fixtures were *rewritten* rather
+#    than exempted, because the strings are still contract and still asserted
+#    exactly - they simply assert a corrected value. The rewrite touched 41
+#    strings across 10 files and changed nothing but the label, so a future
+#    drift in `alt`, `tags` or a facet label still fails here.
 #
 # 1. Cursors are opaque. The old implementation encoded {"offset": n} and
 #    sliced an in-memory array; this one encodes a keyset over (sort_key, id)
