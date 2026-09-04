@@ -232,7 +232,17 @@ async def create_term(
     ).scalar_one()
 
     term = VocabularyTerm(
-        kind=kind, slug=slug, label=label, description=description, position=position
+        kind=kind,
+        slug=slug,
+        label=label,
+        description=description,
+        position=position,
+        # Set explicitly, though a new term has none by definition: assigning
+        # the collection marks the relationship loaded. Without it the caller
+        # that serialises this term reaches for `.aliases`, SQLAlchemy tries a
+        # lazy load on an async session, and the whole request fails with
+        # MissingGreenlet - which is what `POST /admin/vocabulary/{kind}` did.
+        aliases=[],
     )
     session.add(term)
     await session.flush()
