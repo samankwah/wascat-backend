@@ -53,16 +53,17 @@ def store(tmp_path: Path) -> LocalObjectStore:
 #:
 #: artifacts.object_key is unique across the whole table, and the contract
 #: suite seeds the real catalogue into the same database - so a fixture using
-#: vid1 with a small frame index eventually collides with a genuine
-#: "frames/vid1/523-source.jpg". Reserving a high sequence keeps generated
-#: keys and real keys in separate spaces.
-TEST_VIDEO = "vid9000"
+#: seq-001 with a small frame index eventually collides with a genuine
+#: "frames/seq-001/523-source.jpg". Reserving a high sequence keeps generated
+#: keys and real keys in separate spaces. 900 rather than 9000: the format is
+#: three digits, undated.
+TEST_SEQUENCE = "seq-900"
 
 
 async def make_record(
     session: AsyncSession, *, published: bool = False, with_mask: bool = False
 ) -> ImageRecord:
-    collection = Collection(slug=f"vid{uuid.uuid4().int % 100000}")
+    collection = Collection(slug=f"test-{uuid.uuid4().int % 100000}")
     session.add(collection)
     await session.flush()
 
@@ -74,7 +75,7 @@ async def make_record(
         id=f"WAS-T{uuid.uuid4().hex[:8].upper()}",
         release_id=release.id,
         collection_id=collection.id,
-        video_id=TEST_VIDEO,
+        sequence_id=TEST_SEQUENCE,
         # uuid rather than a small random int: the key space has to be wide
         # enough that repeated runs against a persistent database do not
         # collide by birthday.
@@ -94,7 +95,7 @@ async def make_record(
             image_id=record.id,
             type="source",
             media_type="image/jpeg",
-            object_key=f"frames/{TEST_VIDEO}/{record.frame_index}-source.jpg",
+            object_key=f"frames/{TEST_SEQUENCE}/{record.frame_index}-source.jpg",
             checksum="a" * 64,
             bytes=23133,
             width=FRAME_SIZE[0],
@@ -107,7 +108,7 @@ async def make_record(
                 image_id=record.id,
                 type="mask",
                 media_type="image/jpeg",
-                object_key=f"frames/{TEST_VIDEO}/{record.frame_index}-mask.jpg",
+                object_key=f"frames/{TEST_SEQUENCE}/{record.frame_index}-mask.jpg",
                 checksum="b" * 64,
                 bytes=21265,
                 width=FRAME_SIZE[0],

@@ -14,28 +14,28 @@
   "body": {
     "data": {
       "id": "WAS-V01-F2",
-      "collection": "vid1",
+      "collection": "seq-001",
       "release": "1.0",
-      "videoId": "vid1",
+      "sequenceId": "seq-001",
       "frameIndex": 2,
       "maskScale": 1,
       "width": 640,
       "height": 360,
-      "image": "/frames/vid1/2-source.jpg",
-      "sourceUrl": "/frames/vid1/2-source.jpg",
+      "image": "/frames/seq-001/2-source.jpg",
+      "sourceUrl": "/frames/seq-001/2-source.jpg",
       "hasSource": true,
       "hasMask": false,
-      "alt": "All-sky camera frame 2 of sequence vid1, not yet segmented.",
+      "alt": "All-sky camera frame 2 of sequence 01, not yet segmented.",
       "tags": [
-        "vid1",
+        "seq-001",
         "unsegmented",
         "source only"
       ],
       "artifacts": [
         {
           "type": "source",
-          "url": "/frames/vid1/2-source.jpg",
-          "objectKey": "frames/vid1/2-source.jpg",
+          "url": "/frames/seq-001/2-source.jpg",
+          "objectKey": "frames/seq-001/2-source.jpg",
           "bytes": 22711,
           "checksum": "273111b4551709f24e40da6051d2a2541ad822b2531469e78a1c048103cb60df",
           "mediaType": "image/jpeg"

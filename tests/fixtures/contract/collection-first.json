@@ -2,8 +2,8 @@
   "name": "collection-first",
   "request": {
     "method": "GET",
-    "path": "/api/v1/collections/vid1",
-    "url": "https://wascat.example.org/api/v1/collections/vid1"
+    "path": "/api/v1/collections/seq-001",
+    "url": "https://wascat.example.org/api/v1/collections/seq-001"
   },
   "status": 200,
   "headers": {
@@ -13,27 +13,36 @@
   },
   "body": {
     "data": {
-      "slug": "vid1",
-      "title": "Capture sequence vid1",
-      "shortTitle": "vid1",
-      "kicker": "ALL-SKY CLOUD SEGMENTATION · VID1",
-      "description": "323 all-sky frames from capture sequence vid1. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+      "slug": "seq-001",
+      "title": "Capture sequence 01",
+      "shortTitle": "Sequence 01",
+      "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 01",
+      "description": "323 all-sky frames from capture sequence 01. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 2–3,611 · 223 of 323 segmented",
-      "videoIds": [
-        "vid1"
+      "sequenceIds": [
+        "seq-001"
       ],
       "images": 323,
       "artifacts": 493,
       "withSource": 270,
       "segmented": 223,
-      "image": "/frames/vid1/5-source.jpg",
-      "imageAlt": "All-sky camera frame 5 of sequence vid1, measured at 4/8 cloud cover.",
+      "image": "/frames/seq-001/5-source.jpg",
+      "imageAlt": "All-sky camera frame 5 of sequence 01, measured at 4/8 · Scattered cloud cover.",
       "releases": [
         {
           "version": "1.0",
           "images": 323,
           "size": "10.4 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
+        }
+      ],
+      "meanCloudCoverOktas": 4.650224,
+      "maskRegistration": [
+        {
+          "sequenceId": "seq-001",
+          "scale": 1,
+          "corrected": false
         }
       ]
     },
@@ -42,7 +51,7 @@
       "generatedAt": "<GENERATED_AT>"
     },
     "links": {
-      "self": "https://wascat.example.org/api/v1/collections/vid1"
+      "self": "https://wascat.example.org/api/v1/collections/seq-001"
     }
   }
 }

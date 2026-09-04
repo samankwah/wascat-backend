@@ -15,104 +15,115 @@
     "data": {
       "collections": [
         {
-          "value": "vid1",
-          "label": "vid1",
+          "value": "seq-001",
+          "label": "Sequence 01",
           "count": 323
         },
         {
-          "value": "vid2",
-          "label": "vid2",
+          "value": "seq-002",
+          "label": "Sequence 02",
           "count": 688
         },
         {
-          "value": "vid3",
-          "label": "vid3",
+          "value": "seq-003",
+          "label": "Sequence 03",
           "count": 166
         },
         {
-          "value": "vid4",
-          "label": "vid4",
+          "value": "seq-004",
+          "label": "Sequence 04",
           "count": 132
         },
         {
-          "value": "vid5",
-          "label": "vid5",
+          "value": "seq-005",
+          "label": "Sequence 05",
           "count": 136
         },
         {
-          "value": "vid6",
-          "label": "vid6",
+          "value": "seq-006",
+          "label": "Sequence 06",
           "count": 119
         },
         {
-          "value": "vid7",
-          "label": "vid7",
+          "value": "seq-007",
+          "label": "Sequence 07",
           "count": 206
         },
         {
-          "value": "vid8",
-          "label": "vid8",
+          "value": "seq-008",
+          "label": "Sequence 08",
           "count": 161
         },
         {
-          "value": "vid9",
-          "label": "vid9",
+          "value": "seq-009",
+          "label": "Sequence 09",
           "count": 68
         },
         {
-          "value": "vid10",
-          "label": "vid10",
+          "value": "seq-010",
+          "label": "Sequence 10",
           "count": 219
         },
         {
-          "value": "vid11",
-          "label": "vid11",
+          "value": "seq-011",
+          "label": "Sequence 11",
           "count": 204
         }
       ],
       "sequences": [
         {
-          "value": "vid1",
+          "value": "seq-001",
+          "label": "Sequence 01",
           "count": 323
         },
         {
-          "value": "vid2",
+          "value": "seq-002",
+          "label": "Sequence 02",
           "count": 688
         },
         {
-          "value": "vid3",
+          "value": "seq-003",
+          "label": "Sequence 03",
           "count": 166
         },
         {
-          "value": "vid4",
+          "value": "seq-004",
+          "label": "Sequence 04",
           "count": 132
         },
         {
-          "value": "vid5",
+          "value": "seq-005",
+          "label": "Sequence 05",
           "count": 136
         },
         {
-          "value": "vid6",
+          "value": "seq-006",
+          "label": "Sequence 06",
           "count": 119
         },
         {
-          "value": "vid7",
+          "value": "seq-007",
+          "label": "Sequence 07",
           "count": 206
         },
         {
-          "value": "vid8",
+          "value": "seq-008",
+          "label": "Sequence 08",
           "count": 161
         },
         {
-          "value": "vid9",
+          "value": "seq-009",
+          "label": "Sequence 09",
           "count": 68
         },
         {
-          "value": "vid10",
+          "value": "seq-010",
+          "label": "Sequence 10",
           "count": 219
         },
         {
-          "value": "vid11",
+          "value": "seq-011",
+          "label": "Sequence 11",
           "count": 204
         }
       ],
@@ -124,37 +135,37 @@
         },
         {
           "value": 1,
-          "label": "1/8",
+          "label": "1/8 · Few",
           "count": 0
         },
         {
           "value": 2,
-          "label": "2/8",
+          "label": "2/8 · Few",
           "count": 0
         },
         {
           "value": 3,
-          "label": "3/8",
+          "label": "3/8 · Scattered",
           "count": 0
         },
         {
           "value": 4,
-          "label": "4/8",
+          "label": "4/8 · Scattered",
           "count": 134
         },
         {
           "value": 5,
-          "label": "5/8",
+          "label": "5/8 · Broken",
           "count": 474
         },
         {
           "value": 6,
-          "label": "6/8",
+          "label": "6/8 · Broken",
           "count": 191
         },
         {
           "value": 7,
-          "label": "7/8",
+          "label": "7/8 · Broken",
           "count": 94
         },
         {

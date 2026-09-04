@@ -39,7 +39,7 @@ CHECKSUM_B = "b" * 64
 async def make_release(
     session: AsyncSession, *, status: ReleaseStatus = ReleaseStatus.DRAFT
 ) -> Release:
-    collection = Collection(slug=f"vid{uuid.uuid4().int % 100000}", title="Test sequence")
+    collection = Collection(slug=f"test-{uuid.uuid4().int % 100000}", title="Test sequence")
     session.add(collection)
     await session.flush()
     release = Release(
@@ -58,7 +58,7 @@ def make_record(release: Release, **overrides: Any) -> ImageRecord:
         "id": f"WAS-T{uuid.uuid4().hex[:8].upper()}",
         "release_id": release.id,
         "collection_id": release.collection_id,
-        "video_id": "vid1",
+        "sequence_id": "seq-001",
         "frame_index": 5,
         "width": 640,
         "height": 360,
@@ -72,7 +72,7 @@ def make_artifact(record_id: str, artifact_type: str, **overrides: Any) -> Artif
         "image_id": record_id,
         "type": artifact_type,
         "media_type": "image/jpeg",
-        "object_key": f"frames/vid1/{uuid.uuid4().hex}-{artifact_type}.jpg",
+        "object_key": f"frames/seq-001/{uuid.uuid4().hex}-{artifact_type}.jpg",
         "checksum": CHECKSUM_A if artifact_type == "source" else CHECKSUM_B,
         "bytes": 23133,
         "width": 640,
@@ -235,13 +235,36 @@ class TestInvariant10Formats:
         with pytest.raises(IntegrityError, match="id_format"):
             await session.flush()
 
-    @pytest.mark.parametrize("bad_video", ["video1", "vid", "VID1"])
+    @pytest.mark.parametrize("bad_sequence", ["vid1", "seq-1", "SEQ-001", "seq-0011", "seq"])
     async def test_rejects_a_malformed_sequence_id(
-        self, session: AsyncSession, bad_video: str
+        self, session: AsyncSession, bad_sequence: str
     ) -> None:
         release = await make_release(session)
-        session.add(make_record(release, video_id=bad_video))
-        with pytest.raises(IntegrityError, match="video_id_format"):
+        session.add(make_record(release, sequence_id=bad_sequence))
+        with pytest.raises(IntegrityError, match="sequence_id_format"):
+            await session.flush()
+
+    async def test_accepts_a_dated_sequence_id_with_a_timestamp(
+        self, session: AsyncSession
+    ) -> None:
+        release = await make_release(session)
+        session.add(
+            make_record(
+                release,
+                sequence_id="seq-20260904-001",
+                captured_at=datetime(2026, 9, 4, 9, 0, tzinfo=UTC),
+            )
+        )
+        await session.flush()
+
+    async def test_rejects_a_dated_sequence_id_without_a_timestamp(
+        self, session: AsyncSession
+    ) -> None:
+        # sort_key's ordering only holds if a dated id always takes the
+        # timestamp branch, which requires captured_at to actually be set.
+        release = await make_release(session)
+        session.add(make_record(release, sequence_id="seq-20260904-001"))
+        with pytest.raises(IntegrityError, match="dated_sequence_has_timestamp"):
             await session.flush()
 
     async def test_rejects_a_checksum_that_is_not_sha256(self, session: AsyncSession) -> None:
@@ -259,12 +282,12 @@ class TestDerivedColumns:
         self, session: AsyncSession
     ) -> None:
         release = await make_release(session)
-        record = make_record(release, video_id="vid1", frame_index=5)
+        record = make_record(release, sequence_id="seq-001", frame_index=5)
         session.add(record)
         await session.flush()
         await session.refresh(record)
         assert record.sort_key == "001-0000005"
-        assert record.video_number == 1
+        assert record.sequence_number == 1
 
     async def test_sort_key_uses_the_capture_time_when_there_is_one(
         self, session: AsyncSession
@@ -277,24 +300,27 @@ class TestDerivedColumns:
         assert record.sort_key == "2026-03-14T09:00:00.000Z"
         # A timestamped record sorts above an untimestamped one because an ISO
         # year starts with '2' and a zero-padded sequence number starts with
-        # '0'. That holds for every sequence up to vid199; the archive has 11.
+        # '0'. That holds for every undated sequence up to seq-199 - the
+        # archive has 11, and every sequence past it will be dated anyway.
         assert record.sort_key > "011-9999999"
 
-    async def test_video_number_orders_numerically_not_lexically(
+    async def test_sequence_number_orders_numerically_not_lexically(
         self, session: AsyncSession
     ) -> None:
+        # The id itself is zero-padded now, so "seq-002" already sorts before
+        # "seq-010" lexically - unlike "vid2"/"vid10", which needed this
+        # derived key to order correctly at all. sort_key is asserted anyway,
+        # since it is what the read path actually orders by.
         release = await make_release(session)
         created = []
-        for video_id, frame in (("vid2", 1), ("vid10", 1)):
-            record = make_record(release, video_id=video_id, frame_index=frame)
+        for sequence_id, frame in (("seq-002", 1), ("seq-010", 1)):
+            record = make_record(release, sequence_id=sequence_id, frame_index=frame)
             session.add(record)
             created.append(record)
         await session.flush()
         for record in created:
             await session.refresh(record)
 
-        # "vid10" must sort after "vid2", which zero padding guarantees; the
-        # lexical ordering of the ids themselves would put it before.
         keys = sorted(record.sort_key for record in created)
         assert keys == ["002-0000001", "010-0000001"]
 
@@ -308,10 +334,10 @@ class TestDerivedColumns:
         await session.commit()
         await session.refresh(record)
 
-        # [id, videoId, frameIndex, location, ...tags].join(" ").toLowerCase()
-        # with tags = [videoId, oktaLabel, pairing]. The empty location leaves
-        # a doubled space, exactly as Array.join does.
-        assert record.search_text == (f"{record.id.lower()} vid1 5  vid1 4/8 source + mask")
+        # [id, sequenceId, frameIndex, location, ...tags].join(" ").toLowerCase()
+        # with tags = [sequenceId, oktaLabel, pairing]. The empty location
+        # leaves a doubled space, exactly as Array.join does.
+        assert record.search_text == (f"{record.id.lower()} seq-001 5  seq-001 4/8 source + mask")
 
     async def test_search_text_marks_an_unsegmented_frame(self, session: AsyncSession) -> None:
         release = await make_release(session)

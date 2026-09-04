@@ -30,7 +30,7 @@ from wascat.domains.catalog.query import parse_image_query
 
 pytestmark = pytest.mark.db
 
-TEST_VIDEO = "vid9200"
+TEST_SEQUENCE = "seq-920"
 
 
 async def make_release(session: AsyncSession, collection: Collection, version: str) -> Release:
@@ -48,7 +48,7 @@ async def add_record(
         id=f"WAS-T{uuid.uuid4().hex[:8].upper()}",
         release_id=release.id,
         collection_id=collection.id,
-        video_id=TEST_VIDEO,
+        sequence_id=TEST_SEQUENCE,
         frame_index=frame,
         width=640,
         height=360,
@@ -61,7 +61,7 @@ async def add_record(
             image_id=record.id,
             type="source",
             media_type="image/jpeg",
-            object_key=f"frames/{TEST_VIDEO}/{frame}-source.jpg",
+            object_key=f"frames/{TEST_SEQUENCE}/{frame}-source.jpg",
             checksum="a" * 64,
             bytes=1000,
             width=640,

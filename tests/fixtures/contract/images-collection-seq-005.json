@@ -1,9 +1,9 @@
 {
-  "name": "images-collection-vid5",
+  "name": "images-collection-seq-005",
   "request": {
     "method": "GET",
-    "path": "/api/v1/images?collection=vid5&limit=3",
-    "url": "https://wascat.example.org/api/v1/images?collection=vid5&limit=3"
+    "path": "/api/v1/images?collection=seq-005&limit=3",
+    "url": "https://wascat.example.org/api/v1/images?collection=seq-005&limit=3"
   },
   "status": 200,
   "headers": {
@@ -15,28 +15,28 @@
     "data": [
       {
         "id": "WAS-V05-F521",
-        "collection": "vid5",
+        "collection": "seq-005",
         "release": "1.0",
-        "videoId": "vid5",
+        "sequenceId": "seq-005",
         "frameIndex": 521,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid5/521-source.jpg",
-        "sourceUrl": "/frames/vid5/521-source.jpg",
+        "image": "/frames/seq-005/521-source.jpg",
+        "sourceUrl": "/frames/seq-005/521-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 521 of sequence vid5, not yet segmented.",
+        "alt": "All-sky camera frame 521 of sequence 05, not yet segmented.",
         "tags": [
-          "vid5",
+          "seq-005",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid5/521-source.jpg",
-            "objectKey": "frames/vid5/521-source.jpg",
+            "url": "/frames/seq-005/521-source.jpg",
+            "objectKey": "frames/seq-005/521-source.jpg",
             "bytes": 21173,
             "checksum": "fe7f656fccb1eab3a407fb223655ecd6b35b6102ad112da2f1c6e40e6bdc4709",
             "mediaType": "image/jpeg"
@@ -46,28 +46,28 @@
       },
       {
         "id": "WAS-V05-F517",
-        "collection": "vid5",
+        "collection": "seq-005",
         "release": "1.0",
-        "videoId": "vid5",
+        "sequenceId": "seq-005",
         "frameIndex": 517,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid5/517-source.jpg",
-        "sourceUrl": "/frames/vid5/517-source.jpg",
+        "image": "/frames/seq-005/517-source.jpg",
+        "sourceUrl": "/frames/seq-005/517-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 517 of sequence vid5, not yet segmented.",
+        "alt": "All-sky camera frame 517 of sequence 05, not yet segmented.",
         "tags": [
-          "vid5",
+          "seq-005",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid5/517-source.jpg",
-            "objectKey": "frames/vid5/517-source.jpg",
+            "url": "/frames/seq-005/517-source.jpg",
+            "objectKey": "frames/seq-005/517-source.jpg",
             "bytes": 21055,
             "checksum": "e11628bf2d85f409f0790b65253d3ef5eec4c65f075c5c40d5f4a863cc30cd23",
             "mediaType": "image/jpeg"
@@ -77,39 +77,39 @@
       },
       {
         "id": "WAS-V05-F515",
-        "collection": "vid5",
+        "collection": "seq-005",
         "release": "1.0",
-        "videoId": "vid5",
+        "sequenceId": "seq-005",
         "frameIndex": 515,
         "cloudFraction": 0.982494,
         "cloudCoverOktas": 8,
         "maskScale": 1.146497,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid5/515-source.jpg",
-        "sourceUrl": "/frames/vid5/515-source.jpg",
-        "maskUrl": "/frames/vid5/515-mask.jpg",
+        "image": "/frames/seq-005/515-source.jpg",
+        "sourceUrl": "/frames/seq-005/515-source.jpg",
+        "maskUrl": "/frames/seq-005/515-mask.jpg",
         "hasSource": true,
         "hasMask": true,
-        "alt": "All-sky camera frame 515 of sequence vid5, measured at 8/8 · Overcast cloud cover.",
+        "alt": "All-sky camera frame 515 of sequence 05, measured at 8/8 · Overcast cloud cover.",
         "tags": [
-          "vid5",
+          "seq-005",
           "8/8 · Overcast",
           "source + mask"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid5/515-source.jpg",
-            "objectKey": "frames/vid5/515-source.jpg",
+            "url": "/frames/seq-005/515-source.jpg",
+            "objectKey": "frames/seq-005/515-source.jpg",
             "bytes": 21110,
             "checksum": "1b1287d5d2212a81452d8fdab13621ab0e6b2bc36d004362d897c96a05fb9baf",
             "mediaType": "image/jpeg"
           },
           {
             "type": "mask",
-            "url": "/frames/vid5/515-mask.jpg",
-            "objectKey": "frames/vid5/515-mask.jpg",
+            "url": "/frames/seq-005/515-mask.jpg",
+            "objectKey": "frames/seq-005/515-mask.jpg",
             "bytes": 15872,
             "checksum": "6dbf112626a64fcef7d2de529f7f6cd907e70c3acce7923b50faeb51f3eacded",
             "mediaType": "image/jpeg"
@@ -124,11 +124,11 @@
       "count": 3,
       "total": 136,
       "limit": 3,
-      "nextCursor": "eyJvZmZzZXQiOjN9"
+      "nextCursor": "eyJrIjoiMDA1LTAwMDA1MTUiLCJpIjoiV0FTLVYwNS1GNTE1IiwibyI6M30"
     },
     "links": {
-      "self": "https://wascat.example.org/api/v1/images?collection=vid5&limit=3",
-      "next": "https://wascat.example.org/api/v1/images?collection=vid5&limit=3&cursor=eyJvZmZzZXQiOjN9"
+      "self": "https://wascat.example.org/api/v1/images?collection=seq-005&limit=3",
+      "next": "https://wascat.example.org/api/v1/images?collection=seq-005&limit=3&cursor=eyJrIjoiMDA1LTAwMDA1MTUiLCJpIjoiV0FTLVYwNS1GNTE1IiwibyI6M30"
     }
   }
 }

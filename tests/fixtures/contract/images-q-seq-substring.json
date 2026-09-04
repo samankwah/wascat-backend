@@ -1,0 +1,218 @@
+{
+  "name": "images-q-seq-substring",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/images?q=seq-001&limit=5",
+    "url": "https://wascat.example.org/api/v1/images?q=seq-001&limit=5"
+  },
+  "status": 200,
+  "headers": {
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "content-type": "application/json"
+  },
+  "body": {
+    "data": [
+      {
+        "id": "WAS-V01-F3611",
+        "collection": "seq-001",
+        "release": "1.0",
+        "sequenceId": "seq-001",
+        "frameIndex": 3611,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/seq-001/3611-source.jpg",
+        "sourceUrl": "/frames/seq-001/3611-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 3611 of sequence 01, not yet segmented.",
+        "tags": [
+          "seq-001",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/seq-001/3611-source.jpg",
+            "objectKey": "frames/seq-001/3611-source.jpg",
+            "bytes": 24034,
+            "checksum": "c7977b3bf797d075faebc45a4ac8eb0171e9acb849f0dfbccc3d265d7699135f",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0003611"
+      },
+      {
+        "id": "WAS-V01-F3586",
+        "collection": "seq-001",
+        "release": "1.0",
+        "sequenceId": "seq-001",
+        "frameIndex": 3586,
+        "cloudFraction": 0.529399,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/seq-001/3586-source.jpg",
+        "sourceUrl": "/frames/seq-001/3586-source.jpg",
+        "maskUrl": "/frames/seq-001/3586-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 3586 of sequence 01, measured at 4/8 · Scattered cloud cover.",
+        "tags": [
+          "seq-001",
+          "4/8 · Scattered",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/seq-001/3586-source.jpg",
+            "objectKey": "frames/seq-001/3586-source.jpg",
+            "bytes": 24095,
+            "checksum": "b188055f846fc51e1a527c4f039adf0b8cb4edeab1bf94786a6d7e0e035389eb",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/seq-001/3586-mask.jpg",
+            "objectKey": "frames/seq-001/3586-mask.jpg",
+            "bytes": 24692,
+            "checksum": "3c633dc1234baa1719c33bc6de8b0e058723dfb71d4d107e851366646baf6ab1",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0003586"
+      },
+      {
+        "id": "WAS-V01-F3585",
+        "collection": "seq-001",
+        "release": "1.0",
+        "sequenceId": "seq-001",
+        "frameIndex": 3585,
+        "cloudFraction": 0.530975,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/seq-001/3585-source.jpg",
+        "sourceUrl": "/frames/seq-001/3585-source.jpg",
+        "maskUrl": "/frames/seq-001/3585-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 3585 of sequence 01, measured at 4/8 · Scattered cloud cover.",
+        "tags": [
+          "seq-001",
+          "4/8 · Scattered",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/seq-001/3585-source.jpg",
+            "objectKey": "frames/seq-001/3585-source.jpg",
+            "bytes": 24093,
+            "checksum": "bcc2247c46d37bc52924f6c5e99b6c62562a14f04f51330751ca2b8ca05cdbfc",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/seq-001/3585-mask.jpg",
+            "objectKey": "frames/seq-001/3585-mask.jpg",
+            "bytes": 25069,
+            "checksum": "132c1f70022562e3cf4b9fb14b17d8ef3dcd3d33c987f405ff3cbebddd9c81b4",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0003585"
+      },
+      {
+        "id": "WAS-V01-F3574",
+        "collection": "seq-001",
+        "release": "1.0",
+        "sequenceId": "seq-001",
+        "frameIndex": 3574,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/seq-001/3574-source.jpg",
+        "sourceUrl": "/frames/seq-001/3574-source.jpg",
+        "hasSource": true,
+        "hasMask": false,
+        "alt": "All-sky camera frame 3574 of sequence 01, not yet segmented.",
+        "tags": [
+          "seq-001",
+          "unsegmented",
+          "source only"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/seq-001/3574-source.jpg",
+            "objectKey": "frames/seq-001/3574-source.jpg",
+            "bytes": 24098,
+            "checksum": "6ab870484c6c48ee27e89fb6323cf5bd5d034bf0e0a5e6a94c090292f10a9a3d",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0003574"
+      },
+      {
+        "id": "WAS-V01-F3548",
+        "collection": "seq-001",
+        "release": "1.0",
+        "sequenceId": "seq-001",
+        "frameIndex": 3548,
+        "cloudFraction": 0.537887,
+        "cloudCoverOktas": 4,
+        "maskScale": 1,
+        "width": 640,
+        "height": 360,
+        "image": "/frames/seq-001/3548-source.jpg",
+        "sourceUrl": "/frames/seq-001/3548-source.jpg",
+        "maskUrl": "/frames/seq-001/3548-mask.jpg",
+        "hasSource": true,
+        "hasMask": true,
+        "alt": "All-sky camera frame 3548 of sequence 01, measured at 4/8 · Scattered cloud cover.",
+        "tags": [
+          "seq-001",
+          "4/8 · Scattered",
+          "source + mask"
+        ],
+        "artifacts": [
+          {
+            "type": "source",
+            "url": "/frames/seq-001/3548-source.jpg",
+            "objectKey": "frames/seq-001/3548-source.jpg",
+            "bytes": 24068,
+            "checksum": "be6ec6758c670a33a335e6ad1b9a8d482f0f07503d8161d4bb1eb02c88631dc0",
+            "mediaType": "image/jpeg"
+          },
+          {
+            "type": "mask",
+            "url": "/frames/seq-001/3548-mask.jpg",
+            "objectKey": "frames/seq-001/3548-mask.jpg",
+            "bytes": 24467,
+            "checksum": "e230e0e69dc2d5bd3ac0d2d137c07f99618923a37fc97655345ac48ca56311a1",
+            "mediaType": "image/jpeg"
+          }
+        ],
+        "sortKey": "001-0003548"
+      }
+    ],
+    "meta": {
+      "apiVersion": "1.0",
+      "generatedAt": "<GENERATED_AT>",
+      "count": 5,
+      "total": 323,
+      "limit": 5,
+      "nextCursor": "eyJrIjoiMDAxLTAwMDM1NDgiLCJpIjoiV0FTLVYwMS1GMzU0OCIsIm8iOjV9"
+    },
+    "links": {
+      "self": "https://wascat.example.org/api/v1/images?q=seq-001&limit=5",
+      "next": "https://wascat.example.org/api/v1/images?q=seq-001&limit=5&cursor=eyJrIjoiMDAxLTAwMDM1NDgiLCJpIjoiV0FTLVYwMS1GMzU0OCIsIm8iOjV9"
+    }
+  }
+}

@@ -251,7 +251,7 @@ class TestRecordedResponses:
     ) -> None:
         """Page right through a filter and check the result is a partition."""
         seen: list[str] = []
-        path = "/api/v1/images?video=vid9&limit=7"
+        path = "/api/v1/images?sequence=seq-009&limit=7"
         total: int | None = None
         for _ in range(50):
             body = (await client.get(path)).json()
@@ -260,7 +260,7 @@ class TestRecordedResponses:
             cursor = body["meta"]["nextCursor"]
             if cursor is None:
                 break
-            path = f"/api/v1/images?video=vid9&limit=7&cursor={cursor}"
+            path = f"/api/v1/images?sequence=seq-009&limit=7&cursor={cursor}"
 
         assert total is not None
         assert len(seen) == total, "paging did not cover the result exactly once"

@@ -14,256 +14,355 @@
   "body": {
     "data": [
       {
-        "slug": "vid1",
-        "title": "Capture sequence vid1",
-        "shortTitle": "vid1",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID1",
-        "description": "323 all-sky frames from capture sequence vid1. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-001",
+        "title": "Capture sequence 01",
+        "shortTitle": "Sequence 01",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 01",
+        "description": "323 all-sky frames from capture sequence 01. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 2–3,611 · 223 of 323 segmented",
-        "videoIds": [
-          "vid1"
+        "sequenceIds": [
+          "seq-001"
         ],
         "images": 323,
         "artifacts": 493,
         "withSource": 270,
         "segmented": 223,
-        "image": "/frames/vid1/5-source.jpg",
-        "imageAlt": "All-sky camera frame 5 of sequence vid1, measured at 4/8 cloud cover.",
+        "image": "/frames/seq-001/5-source.jpg",
+        "imageAlt": "All-sky camera frame 5 of sequence 01, measured at 4/8 · Scattered cloud cover.",
+        "meanCloudCoverOktas": 4.650224,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-001",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 323,
           "size": "10.4 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid2",
-        "title": "Capture sequence vid2",
-        "shortTitle": "vid2",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID2",
-        "description": "688 all-sky frames from capture sequence vid2. 588 carry a binary cloud mask and a measured cloud cover, 134 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-002",
+        "title": "Capture sequence 02",
+        "shortTitle": "Sequence 02",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 02",
+        "description": "688 all-sky frames from capture sequence 02. 588 carry a binary cloud mask and a measured cloud cover, 134 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–10,240 · 588 of 688 segmented",
-        "videoIds": [
-          "vid2"
+        "sequenceIds": [
+          "seq-002"
         ],
         "images": 688,
         "artifacts": 1142,
         "withSource": 554,
         "segmented": 588,
-        "image": "/frames/vid2/46-source.jpg",
-        "imageAlt": "All-sky camera frame 46 of sequence vid2, measured at 6/8 cloud cover.",
+        "image": "/frames/seq-002/46-source.jpg",
+        "imageAlt": "All-sky camera frame 46 of sequence 02, measured at 6/8 · Broken cloud cover.",
+        "meanCloudCoverOktas": 5.270408,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-002",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 688,
           "size": "22.3 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid3",
-        "title": "Capture sequence vid3",
-        "shortTitle": "vid3",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID3",
-        "description": "166 all-sky frames from capture sequence vid3. 66 carry a binary cloud mask and a measured cloud cover, 17 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-003",
+        "title": "Capture sequence 03",
+        "shortTitle": "Sequence 03",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 03",
+        "description": "166 all-sky frames from capture sequence 03. 66 carry a binary cloud mask and a measured cloud cover, 17 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,004 · 66 of 166 segmented",
-        "videoIds": [
-          "vid3"
+        "sequenceIds": [
+          "seq-003"
         ],
         "images": 166,
         "artifacts": 215,
         "withSource": 149,
         "segmented": 66,
-        "image": "/frames/vid3/7-source.jpg",
-        "imageAlt": "All-sky camera frame 7 of sequence vid3, measured at 7/8 cloud cover.",
+        "image": "/frames/seq-003/7-source.jpg",
+        "imageAlt": "All-sky camera frame 7 of sequence 03, measured at 7/8 · Broken cloud cover.",
+        "meanCloudCoverOktas": 7,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-003",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 166,
           "size": "4.8 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid4",
-        "title": "Capture sequence vid4",
-        "shortTitle": "vid4",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID4",
-        "description": "132 all-sky frames from capture sequence vid4. 32 carry a binary cloud mask and a measured cloud cover, 9 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-004",
+        "title": "Capture sequence 04",
+        "shortTitle": "Sequence 04",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 04",
+        "description": "132 all-sky frames from capture sequence 04. 32 carry a binary cloud mask and a measured cloud cover, 9 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–570 · 32 of 132 segmented",
-        "videoIds": [
-          "vid4"
+        "sequenceIds": [
+          "seq-004"
         ],
         "images": 132,
         "artifacts": 155,
         "withSource": 123,
         "segmented": 32,
-        "image": "/frames/vid4/110-source.jpg",
-        "imageAlt": "All-sky camera frame 110 of sequence vid4, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-004/110-source.jpg",
+        "imageAlt": "All-sky camera frame 110 of sequence 04, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-004",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 132,
           "size": "2.9 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid5",
-        "title": "Capture sequence vid5",
-        "shortTitle": "vid5",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID5",
-        "description": "136 all-sky frames from capture sequence vid5. 36 carry a binary cloud mask and a measured cloud cover, 10 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-005",
+        "title": "Capture sequence 05",
+        "shortTitle": "Sequence 05",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 05",
+        "description": "136 all-sky frames from capture sequence 05. 36 carry a binary cloud mask and a measured cloud cover, 10 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–521 · 36 of 136 segmented",
-        "videoIds": [
-          "vid5"
+        "sequenceIds": [
+          "seq-005"
         ],
         "images": 136,
         "artifacts": 162,
         "withSource": 126,
         "segmented": 36,
-        "image": "/frames/vid5/8-source.jpg",
-        "imageAlt": "All-sky camera frame 8 of sequence vid5, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-005/8-source.jpg",
+        "imageAlt": "All-sky camera frame 8 of sequence 05, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-005",
+            "scale": 1.146497,
+            "corrected": true
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 136,
           "size": "3.1 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid6",
-        "title": "Capture sequence vid6",
-        "shortTitle": "vid6",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID6",
-        "description": "119 all-sky frames from capture sequence vid6. 19 carry a binary cloud mask and a measured cloud cover, 4 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-006",
+        "title": "Capture sequence 06",
+        "shortTitle": "Sequence 06",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 06",
+        "description": "119 all-sky frames from capture sequence 06. 19 carry a binary cloud mask and a measured cloud cover, 4 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–293 · 19 of 119 segmented",
-        "videoIds": [
-          "vid6"
+        "sequenceIds": [
+          "seq-006"
         ],
         "images": 119,
         "artifacts": 134,
         "withSource": 115,
         "segmented": 19,
-        "image": "/frames/vid6/0-source.jpg",
-        "imageAlt": "All-sky camera frame 0 of sequence vid6, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-006/0-source.jpg",
+        "imageAlt": "All-sky camera frame 0 of sequence 06, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-006",
+            "scale": 1.146497,
+            "corrected": true
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 119,
           "size": "2.7 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid7",
-        "title": "Capture sequence vid7",
-        "shortTitle": "vid7",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID7",
-        "description": "206 all-sky frames from capture sequence vid7. 106 carry a binary cloud mask and a measured cloud cover, 33 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-007",
+        "title": "Capture sequence 07",
+        "shortTitle": "Sequence 07",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 07",
+        "description": "206 all-sky frames from capture sequence 07. 106 carry a binary cloud mask and a measured cloud cover, 33 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,835 · 106 of 206 segmented",
-        "videoIds": [
-          "vid7"
+        "sequenceIds": [
+          "seq-007"
         ],
         "images": 206,
         "artifacts": 279,
         "withSource": 173,
         "segmented": 106,
-        "image": "/frames/vid7/12-source.jpg",
-        "imageAlt": "All-sky camera frame 12 of sequence vid7, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-007/12-source.jpg",
+        "imageAlt": "All-sky camera frame 12 of sequence 07, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 7.849057,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-007",
+            "scale": 1.146497,
+            "corrected": true
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 206,
           "size": "5.5 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid8",
-        "title": "Capture sequence vid8",
-        "shortTitle": "vid8",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID8",
-        "description": "161 all-sky frames from capture sequence vid8. 61 carry a binary cloud mask and a measured cloud cover, 16 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-008",
+        "title": "Capture sequence 08",
+        "shortTitle": "Sequence 08",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 08",
+        "description": "161 all-sky frames from capture sequence 08. 61 carry a binary cloud mask and a measured cloud cover, 16 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 3–884 · 61 of 161 segmented",
-        "videoIds": [
-          "vid8"
+        "sequenceIds": [
+          "seq-008"
         ],
         "images": 161,
         "artifacts": 206,
         "withSource": 145,
         "segmented": 61,
-        "image": "/frames/vid8/10-source.jpg",
-        "imageAlt": "All-sky camera frame 10 of sequence vid8, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-008/10-source.jpg",
+        "imageAlt": "All-sky camera frame 10 of sequence 08, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-008",
+            "scale": 1.146497,
+            "corrected": true
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 161,
           "size": "4.0 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid9",
-        "title": "Capture sequence vid9",
-        "shortTitle": "vid9",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID9",
-        "description": "68 all-sky frames from capture sequence vid9. 6 carry a binary cloud mask and a measured cloud cover, 3 of them without the source frame. A further 62 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-009",
+        "title": "Capture sequence 09",
+        "shortTitle": "Sequence 09",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 09",
+        "description": "68 all-sky frames from capture sequence 09. 6 carry a binary cloud mask and a measured cloud cover, 3 of them without the source frame. A further 62 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–88 · 6 of 68 segmented",
-        "videoIds": [
-          "vid9"
+        "sequenceIds": [
+          "seq-009"
         ],
         "images": 68,
         "artifacts": 71,
         "withSource": 65,
         "segmented": 6,
-        "image": "/frames/vid9/48-source.jpg",
-        "imageAlt": "All-sky camera frame 48 of sequence vid9, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-009/48-source.jpg",
+        "imageAlt": "All-sky camera frame 48 of sequence 09, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-009",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 68,
           "size": "1.1 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid10",
-        "title": "Capture sequence vid10",
-        "shortTitle": "vid10",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID10",
-        "description": "219 all-sky frames from capture sequence vid10. 119 carry a binary cloud mask and a measured cloud cover, 29 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-010",
+        "title": "Capture sequence 10",
+        "shortTitle": "Sequence 10",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 10",
+        "description": "219 all-sky frames from capture sequence 10. 119 carry a binary cloud mask and a measured cloud cover, 29 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,834 · 119 of 219 segmented",
-        "videoIds": [
-          "vid10"
+        "sequenceIds": [
+          "seq-010"
         ],
         "images": 219,
         "artifacts": 309,
         "withSource": 190,
         "segmented": 119,
-        "image": "/frames/vid10/4-source.jpg",
-        "imageAlt": "All-sky camera frame 4 of sequence vid10, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-010/4-source.jpg",
+        "imageAlt": "All-sky camera frame 4 of sequence 10, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-010",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 219,
           "size": "5.2 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       },
       {
-        "slug": "vid11",
-        "title": "Capture sequence vid11",
-        "shortTitle": "vid11",
-        "kicker": "ALL-SKY CLOUD SEGMENTATION · VID11",
-        "description": "204 all-sky frames from capture sequence vid11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+        "slug": "seq-011",
+        "title": "Capture sequence 11",
+        "shortTitle": "Sequence 11",
+        "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 11",
+        "description": "204 all-sky frames from capture sequence 11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–2,120 · 104 of 204 segmented",
-        "videoIds": [
-          "vid11"
+        "sequenceIds": [
+          "seq-011"
         ],
         "images": 204,
         "artifacts": 272,
         "withSource": 168,
         "segmented": 104,
-        "image": "/frames/vid11/9-source.jpg",
-        "imageAlt": "All-sky camera frame 9 of sequence vid11, measured at 8/8 · Overcast cloud cover.",
+        "image": "/frames/seq-011/9-source.jpg",
+        "imageAlt": "All-sky camera frame 9 of sequence 11, measured at 8/8 · Overcast cloud cover.",
+        "meanCloudCoverOktas": 8,
+        "maskRegistration": [
+          {
+            "sequenceId": "seq-011",
+            "scale": 1,
+            "corrected": false
+          }
+        ],
         "currentRelease": {
           "version": "1.0",
           "images": 204,
           "size": "4.7 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
         }
       }
     ],

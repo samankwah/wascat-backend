@@ -14,30 +14,30 @@
   "body": {
     "data": {
       "id": "WAS-V01-F85",
-      "collection": "vid1",
+      "collection": "seq-001",
       "release": "1.0",
-      "videoId": "vid1",
+      "sequenceId": "seq-001",
       "frameIndex": 85,
       "cloudFraction": 0.573093,
       "cloudCoverOktas": 5,
       "maskScale": 1,
       "width": 640,
       "height": 360,
-      "image": "/frames/vid1/85-mask.jpg",
-      "maskUrl": "/frames/vid1/85-mask.jpg",
+      "image": "/frames/seq-001/85-mask.jpg",
+      "maskUrl": "/frames/seq-001/85-mask.jpg",
       "hasSource": false,
       "hasMask": true,
-      "alt": "Binary cloud segmentation mask for frame 85 of sequence vid1, measured at 5/8 cloud cover.",
+      "alt": "Binary cloud segmentation mask for frame 85 of sequence 01, measured at 5/8 · Broken cloud cover.",
       "tags": [
-        "vid1",
-        "5/8",
+        "seq-001",
+        "5/8 · Broken",
         "mask only"
       ],
       "artifacts": [
         {
           "type": "mask",
-          "url": "/frames/vid1/85-mask.jpg",
-          "objectKey": "frames/vid1/85-mask.jpg",
+          "url": "/frames/seq-001/85-mask.jpg",
+          "objectKey": "frames/seq-001/85-mask.jpg",
           "bytes": 22848,
           "checksum": "7ad183c34f5767f3916bf8cc32e2b9233ba57c92531903d616b8a389d362a4f1",
           "mediaType": "image/jpeg"

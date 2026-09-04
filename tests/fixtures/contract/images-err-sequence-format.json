@@ -1,9 +1,9 @@
 {
-  "name": "images-err-video-format",
+  "name": "images-err-sequence-format",
   "request": {
     "method": "GET",
-    "path": "/api/v1/images?video=video1",
-    "url": "https://wascat.example.org/api/v1/images?video=video1"
+    "path": "/api/v1/images?sequence=vid1",
+    "url": "https://wascat.example.org/api/v1/images?sequence=vid1"
   },
   "status": 400,
   "headers": {
@@ -16,7 +16,7 @@
       "code": "invalid_query",
       "message": "One or more query parameters are invalid.",
       "details": {
-        "video": [
+        "sequence": [
           "Invalid"
         ]
       }

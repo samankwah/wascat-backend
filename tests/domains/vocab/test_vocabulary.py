@@ -28,7 +28,7 @@ from wascat.domains.vocab.models import VocabKind, VocabularyAlias, VocabularyTe
 
 pytestmark = pytest.mark.db
 
-TEST_VIDEO = "vid9100"
+TEST_SEQUENCE = "seq-910"
 
 
 async def make_term(
@@ -64,7 +64,7 @@ async def make_record_with(
             id=f"WAS-T{uuid.uuid4().hex[:8].upper()}",
             release_id=release.id,
             collection_id=collection.id,
-            video_id=TEST_VIDEO,
+            sequence_id=TEST_SEQUENCE,
             frame_index=frame,
             width=640,
             height=360,
@@ -78,7 +78,7 @@ async def make_record_with(
                 image_id=record.id,
                 type="source",
                 media_type="image/jpeg",
-                object_key=f"frames/{TEST_VIDEO}/{frame}-source.jpg",
+                object_key=f"frames/{TEST_SEQUENCE}/{frame}-source.jpg",
                 checksum="a" * 64,
                 bytes=1000,
                 width=640,
@@ -300,6 +300,23 @@ class TestAddingToAFrozenVocabulary:
 
         with pytest.raises(ConflictError, match="Merge into it"):
             await service.create_term(session, kind=VocabKind.LOCATION, label=label)
+
+    async def test_a_new_term_can_be_serialised_without_a_lazy_load(
+        self, session: AsyncSession
+    ) -> None:
+        """A new term's `aliases` must already be loaded.
+
+        The dashboard serialises the term it just created, and reading an
+        unloaded relationship on an async session raises MissingGreenlet - so
+        `POST /admin/vocabulary/{kind}` returned 500 while still creating the
+        row. Reading `.aliases` here is the whole assertion: it raises if the
+        collection was never populated.
+        """
+        term = await service.create_term(
+            session, kind=VocabKind.CONDITION_TAG, label=f"hazy {uuid.uuid4().hex[:6]}"
+        )
+        await session.commit()
+        assert list(term.aliases) == []
 
 
 class TestOrdering:

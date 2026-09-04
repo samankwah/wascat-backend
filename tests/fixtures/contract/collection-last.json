@@ -2,8 +2,8 @@
   "name": "collection-last",
   "request": {
     "method": "GET",
-    "path": "/api/v1/collections/vid11",
-    "url": "https://wascat.example.org/api/v1/collections/vid11"
+    "path": "/api/v1/collections/seq-011",
+    "url": "https://wascat.example.org/api/v1/collections/seq-011"
   },
   "status": 200,
   "headers": {
@@ -13,27 +13,36 @@
   },
   "body": {
     "data": {
-      "slug": "vid11",
-      "title": "Capture sequence vid11",
-      "shortTitle": "vid11",
-      "kicker": "ALL-SKY CLOUD SEGMENTATION · VID11",
-      "description": "204 all-sky frames from capture sequence vid11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
+      "slug": "seq-011",
+      "title": "Capture sequence 11",
+      "shortTitle": "Sequence 11",
+      "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 11",
+      "description": "204 all-sky frames from capture sequence 11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 0–2,120 · 104 of 204 segmented",
-      "videoIds": [
-        "vid11"
+      "sequenceIds": [
+        "seq-011"
       ],
       "images": 204,
       "artifacts": 272,
       "withSource": 168,
       "segmented": 104,
-      "image": "/frames/vid11/9-source.jpg",
-      "imageAlt": "All-sky camera frame 9 of sequence vid11, measured at 8/8 · Overcast cloud cover.",
+      "image": "/frames/seq-011/9-source.jpg",
+      "imageAlt": "All-sky camera frame 9 of sequence 11, measured at 8/8 · Overcast cloud cover.",
       "releases": [
         {
           "version": "1.0",
           "images": 204,
           "size": "4.7 MB",
-          "current": true
+          "current": true,
+          "publishedAt": "2026-08-22T22:42:56.375Z"
+        }
+      ],
+      "meanCloudCoverOktas": 8,
+      "maskRegistration": [
+        {
+          "sequenceId": "seq-011",
+          "scale": 1,
+          "corrected": false
         }
       ]
     },
@@ -42,7 +51,7 @@
       "generatedAt": "<GENERATED_AT>"
     },
     "links": {
-      "self": "https://wascat.example.org/api/v1/collections/vid11"
+      "self": "https://wascat.example.org/api/v1/collections/seq-011"
     }
   }
 }

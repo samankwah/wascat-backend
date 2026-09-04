@@ -15,28 +15,28 @@
     "data": [
       {
         "id": "WAS-V11-F2120",
-        "collection": "vid11",
+        "collection": "seq-011",
         "release": "1.0",
-        "videoId": "vid11",
+        "sequenceId": "seq-011",
         "frameIndex": 2120,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid11/2120-source.jpg",
-        "sourceUrl": "/frames/vid11/2120-source.jpg",
+        "image": "/frames/seq-011/2120-source.jpg",
+        "sourceUrl": "/frames/seq-011/2120-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 2120 of sequence vid11, not yet segmented.",
+        "alt": "All-sky camera frame 2120 of sequence 11, not yet segmented.",
         "tags": [
-          "vid11",
+          "seq-011",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid11/2120-source.jpg",
-            "objectKey": "frames/vid11/2120-source.jpg",
+            "url": "/frames/seq-011/2120-source.jpg",
+            "objectKey": "frames/seq-011/2120-source.jpg",
             "bytes": 21496,
             "checksum": "30b073cef7de7a6f78074c9a37f5fc2b0b625b14b7898a4219d4e7cd0ee7b2f0",
             "mediaType": "image/jpeg"
@@ -46,28 +46,28 @@
       },
       {
         "id": "WAS-V11-F2095",
-        "collection": "vid11",
+        "collection": "seq-011",
         "release": "1.0",
-        "videoId": "vid11",
+        "sequenceId": "seq-011",
         "frameIndex": 2095,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid11/2095-source.jpg",
-        "sourceUrl": "/frames/vid11/2095-source.jpg",
+        "image": "/frames/seq-011/2095-source.jpg",
+        "sourceUrl": "/frames/seq-011/2095-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 2095 of sequence vid11, not yet segmented.",
+        "alt": "All-sky camera frame 2095 of sequence 11, not yet segmented.",
         "tags": [
-          "vid11",
+          "seq-011",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid11/2095-source.jpg",
-            "objectKey": "frames/vid11/2095-source.jpg",
+            "url": "/frames/seq-011/2095-source.jpg",
+            "objectKey": "frames/seq-011/2095-source.jpg",
             "bytes": 21528,
             "checksum": "52b6196a92657dac8efd5e4098f889f00fb0d3bd5fbb2ea2a75c123bd7bb6a84",
             "mediaType": "image/jpeg"
@@ -77,28 +77,28 @@
       },
       {
         "id": "WAS-V11-F2073",
-        "collection": "vid11",
+        "collection": "seq-011",
         "release": "1.0",
-        "videoId": "vid11",
+        "sequenceId": "seq-011",
         "frameIndex": 2073,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid11/2073-source.jpg",
-        "sourceUrl": "/frames/vid11/2073-source.jpg",
+        "image": "/frames/seq-011/2073-source.jpg",
+        "sourceUrl": "/frames/seq-011/2073-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 2073 of sequence vid11, not yet segmented.",
+        "alt": "All-sky camera frame 2073 of sequence 11, not yet segmented.",
         "tags": [
-          "vid11",
+          "seq-011",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid11/2073-source.jpg",
-            "objectKey": "frames/vid11/2073-source.jpg",
+            "url": "/frames/seq-011/2073-source.jpg",
+            "objectKey": "frames/seq-011/2073-source.jpg",
             "bytes": 21531,
             "checksum": "361cce2ea965f2c70ef3031d7018ef1592940464ef0347d57f426e3f93590259",
             "mediaType": "image/jpeg"
@@ -113,11 +113,11 @@
       "count": 3,
       "total": 1062,
       "limit": 3,
-      "nextCursor": "eyJvZmZzZXQiOjN9"
+      "nextCursor": "eyJrIjoiMDExLTAwMDIwNzMiLCJpIjoiV0FTLVYxMS1GMjA3MyIsIm8iOjN9"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/images?segmented=false&limit=3",
-      "next": "https://wascat.example.org/api/v1/images?segmented=false&limit=3&cursor=eyJvZmZzZXQiOjN9"
+      "next": "https://wascat.example.org/api/v1/images?segmented=false&limit=3&cursor=eyJrIjoiMDExLTAwMDIwNzMiLCJpIjoiV0FTLVYxMS1GMjA3MyIsIm8iOjN9"
     }
   }
 }

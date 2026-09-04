@@ -15,28 +15,28 @@
     "data": [
       {
         "id": "WAS-V11-F2073",
-        "collection": "vid11",
+        "collection": "seq-011",
         "release": "1.0",
-        "videoId": "vid11",
+        "sequenceId": "seq-011",
         "frameIndex": 2073,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid11/2073-source.jpg",
-        "sourceUrl": "/frames/vid11/2073-source.jpg",
+        "image": "/frames/seq-011/2073-source.jpg",
+        "sourceUrl": "/frames/seq-011/2073-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 2073 of sequence vid11, not yet segmented.",
+        "alt": "All-sky camera frame 2073 of sequence 11, not yet segmented.",
         "tags": [
-          "vid11",
+          "seq-011",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid11/2073-source.jpg",
-            "objectKey": "frames/vid11/2073-source.jpg",
+            "url": "/frames/seq-011/2073-source.jpg",
+            "objectKey": "frames/seq-011/2073-source.jpg",
             "bytes": 21531,
             "checksum": "361cce2ea965f2c70ef3031d7018ef1592940464ef0347d57f426e3f93590259",
             "mediaType": "image/jpeg"
@@ -46,28 +46,28 @@
       },
       {
         "id": "WAS-V11-F2051",
-        "collection": "vid11",
+        "collection": "seq-011",
         "release": "1.0",
-        "videoId": "vid11",
+        "sequenceId": "seq-011",
         "frameIndex": 2051,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid11/2051-source.jpg",
-        "sourceUrl": "/frames/vid11/2051-source.jpg",
+        "image": "/frames/seq-011/2051-source.jpg",
+        "sourceUrl": "/frames/seq-011/2051-source.jpg",
         "hasSource": true,
         "hasMask": false,
-        "alt": "All-sky camera frame 2051 of sequence vid11, not yet segmented.",
+        "alt": "All-sky camera frame 2051 of sequence 11, not yet segmented.",
         "tags": [
-          "vid11",
+          "seq-011",
           "unsegmented",
           "source only"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid11/2051-source.jpg",
-            "objectKey": "frames/vid11/2051-source.jpg",
+            "url": "/frames/seq-011/2051-source.jpg",
+            "objectKey": "frames/seq-011/2051-source.jpg",
             "bytes": 21477,
             "checksum": "3ae88616591097c4861d2f8d98ebf67179baafaa1c6ddfed81180ef86300f665",
             "mediaType": "image/jpeg"
@@ -82,11 +82,11 @@
       "count": 2,
       "total": 2422,
       "limit": 2,
-      "nextCursor": "eyJvZmZzZXQiOjZ9"
+      "nextCursor": "eyJrIjoiMDExLTAwMDIwNTEiLCJpIjoiV0FTLVYxMS1GMjA1MSIsIm8iOjZ9"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjR9",
-      "next": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJvZmZzZXQiOjZ9"
+      "next": "https://wascat.example.org/api/v1/images?limit=2&cursor=eyJrIjoiMDExLTAwMDIwNTEiLCJpIjoiV0FTLVYxMS1GMjA1MSIsIm8iOjZ9"
     }
   }
 }

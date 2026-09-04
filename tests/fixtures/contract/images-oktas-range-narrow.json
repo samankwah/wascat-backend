@@ -15,39 +15,39 @@
     "data": [
       {
         "id": "WAS-V02-F10060",
-        "collection": "vid2",
+        "collection": "seq-002",
         "release": "1.0",
-        "videoId": "vid2",
+        "sequenceId": "seq-002",
         "frameIndex": 10060,
         "cloudFraction": 0.67317,
         "cloudCoverOktas": 5,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid2/10060-source.jpg",
-        "sourceUrl": "/frames/vid2/10060-source.jpg",
-        "maskUrl": "/frames/vid2/10060-mask.jpg",
+        "image": "/frames/seq-002/10060-source.jpg",
+        "sourceUrl": "/frames/seq-002/10060-source.jpg",
+        "maskUrl": "/frames/seq-002/10060-mask.jpg",
         "hasSource": true,
         "hasMask": true,
-        "alt": "All-sky camera frame 10060 of sequence vid2, measured at 5/8 cloud cover.",
+        "alt": "All-sky camera frame 10060 of sequence 02, measured at 5/8 · Broken cloud cover.",
         "tags": [
-          "vid2",
-          "5/8",
+          "seq-002",
+          "5/8 · Broken",
           "source + mask"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid2/10060-source.jpg",
-            "objectKey": "frames/vid2/10060-source.jpg",
+            "url": "/frames/seq-002/10060-source.jpg",
+            "objectKey": "frames/seq-002/10060-source.jpg",
             "bytes": 22916,
             "checksum": "5241e5b53dcf66c5b372e67b47c141ab42160c596a10d4c9803286a0692a80f9",
             "mediaType": "image/jpeg"
           },
           {
             "type": "mask",
-            "url": "/frames/vid2/10060-mask.jpg",
-            "objectKey": "frames/vid2/10060-mask.jpg",
+            "url": "/frames/seq-002/10060-mask.jpg",
+            "objectKey": "frames/seq-002/10060-mask.jpg",
             "bytes": 19109,
             "checksum": "e2831e123e89c6a26162ae1c0299b60e2f65b341267d7ebb568498636d5d12f7",
             "mediaType": "image/jpeg"
@@ -57,39 +57,39 @@
       },
       {
         "id": "WAS-V02-F10029",
-        "collection": "vid2",
+        "collection": "seq-002",
         "release": "1.0",
-        "videoId": "vid2",
+        "sequenceId": "seq-002",
         "frameIndex": 10029,
         "cloudFraction": 0.681839,
         "cloudCoverOktas": 5,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid2/10029-source.jpg",
-        "sourceUrl": "/frames/vid2/10029-source.jpg",
-        "maskUrl": "/frames/vid2/10029-mask.jpg",
+        "image": "/frames/seq-002/10029-source.jpg",
+        "sourceUrl": "/frames/seq-002/10029-source.jpg",
+        "maskUrl": "/frames/seq-002/10029-mask.jpg",
         "hasSource": true,
         "hasMask": true,
-        "alt": "All-sky camera frame 10029 of sequence vid2, measured at 5/8 cloud cover.",
+        "alt": "All-sky camera frame 10029 of sequence 02, measured at 5/8 · Broken cloud cover.",
         "tags": [
-          "vid2",
-          "5/8",
+          "seq-002",
+          "5/8 · Broken",
           "source + mask"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid2/10029-source.jpg",
-            "objectKey": "frames/vid2/10029-source.jpg",
+            "url": "/frames/seq-002/10029-source.jpg",
+            "objectKey": "frames/seq-002/10029-source.jpg",
             "bytes": 22632,
             "checksum": "48a912aac23d7fb6526bf949a4004cb0ed58500cec7e8d1d97f7d0a86771bbf0",
             "mediaType": "image/jpeg"
           },
           {
             "type": "mask",
-            "url": "/frames/vid2/10029-mask.jpg",
-            "objectKey": "frames/vid2/10029-mask.jpg",
+            "url": "/frames/seq-002/10029-mask.jpg",
+            "objectKey": "frames/seq-002/10029-mask.jpg",
             "bytes": 17995,
             "checksum": "f332c9070a8c24cd71ee57a797b2ee2b2eadc0fb7e54e300ba1b9f34398b6deb",
             "mediaType": "image/jpeg"
@@ -99,39 +99,39 @@
       },
       {
         "id": "WAS-V02-F9966",
-        "collection": "vid2",
+        "collection": "seq-002",
         "release": "1.0",
-        "videoId": "vid2",
+        "sequenceId": "seq-002",
         "frameIndex": 9966,
         "cloudFraction": 0.642072,
         "cloudCoverOktas": 5,
         "maskScale": 1,
         "width": 640,
         "height": 360,
-        "image": "/frames/vid2/9966-source.jpg",
-        "sourceUrl": "/frames/vid2/9966-source.jpg",
-        "maskUrl": "/frames/vid2/9966-mask.jpg",
+        "image": "/frames/seq-002/9966-source.jpg",
+        "sourceUrl": "/frames/seq-002/9966-source.jpg",
+        "maskUrl": "/frames/seq-002/9966-mask.jpg",
         "hasSource": true,
         "hasMask": true,
-        "alt": "All-sky camera frame 9966 of sequence vid2, measured at 5/8 cloud cover.",
+        "alt": "All-sky camera frame 9966 of sequence 02, measured at 5/8 · Broken cloud cover.",
         "tags": [
-          "vid2",
-          "5/8",
+          "seq-002",
+          "5/8 · Broken",
           "source + mask"
         ],
         "artifacts": [
           {
             "type": "source",
-            "url": "/frames/vid2/9966-source.jpg",
-            "objectKey": "frames/vid2/9966-source.jpg",
+            "url": "/frames/seq-002/9966-source.jpg",
+            "objectKey": "frames/seq-002/9966-source.jpg",
             "bytes": 22887,
             "checksum": "0ca2f3c086ea46689f83992042f42f0e4150e0b6a7c40edde0e143069c3cef8c",
             "mediaType": "image/jpeg"
           },
           {
             "type": "mask",
-            "url": "/frames/vid2/9966-mask.jpg",
-            "objectKey": "frames/vid2/9966-mask.jpg",
+            "url": "/frames/seq-002/9966-mask.jpg",
+            "objectKey": "frames/seq-002/9966-mask.jpg",
             "bytes": 15661,
             "checksum": "894a9f1f068dbda9f0b1719a9bb116b711dd614a7b57ee54ad0e921679deb854",
             "mediaType": "image/jpeg"
@@ -146,11 +146,11 @@
       "count": 3,
       "total": 608,
       "limit": 3,
-      "nextCursor": "eyJvZmZzZXQiOjN9"
+      "nextCursor": "eyJrIjoiMDAyLTAwMDk5NjYiLCJpIjoiV0FTLVYwMi1GOTk2NiIsIm8iOjN9"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/images?oktasMin=3&oktasMax=5&limit=3",
-      "next": "https://wascat.example.org/api/v1/images?oktasMin=3&oktasMax=5&limit=3&cursor=eyJvZmZzZXQiOjN9"
+      "next": "https://wascat.example.org/api/v1/images?oktasMin=3&oktasMax=5&limit=3&cursor=eyJrIjoiMDAyLTAwMDk5NjYiLCJpIjoiV0FTLVYwMi1GOTk2NiIsIm8iOjN9"
     }
   }
 }

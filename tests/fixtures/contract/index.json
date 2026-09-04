@@ -35,22 +35,22 @@
       "file": "images-sort-newest.json"
     },
     {
-      "name": "images-video-vid1",
-      "path": "/api/v1/images?video=vid1&limit=3",
+      "name": "images-sequence-seq-001",
+      "path": "/api/v1/images?sequence=seq-001&limit=3",
       "status": 200,
-      "file": "images-video-vid1.json"
+      "file": "images-sequence-seq-001.json"
     },
     {
-      "name": "images-video-vid11",
-      "path": "/api/v1/images?video=vid11&limit=3",
+      "name": "images-sequence-seq-011",
+      "path": "/api/v1/images?sequence=seq-011&limit=3",
       "status": 200,
-      "file": "images-video-vid11.json"
+      "file": "images-sequence-seq-011.json"
     },
     {
-      "name": "images-collection-vid5",
-      "path": "/api/v1/images?collection=vid5&limit=3",
+      "name": "images-collection-seq-005",
+      "path": "/api/v1/images?collection=seq-005&limit=3",
       "status": 200,
-      "file": "images-collection-vid5.json"
+      "file": "images-collection-seq-005.json"
     },
     {
       "name": "images-release-1-0",
@@ -131,10 +131,10 @@
       "file": "images-artifact-mask.json"
     },
     {
-      "name": "images-q-vid1-substring",
-      "path": "/api/v1/images?q=vid1&limit=5",
+      "name": "images-q-seq-substring",
+      "path": "/api/v1/images?q=seq-001&limit=5",
       "status": 200,
-      "file": "images-q-vid1-substring.json"
+      "file": "images-q-seq-substring.json"
     },
     {
       "name": "images-q-exact-id",
@@ -233,10 +233,10 @@
       "file": "images-err-limit-0.json"
     },
     {
-      "name": "images-err-video-format",
-      "path": "/api/v1/images?video=video1",
+      "name": "images-err-sequence-format",
+      "path": "/api/v1/images?sequence=vid1",
       "status": 400,
-      "file": "images-err-video-format.json"
+      "file": "images-err-sequence-format.json"
     },
     {
       "name": "images-err-season-unknown",
@@ -264,7 +264,7 @@
     },
     {
       "name": "images-err-multiple",
-      "path": "/api/v1/images?oktas=9&limit=101&video=nope",
+      "path": "/api/v1/images?oktas=9&limit=101&sequence=nope",
       "status": 400,
       "file": "images-err-multiple.json"
     },
@@ -300,13 +300,13 @@
     },
     {
       "name": "collection-first",
-      "path": "/api/v1/collections/vid1",
+      "path": "/api/v1/collections/seq-001",
       "status": 200,
       "file": "collection-first.json"
     },
     {
       "name": "collection-last",
-      "path": "/api/v1/collections/vid11",
+      "path": "/api/v1/collections/seq-011",
       "status": 200,
       "file": "collection-last.json"
     },
@@ -318,7 +318,7 @@
     },
     {
       "name": "releases-first",
-      "path": "/api/v1/collections/vid1/releases",
+      "path": "/api/v1/collections/seq-001/releases",
       "status": 200,
       "file": "releases-first.json"
     },

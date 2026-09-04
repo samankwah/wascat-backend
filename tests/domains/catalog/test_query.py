@@ -45,10 +45,10 @@ class TestRecordedRejections:
 
     def test_reports_every_bad_parameter_at_once(self) -> None:
         with pytest.raises(InvalidQueryError) as caught:
-            parse_image_query({"oktas": "9", "limit": "101", "video": "nope"})
+            parse_image_query({"oktas": "9", "limit": "101", "sequence": "nope"})
         # Key order follows the schema's declaration order, as Zod's
         # flatten().fieldErrors does.
-        assert list(caught.value.details or {}) == ["video", "oktas", "limit"]
+        assert list(caught.value.details or {}) == ["sequence", "oktas", "limit"]
 
 
 class TestDefaults:
@@ -108,15 +108,17 @@ class TestStringFields:
             parse_image_query({"q": "x" * 101})
         assert caught.value.details == {"q": ["String must contain at most 100 character(s)"]}
 
-    @pytest.mark.parametrize("video", ["vid1", "vid11", "vid007"])
-    def test_accepts_sequence_identifiers(self, video: str) -> None:
-        assert parse_image_query({"video": video}).video == video
+    @pytest.mark.parametrize("sequence", ["seq-001", "seq-011", "seq-20260904-001"])
+    def test_accepts_sequence_identifiers(self, sequence: str) -> None:
+        assert parse_image_query({"sequence": sequence}).sequence == sequence
 
-    @pytest.mark.parametrize("video", ["video1", "vid", "VID1", "vid1x", "1vid"])
-    def test_rejects_malformed_sequence_identifiers(self, video: str) -> None:
+    @pytest.mark.parametrize(
+        "sequence", ["vid1", "seq-1", "SEQ-001", "seq-0011", "seq-001x", "seq"]
+    )
+    def test_rejects_malformed_sequence_identifiers(self, sequence: str) -> None:
         with pytest.raises(InvalidQueryError) as caught:
-            parse_image_query({"video": video})
-        assert caught.value.details == {"video": ["Invalid"]}
+            parse_image_query({"sequence": sequence})
+        assert caught.value.details == {"sequence": ["Invalid"]}
 
 
 class TestDates:

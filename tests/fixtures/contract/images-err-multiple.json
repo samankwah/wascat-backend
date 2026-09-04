@@ -2,8 +2,8 @@
   "name": "images-err-multiple",
   "request": {
     "method": "GET",
-    "path": "/api/v1/images?oktas=9&limit=101&video=nope",
-    "url": "https://wascat.example.org/api/v1/images?oktas=9&limit=101&video=nope"
+    "path": "/api/v1/images?oktas=9&limit=101&sequence=nope",
+    "url": "https://wascat.example.org/api/v1/images?oktas=9&limit=101&sequence=nope"
   },
   "status": 400,
   "headers": {
@@ -16,7 +16,7 @@
       "code": "invalid_query",
       "message": "One or more query parameters are invalid.",
       "details": {
-        "video": [
+        "sequence": [
           "Invalid"
         ],
         "oktas": [
