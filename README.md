@@ -115,3 +115,23 @@ and must not shift because storage moved.
 Tests use a throwaway database, rebuilt each session. Most run without Docker
 by using the filesystem object store; the ones that need PostgreSQL are marked
 `db`.
+
+## Deploy
+
+`Dockerfile` and `render.yaml` deploy this as a Render web service with a
+managed Postgres, one Blueprint launch (`render blueprint launch`, or
+**New → Blueprint** in the dashboard, pointed at this repo). Object storage
+is external - any S3-compatible endpoint, set via the `WASCAT_S3_*` vars
+that already default to MinIO locally.
+
+`render.yaml` documents which vars it can generate itself
+(`WASCAT_SECRET_KEY`) and which need a real value pasted in once
+(`WASCAT_DATABASE_URL`'s driver prefix, the object-store credentials, and
+the frontend's public URL for `WASCAT_PUBLIC_BASE_URL` /
+`WASCAT_ADMIN_ORIGINS` / `WASCAT_FRONTEND_REVALIDATE_URL`) - nothing this
+service needs is invented at deploy time.
+
+`WASCAT_ENVIRONMENT=production` makes the app refuse to start on a
+development default: see `Settings._refuse_dev_defaults_in_production` in
+`src/wascat/core/config.py` before assuming a misconfigured deploy will just
+work with the wrong secret.

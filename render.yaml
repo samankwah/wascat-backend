@@ -1,0 +1,82 @@
+# Render Blueprint: `render blueprint launch` (or "New +" -> "Blueprint" in
+# the dashboard) reads this and provisions both resources below in one pass.
+#
+# Every WASCAT_* var mirrors .env.example. Three kinds of value here:
+#  - a literal, for anything that's the same in every deploy of this service
+#    (WASCAT_ENVIRONMENT, WASCAT_COOKIE_SECURE, ...)
+#  - `generateValue: true`, for WASCAT_SECRET_KEY - Render mints a real
+#    random value at first deploy, so no secret is ever typed or committed
+#  - `sync: false`, for anything genuinely per-deployment that only you have
+#    (the R2 credentials, the two public URLs) - Render prompts for these
+#    once in the dashboard and leaves them alone on every redeploy after
+#
+# `fromDatabase` wires WASCAT_DATABASE_URL straight to the Postgres instance
+# this same blueprint creates, in the async-driver form the app expects
+# (postgresql+asyncpg://...) - see the `property: connectionString` note below.
+
+databases:
+  - name: wascat-db
+    databaseName: wascat
+    user: wascat
+    plan: free
+
+services:
+  - type: web
+    name: wascat-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: WASCAT_ENVIRONMENT
+        value: production
+      - key: WASCAT_DEBUG
+        value: "false"
+
+      # Postgres, from the database block above. Render's own
+      # `connectionString` is postgresql://...; the app needs the asyncpg
+      # driver named explicitly, so this is built from the parts instead.
+      - key: WASCAT_DATABASE_URL
+        fromDatabase:
+          name: wascat-db
+          property: connectionString
+          # NOTE: Render's generated connectionString omits "+asyncpg". If
+          # the Blueprint UI does not offer a way to inject that prefix,
+          # paste the value manually as
+          # postgresql+asyncpg://<user>:<password>@<host>/<database>
+          # using the same host/user/password Render generated - the
+          # dashboard's "Info" tab on wascat-db shows all four.
+
+      # Public URLs - the frontend's real Netlify origin, set once it exists
+      # (see the plan's "Wiring the two services together" section).
+      - key: WASCAT_PUBLIC_BASE_URL
+        sync: false
+      - key: WASCAT_PUBLIC_ASSET_BASE_URL
+        value: ""
+
+      # Object storage - Cloudflare R2. All four come from the R2 API token
+      # and bucket you create; see the plan for what each one is.
+      - key: WASCAT_S3_ENDPOINT_URL
+        sync: false
+      - key: WASCAT_S3_BUCKET
+        value: wascat
+      - key: WASCAT_S3_REGION
+        value: auto
+      - key: WASCAT_S3_ACCESS_KEY
+        sync: false
+      - key: WASCAT_S3_SECRET_KEY
+        sync: false
+
+      # Security.
+      - key: WASCAT_SECRET_KEY
+        generateValue: true
+      - key: WASCAT_COOKIE_SECURE
+        value: "true"
+      - key: WASCAT_ADMIN_ORIGINS
+        sync: false # e.g. ["https://wascat-frontend.netlify.app"]
+
+      # Frontend cache invalidation.
+      - key: WASCAT_FRONTEND_REVALIDATE_URL
+        sync: false # e.g. https://wascat-frontend.netlify.app/api/revalidate
+      - key: WASCAT_FRONTEND_REVALIDATE_SECRET
+        generateValue: true
