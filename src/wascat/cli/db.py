@@ -33,7 +33,7 @@ PROVENANCE_OPTION = typer.Option(
 FRAMES_OPTION = typer.Option(
     None,
     "--frames",
-    help="Directory holding the vidN frame folders. Omit to skip uploading.",
+    help="Directory holding the seq-NNN frame folders. Omit to skip uploading.",
 )
 REPLACE_OPTION = typer.Option(False, "--replace", help="Delete the existing catalogue first.")
 PUBLISH_OPTION = typer.Option(

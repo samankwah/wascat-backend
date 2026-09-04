@@ -4,7 +4,7 @@ Two tables, both of which exist to make the pipeline reproducible rather than
 merely runnable.
 
 ``SequenceReference`` pins the frame each sequence takes its reference circle
-from. The TypeScript pipeline used ``Object.keys(pairedByVideo)[0]``, which is
+from. The TypeScript pipeline used ``Object.keys(pairedBySequence)[0]``, which is
 readdir order - so it depended on the filesystem, and a Linux CI run could
 legitimately choose a different frame and produce different geometry from the
 same inputs. Pinning it makes the measurement a property of the data instead
@@ -33,6 +33,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column
 
 from wascat.core.db import Base, ts_created, ts_updated, uuid_pk
+from wascat.domains.catalog.models import SEQUENCE_ID_SQL_REGEX
 
 
 class IngestStatus(StrEnum):
@@ -51,7 +52,7 @@ class SequenceReference(Base):
     __tablename__ = "sequence_references"
 
     id: Mapped[uuid_pk]
-    video_id: Mapped[str] = mapped_column(unique=True)
+    sequence_id: Mapped[str] = mapped_column(unique=True)
 
     # Frame whose source image defines the valid circular field of view. Used
     # directly for its own sequence, and reused for mask-only records that have
@@ -81,7 +82,7 @@ class SequenceReference(Base):
     updated_at: Mapped[ts_updated]
 
     __table_args__ = (
-        CheckConstraint(r"video_id ~ '^vid[0-9]+$'", name="video_id_format"),
+        CheckConstraint(SEQUENCE_ID_SQL_REGEX, name="sequence_id_format"),
         CheckConstraint("mask_scale >= 1", name="mask_scale_at_least_one"),
         CheckConstraint("reference_frame_index >= 0", name="reference_frame_non_negative"),
     )

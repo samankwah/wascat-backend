@@ -37,7 +37,7 @@ def public_url(object_key: str) -> str:
     """Absolute URL for a stored object.
 
     With an empty ``PUBLIC_ASSET_BASE_URL`` this renders
-    ``/frames/vid1/5-source.jpg``, byte-identical to what the bundled
+    ``/frames/seq-001/5-source.jpg``, byte-identical to what the bundled
     catalogue served. Production points it at a CDN.
     """
     base = get_settings().public_asset_base_url
@@ -62,7 +62,22 @@ def _public_artifacts(record: ImageRecord) -> list[Artifact]:
     )
 
 
-def build_alt(*, frame_index: int, video_id: str, oktas: int | None, has_source: bool) -> str:
+def sequence_ordinal(sequence_id: str) -> int:
+    """The trailing ordinal of a sequence id, mirroring what the trigger stores."""
+    return int(sequence_id[-3:])
+
+
+def sequence_label(sequence_id: str) -> str:
+    """The reader-facing name of a capture sequence: "seq-001" -> "01".
+
+    The identifier is a filter token and a URL segment. It does not belong in a
+    heading, a sentence or alt text, so every human-facing string is built from
+    this instead. Two digits minimum, more once the archive passes ninety-nine.
+    """
+    return f"{sequence_ordinal(sequence_id):02d}"
+
+
+def build_alt(*, frame_index: int, sequence_id: str, oktas: int | None, has_source: bool) -> str:
     """Alt text for the primary image.
 
     A frame and a bare mask are described differently, because what the reader
@@ -75,24 +90,29 @@ def build_alt(*, frame_index: int, video_id: str, oktas: int | None, has_source:
             if oktas is None
             else f", measured at {okta_label(oktas)} cloud cover"
         )
-        return f"All-sky camera frame {frame_index} of sequence {video_id}{measurement}."
+        label = sequence_label(sequence_id)
+        return f"All-sky camera frame {frame_index} of sequence {label}{measurement}."
     return (
         f"Binary cloud segmentation mask for frame {frame_index} "
-        f"of sequence {video_id}, measured at {okta_label(oktas or 0)} cloud cover."
+        f"of sequence {sequence_label(sequence_id)}, "
+        f"measured at {okta_label(oktas or 0)} cloud cover."
     )
 
 
-def build_tags(*, video_id: str, oktas: int | None, has_source: bool, has_mask: bool) -> list[str]:
+def build_tags(
+    *, sequence_id: str, oktas: int | None, has_source: bool, has_mask: bool
+) -> list[str]:
+    """Filter tokens, not prose - so tags[0] stays the raw sequence id."""
     if has_source and has_mask:
         pairing = "source + mask"
     elif has_mask:
         pairing = "mask only"
     else:
         pairing = "source only"
-    return [video_id, "unsegmented" if oktas is None else okta_label(oktas), pairing]
+    return [sequence_id, "unsegmented" if oktas is None else okta_label(oktas), pairing]
 
 
-def build_sort_key(*, captured_at: Any, video_number: int, frame_index: int) -> str:
+def build_sort_key(*, captured_at: Any, sequence_number: int, frame_index: int) -> str:
     """Real timestamp when known, sequence position otherwise.
 
     Both forms are fixed width so they sort byte-wise, and an ISO timestamp
@@ -101,7 +121,7 @@ def build_sort_key(*, captured_at: Any, video_number: int, frame_index: int) -> 
     """
     if captured_at is not None:
         return iso_z(captured_at)
-    return f"{video_number:03d}-{frame_index:07d}"
+    return f"{sequence_number:03d}-{frame_index:07d}"
 
 
 def record_to_json(
@@ -126,7 +146,7 @@ def record_to_json(
         "id": record.id,
         "collection": collection_slug,
         "release": release_version,
-        "videoId": record.video_id,
+        "sequenceId": record.sequence_id,
         "frameIndex": record.frame_index,
     }
 
@@ -148,12 +168,12 @@ def record_to_json(
     payload["hasMask"] = mask is not None
     payload["alt"] = build_alt(
         frame_index=record.frame_index,
-        video_id=record.video_id,
+        sequence_id=record.sequence_id,
         oktas=oktas,
         has_source=source is not None,
     )
     payload["tags"] = build_tags(
-        video_id=record.video_id,
+        sequence_id=record.sequence_id,
         oktas=oktas,
         has_source=source is not None,
         has_mask=mask is not None,
@@ -194,13 +214,13 @@ def release_to_json(release: Release, *, images: int, total_bytes: int) -> dict[
 
 
 def build_collection_description(
-    *, images: int, segmented: int, with_source: int, sequence_label: str
+    *, images: int, segmented: int, with_source: int, sequence_names: str
 ) -> str:
     mask_only = images - with_source
     source_only = images - segmented
 
     text = (
-        f"{locale_int(images)} all-sky frames from capture sequence {sequence_label}. "
+        f"{locale_int(images)} all-sky frames from capture sequence {sequence_names}. "
         f"{locale_int(segmented)} carry a binary cloud mask and a measured cloud cover"
     )
     if mask_only > 0:
@@ -233,7 +253,7 @@ def build_coverage(
 def collection_to_json(
     collection: Collection,
     *,
-    video_ids: list[str],
+    sequence_ids: list[str],
     images: int,
     artifacts: int,
     with_source: int,
@@ -246,24 +266,24 @@ def collection_to_json(
     mean_oktas: float | None = None,
     mask_registration: list[tuple[str, float]] | None = None,
 ) -> dict[str, Any]:
-    sequence_label = ", ".join(video_ids)
+    sequence_names = ", ".join(sequence_label(s) for s in sequence_ids)
     location_name = collection.location_name
 
     payload: dict[str, Any] = {
         "slug": collection.slug,
-        "title": location_name or f"Capture sequence {sequence_label}",
-        "shortTitle": location_name or sequence_label,
-        "kicker": f"ALL-SKY CLOUD SEGMENTATION · {sequence_label.upper()}",
+        "title": location_name or f"Capture sequence {sequence_names}",
+        "shortTitle": location_name or f"Sequence {sequence_names}",
+        "kicker": f"ALL-SKY CLOUD SEGMENTATION · SEQUENCE {sequence_names}",
         "description": build_collection_description(
             images=images,
             segmented=segmented,
             with_source=with_source,
-            sequence_label=sequence_label,
+            sequence_names=sequence_names,
         ),
         "coverage": build_coverage(
             min_frame=min_frame, max_frame=max_frame, segmented=segmented, images=images
         ),
-        "videoIds": video_ids,
+        "sequenceIds": sequence_ids,
         "images": images,
         "artifacts": artifacts,
         "withSource": with_source,
@@ -279,8 +299,8 @@ def collection_to_json(
         # the frames they segment. Masks are stored exactly as delivered; the
         # viewer scales the overlay back so the two line up.
         "maskRegistration": [
-            {"videoId": video_id, "scale": js_number(scale), "corrected": scale > 1}
-            for video_id, scale in (mask_registration or [])
+            {"sequenceId": sequence_id, "scale": js_number(scale), "corrected": scale > 1}
+            for sequence_id, scale in (mask_registration or [])
         ],
     }
 

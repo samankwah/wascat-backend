@@ -32,13 +32,16 @@ from wascat.domains.catalog.models import (
     Release,
     ReleaseStatus,
 )
+from wascat.domains.catalog.presenters import sequence_ordinal
 from wascat.storage import keys
 from wascat.storage.base import IMMUTABLE_CACHE_CONTROL, ObjectStore
 from wascat.storage.imaging import UnsupportedImageError, probe
 
 log = get_logger(__name__)
 
-#: Delivered filenames look like "1057_vid7_corner_mask.jpg".
+#: Delivered filenames look like "1057_vid7_corner_mask.jpg". That naming
+#: belongs to the capture team, so it is read as delivered and translated to a
+#: catalogue sequence id here, at the boundary, and nowhere else.
 DELIVERY = re.compile(r"^(?P<frame>\d+)_(?P<video>vid\d+)_")
 
 #: Small objects, so the cost is round trips rather than bandwidth.
@@ -66,7 +69,7 @@ class BackfillReport:
 @dataclass(frozen=True, slots=True)
 class Delivered:
     path: Path
-    video_id: str
+    sequence_id: str
     frame_index: int
 
 
@@ -80,18 +83,24 @@ def scan(source: Path) -> Iterator[Delivered]:
             continue
         yield Delivered(
             path=path,
-            video_id=match["video"],
+            sequence_id=sequence_id_from_delivery(match["video"]),
             frame_index=int(match["frame"]),
         )
 
 
-def record_id(video_id: str, frame_index: int) -> str:
+def sequence_id_from_delivery(delivered: str) -> str:
+    """Translate a delivered "vid7" into the catalogue's "seq-007"."""
+    return f"seq-{int(delivered[3:]):03d}"
+
+
+def record_id(sequence_id: str, frame_index: int) -> str:
     """The identifier the original pipeline would have given this frame.
 
     Reproduced rather than invented, so a backfilled record is
-    indistinguishable from one the pipeline produced - "WAS-V07-F1057".
+    indistinguishable from one the pipeline produced - "WAS-V07-F1057". The
+    frame id keeps its own two-digit form; only the sequence id was renamed.
     """
-    return f"WAS-V{int(video_id[3:]):02d}-F{frame_index}"
+    return f"WAS-V{sequence_ordinal(sequence_id):02d}-F{frame_index}"
 
 
 async def backfill(
@@ -178,14 +187,30 @@ async def backfill(
         if release is not None:
             releases[slug] = release
 
+    # Which collection each sequence already lives in. The seed happens to name
+    # a collection after its only sequence, but that is a default and not an
+    # invariant - a collection may group several sequences captured at one site
+    # - so the mapping is read from the catalogue rather than assumed.
+    slug_by_sequence = {
+        sequence_id: slug
+        for sequence_id, slug in (
+            await session.execute(
+                select(ImageRecord.sequence_id, Collection.slug)
+                .join(Collection, Collection.id == ImageRecord.collection_id)
+                .group_by(ImageRecord.sequence_id, Collection.slug)
+            )
+        ).all()
+    }
+
     pending: list[Delivered] = []
     for item in delivered:
-        identifier = record_id(item.video_id, item.frame_index)
+        identifier = record_id(item.sequence_id, item.frame_index)
         if identifier in existing:
             report.already_present += 1
             continue
-        if item.video_id not in releases:
-            report.skipped.append(f"{item.path.name}: no collection for {item.video_id}")
+        owner_slug = slug_by_sequence.get(item.sequence_id)
+        if owner_slug is None or owner_slug not in releases:
+            report.skipped.append(f"{item.path.name}: no collection for {item.sequence_id}")
             continue
         pending.append(item)
         if limit is not None and len(pending) >= limit:
@@ -198,9 +223,9 @@ async def backfill(
     # Published releases are immutable, so the target has to be a draft. Say
     # so before uploading 300 MB rather than after.
     blocked = {
-        releases[item.video_id].version
+        releases[slug_by_sequence[item.sequence_id]].version
         for item in pending
-        if releases[item.video_id].status is not ReleaseStatus.DRAFT
+        if releases[slug_by_sequence[item.sequence_id]].status is not ReleaseStatus.DRAFT
     }
     if blocked:
         raise RuntimeError(
@@ -225,7 +250,7 @@ async def backfill(
                     report.skipped.append(f"{item.path.name}: {exc}")
                 return
 
-            key = keys.frame_key(item.video_id, item.frame_index, "source")
+            key = keys.frame_key(item.sequence_id, item.frame_index, "source")
             await store.put(
                 key,
                 data,
@@ -233,8 +258,8 @@ async def backfill(
                 cache_control=IMMUTABLE_CACHE_CONTROL,
             )
 
-            release = releases[item.video_id]
-            identifier = record_id(item.video_id, item.frame_index)
+            release = releases[slug_by_sequence[item.sequence_id]]
+            identifier = record_id(item.sequence_id, item.frame_index)
 
             async with lock:
                 rows.append(
@@ -242,7 +267,7 @@ async def backfill(
                         "id": identifier,
                         "release_id": release.id,
                         "collection_id": release.collection_id,
-                        "video_id": item.video_id,
+                        "sequence_id": item.sequence_id,
                         "frame_index": item.frame_index,
                         # No mask, so no measurement. Absent, never zero.
                         "cloud_fraction": None,

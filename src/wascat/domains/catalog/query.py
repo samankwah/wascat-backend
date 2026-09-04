@@ -24,6 +24,7 @@ from datetime import date
 from typing import Any, Literal
 
 from wascat.core.errors import FieldErrors, InvalidQueryError
+from wascat.domains.catalog.models import SEQUENCE_ID_PATTERN
 
 # Mirrors lib/vocab.ts. These are the values the public API validates against;
 # the vocabulary tables may hold more, but widening this set widens the
@@ -48,7 +49,7 @@ class ImageQuery:
     q: str | None = None
     collection: str | None = None
     release: str | None = None
-    video: str | None = None
+    sequence: str | None = None
     oktas: int | None = None
     oktas_min: int | None = None
     oktas_max: int | None = None
@@ -184,7 +185,7 @@ def parse_image_query(params: Mapping[str, str]) -> ImageQuery:
     q = parser.read("q", lambda raw: _string(raw, max_length=100))
     collection = parser.read("collection", lambda raw: _string(raw, max_length=80))
     release = parser.read("release", lambda raw: _string(raw, max_length=20))
-    video = parser.read("video", lambda raw: _regex(raw, r"vid\d+", max_length=80))
+    sequence = parser.read("sequence", lambda raw: _regex(raw, SEQUENCE_ID_PATTERN, max_length=80))
     oktas = parser.read("oktas", lambda raw: _coerce_int(raw, minimum=0, maximum=8))
     oktas_min = parser.read("oktasMin", lambda raw: _coerce_int(raw, minimum=0, maximum=8))
     oktas_max = parser.read("oktasMax", lambda raw: _coerce_int(raw, minimum=0, maximum=8))
@@ -206,7 +207,7 @@ def parse_image_query(params: Mapping[str, str]) -> ImageQuery:
         q=q or None,
         collection=collection or None,
         release=release or None,
-        video=video,
+        sequence=sequence,
         oktas=oktas,
         oktas_min=oktas_min,
         oktas_max=oktas_max,

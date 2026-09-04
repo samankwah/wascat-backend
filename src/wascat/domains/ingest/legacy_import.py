@@ -100,8 +100,8 @@ async def _upload_artifact(
             report.skipped += 1
             return
 
-        # objectKey is always "frames/vidN/<file>", and frames_root points at
-        # the directory holding those vidN folders.
+        # objectKey is always "frames/seq-NNN/<file>", and frames_root points at
+        # the directory holding those sequence folders.
         source = frames_root / key[len("frames/") :]
         if not await to_thread.run_sync(source.exists):
             raise FileNotFoundError(f"Missing frame for {key}: looked in {source}")
@@ -197,8 +197,9 @@ async def import_catalogue(
         # All of them are null today, which is exactly the gap the dashboard
         # exists to close.
         collection.title = entry.get("title")
-        # Ordering comes from the catalogue, which is numeric by sequence.
-        # Sorting on the slug would read vid1, vid10, vid11, vid2.
+        # Ordering comes from the catalogue. Zero-padded slugs sort correctly
+        # on their own now, but position stays explicit so a curator can group
+        # collections by site rather than by capture order.
         collection.position = index
         for source_key, attribute in (
             ("locationName", "location_name"),
@@ -248,18 +249,18 @@ async def import_catalogue(
         releases_by_slug[slug] = release
 
     # -- per-sequence reference data ---------------------------------------
-    for video_id, registration in mask_registration.items():
+    for sequence_id, registration in mask_registration.items():
         reference = (
             (
                 await session.execute(
-                    select(SequenceReference).where(SequenceReference.video_id == video_id)
+                    select(SequenceReference).where(SequenceReference.sequence_id == sequence_id)
                 )
             )
             .scalars()
             .first()
         )
         if reference is None:
-            reference = SequenceReference(video_id=video_id, reference_frame_index=0)
+            reference = SequenceReference(sequence_id=sequence_id, reference_frame_index=0)
             session.add(reference)
         reference.mask_scale = Decimal(str(registration.get("scale", 1)))
         reference.corrected = bool(registration.get("corrected", False))
@@ -267,7 +268,7 @@ async def import_catalogue(
         reference.cloud_outside_field_of_view = (
             Decimal(str(round(float(outside), 6))) if outside is not None else None
         )
-        sequence_meta = sequences.get(video_id) or {}
+        sequence_meta = sequences.get(sequence_id) or {}
         reference.frames = sequence_meta.get("frames")
         reference.geometry = sequence_meta.get("geometry")
     await session.flush()
@@ -286,7 +287,7 @@ async def import_catalogue(
                 "id": image["id"],
                 "release_id": release.id,
                 "collection_id": release.collection_id,
-                "video_id": image["videoId"],
+                "sequence_id": image["sequenceId"],
                 "frame_index": image["frameIndex"],
                 # str() first: Decimal(float) would carry the float's noise
                 # into an exact column.

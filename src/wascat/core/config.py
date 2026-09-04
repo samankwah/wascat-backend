@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     # actually asked for, so the public origin is configured rather than
     # inferred. See risk R7 in the plan.
     public_base_url: str = ""
-    # Prefix for object keys. Empty renders "/frames/vid1/2-source.jpg", which
+    # Prefix for object keys. Empty renders "/frames/seq-001/2-source.jpg", which
     # is byte-identical to what the bundled catalogue served.
     public_asset_base_url: str = ""
 

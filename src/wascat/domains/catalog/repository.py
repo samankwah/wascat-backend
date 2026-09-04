@@ -136,7 +136,7 @@ async def get_image(
 
 @dataclass(frozen=True, slots=True)
 class CollectionStats:
-    video_ids: list[str]
+    sequence_ids: list[str]
     images: int
     artifacts: int
     with_source: int
@@ -188,35 +188,35 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
     )
     artifacts, total_bytes = (await session.execute(artifact_stmt)).one()
 
-    video_stmt = (
-        select(ImageRecord.video_id)
+    sequence_ids_stmt = (
+        select(ImageRecord.sequence_id)
         .where(
             ImageRecord.collection_id == collection_id,
             ImageRecord.retired_at.is_(None),
             ImageRecord.release_id.in_(_published_releases(collection_id)),
         )
-        .group_by(ImageRecord.video_id, ImageRecord.video_number)
-        .order_by(ImageRecord.video_number)
+        .group_by(ImageRecord.sequence_id)
+        .order_by(ImageRecord.sequence_id)
     )
-    video_ids = list((await session.execute(video_stmt)).scalars().all())
+    sequence_ids = list((await session.execute(sequence_ids_stmt)).scalars().all())
 
     registration_stmt = (
-        select(ImageRecord.video_id, func.max(ImageRecord.mask_scale))
+        select(ImageRecord.sequence_id, func.max(ImageRecord.mask_scale))
         .where(
             ImageRecord.collection_id == collection_id,
             ImageRecord.retired_at.is_(None),
             ImageRecord.release_id.in_(_published_releases(collection_id)),
         )
-        .group_by(ImageRecord.video_id, ImageRecord.video_number)
-        .order_by(ImageRecord.video_number)
+        .group_by(ImageRecord.sequence_id)
+        .order_by(ImageRecord.sequence_id)
     )
     mask_registration = [
-        (video_id, float(scale))
-        for video_id, scale in (await session.execute(registration_stmt)).all()
+        (sequence_id, float(scale))
+        for sequence_id, scale in (await session.execute(registration_stmt)).all()
     ]
 
     return CollectionStats(
-        video_ids=video_ids,
+        sequence_ids=sequence_ids,
         images=images or 0,
         artifacts=artifacts or 0,
         with_source=with_source or 0,
@@ -249,7 +249,7 @@ async def cover_record(session: AsyncSession, collection_id: Any) -> RecordRow |
                 ImageRecord.release_id.in_(_published_releases(collection_id)),
                 *condition,
             )
-            .order_by(ImageRecord.video_number, ImageRecord.frame_index)
+            .order_by(ImageRecord.sequence_id, ImageRecord.frame_index)
             .limit(1)
         )
         row = (await session.execute(stmt)).first()

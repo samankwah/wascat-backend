@@ -39,7 +39,7 @@ async def render_collection(session: AsyncSession, collection: Collection) -> di
 
     return collection_to_json(
         collection,
-        video_ids=stats.video_ids,
+        sequence_ids=stats.sequence_ids,
         images=stats.images,
         artifacts=stats.artifacts,
         with_source=stats.with_source,

@@ -47,6 +47,14 @@ if TYPE_CHECKING:
 PRIMARY_ARTIFACT_TYPES = ("source", "mask")
 DERIVATIVE_ARTIFACT_TYPES = ("thumbnail", "webp")
 
+# A capture sequence is "seq-" plus a three-digit ordinal, optionally preceded
+# by the capture date: "seq-001", or "seq-20260904-001" once the capture team
+# supplies timestamps. Both forms are fixed width, so they sort byte-wise, and
+# '0' < '2' puts the undated eleven ahead of anything dated - the same
+# discriminator sort_key uses to separate ISO timestamps from frame positions.
+SEQUENCE_ID_PATTERN = r"^seq-(?:\d{8}-)?\d{3}$"
+SEQUENCE_ID_SQL_REGEX = r"sequence_id ~ '^seq-(\d{8}-)?\d{3}$'"
+
 
 class ReleaseStatus(StrEnum):
     DRAFT = "DRAFT"
@@ -155,10 +163,13 @@ class ImageRecord(Base):
         ForeignKey("collections.id", ondelete="RESTRICT")
     )
 
-    video_id: Mapped[str]
-    # Parsed from video_id by trigger, so "vid10" orders after "vid9" rather
-    # than lexically between "vid1" and "vid2".
-    video_number: Mapped[int] = mapped_column(SmallInteger)
+    # The capture run this frame belongs to, e.g. "seq-001". Zero-padded so it
+    # orders byte-wise, and fixed width so "seq-001" is never a prefix of
+    # "seq-011" - which is what the substring search used to trip over.
+    sequence_id: Mapped[str]
+    # The trailing ordinal, parsed from sequence_id by trigger. Still carried
+    # because sort_key needs it as an integer; ordering reads sequence_id.
+    sequence_number: Mapped[int] = mapped_column(SmallInteger)
     frame_index: Mapped[int]
 
     # Measurement. Both NULL together or both set together; never invented.
@@ -261,7 +272,15 @@ class ImageRecord(Base):
         ),
         # 10: identifier formats.
         CheckConstraint(r"id ~ '^WAS-[A-Z0-9-]+$'", name="id_format"),
-        CheckConstraint(r"video_id ~ '^vid[0-9]+$'", name="video_id_format"),
+        CheckConstraint(SEQUENCE_ID_SQL_REGEX, name="sequence_id_format"),
+        # A dated sequence id repeats its ordinal across days, so two of them
+        # would share a numeric sort_key prefix. That never happens because a
+        # dated sequence sorts by its timestamp instead - which is only true if
+        # the timestamp is actually there. Make the database say so.
+        CheckConstraint(
+            r"sequence_id !~ '^seq-\d{8}-' OR captured_at IS NOT NULL",
+            name="dated_sequence_has_timestamp",
+        ),
         CheckConstraint("width > 0 AND height > 0", name="positive_dimensions"),
         CheckConstraint("frame_index >= 0", name="frame_index_non_negative"),
         CheckConstraint("mask_scale >= 1", name="mask_scale_at_least_one"),
@@ -269,16 +288,16 @@ class ImageRecord(Base):
         Index("ix_image_records_sort", "sort_key", "id"),
         Index("ix_image_records_release_sort", "release_id", "sort_key", "id"),
         Index("ix_image_records_collection_sort", "collection_id", "sort_key", "id"),
-        Index("ix_image_records_video_sort", "video_id", "sort_key", "id"),
+        Index("ix_image_records_sequence_sort", "sequence_id", "sort_key", "id"),
         Index("ix_image_records_segmented_sort", "has_mask", "sort_key", "id"),
         # A frame is unique *within a release*, not across the archive: a
-        # later release legitimately re-ingests vid1 frame 5, whether
+        # later release legitimately re-ingests seq-001 frame 5, whether
         # re-measured or re-encoded. Making this global would make the
         # second release of any sequence impossible to create.
         Index(
             "ix_image_records_release_frame",
             "release_id",
-            "video_id",
+            "sequence_id",
             "frame_index",
             unique=True,
         ),
@@ -347,5 +366,5 @@ class Artifact(Base):
     # NOTE: public_url is intentionally not a column. It is derived at read
     # time as f"{PUBLIC_ASSET_BASE_URL}/{object_key}", so moving the archive
     # behind a CDN is a config change rather than a data migration. With an
-    # empty base it renders "/frames/vid1/2-source.jpg", byte-identical to
-    # what the bundled catalogue served.
+    # empty base it renders "/frames/seq-001/2-source.jpg", the same path the
+    # site serves and the seed uploads to.

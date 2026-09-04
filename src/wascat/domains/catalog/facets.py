@@ -25,6 +25,7 @@ from wascat.domains.catalog.models import (
     Release,
     ReleaseStatus,
 )
+from wascat.domains.catalog.presenters import sequence_label
 from wascat.domains.catalog.query import ARTIFACT_TYPES, SEASONS, TIMES_OF_DAY
 
 Facet = dict[str, Any]
@@ -58,42 +59,49 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
             Collection.position,
             Collection.slug,
             Collection.location_name,
-            ImageRecord.video_id,
+            ImageRecord.sequence_id,
             func.count(ImageRecord.id),
         )
         .join(ImageRecord, ImageRecord.collection_id == Collection.id)
         .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(
-            Collection.position, Collection.slug, Collection.location_name, ImageRecord.video_id
+            Collection.position, Collection.slug, Collection.location_name, ImageRecord.sequence_id
         )
         .order_by(Collection.position, Collection.slug)
     )
     per_collection: dict[str, dict[str, Any]] = {}
-    for _, slug, location_name, video_id, count in (await session.execute(collection_stmt)).all():
-        entry = per_collection.setdefault(slug, {"label": location_name, "videos": [], "count": 0})
-        entry["videos"].append(video_id)
+    for _, slug, location_name, sequence_id, count in (
+        await session.execute(collection_stmt)
+    ).all():
+        entry = per_collection.setdefault(
+            slug, {"label": location_name, "sequences": [], "count": 0}
+        )
+        entry["sequences"].append(sequence_label(sequence_id))
         entry["count"] += count
 
     collections = [
         {
             "value": slug,
             # shortTitle: the site name once supplied, the sequence list until then.
-            "label": entry["label"] or ", ".join(sorted(set(entry["videos"]))),
+            "label": entry["label"] or f"Sequence {', '.join(sorted(set(entry['sequences'])))}",
             "count": entry["count"],
         }
         for slug, entry in per_collection.items()
     ]
 
-    # -- sequences, ordered numerically so vid10 follows vid9 -------------
+    # -- sequences ---------------------------------------------------------
+    # Ordered by the identifier itself: it is zero-padded and fixed width, so
+    # seq-010 follows seq-009 without a derived integer to sort on. The label
+    # is what a reader sees; the value is what the filter sends back.
     sequence_stmt = (
-        select(ImageRecord.video_id, func.count(ImageRecord.id))
+        select(ImageRecord.sequence_id, func.count(ImageRecord.id))
         .where(ImageRecord.retired_at.is_(None), _published())
-        .group_by(ImageRecord.video_id, ImageRecord.video_number)
-        .order_by(ImageRecord.video_number)
+        .group_by(ImageRecord.sequence_id)
+        .order_by(ImageRecord.sequence_id)
     )
     sequences = [
-        {"value": video_id, "count": count}
-        for video_id, count in (await session.execute(sequence_stmt)).all()
+        {"value": sequence_id, "label": f"Sequence {sequence_label(sequence_id)}", "count": count}
+        for sequence_id, count in (await session.execute(sequence_stmt)).all()
     ]
 
     # -- cloud cover ------------------------------------------------------

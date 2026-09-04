@@ -47,9 +47,11 @@ def apply_filters(
 
     if query.q:
         # lib/search.ts used String.includes on a lowercased join, so this
-        # stays a substring match rather than becoming a tsquery. Full-text
-        # would stop matching "vid1" inside "vid11", which the archive's own
-        # tests assert. autoescape neutralises % and _ in user input.
+        # stays a substring match rather than becoming a tsquery. It used to
+        # have to: unpadded ids meant "vid1" was a prefix of "vid11" and a
+        # search for one sequence returned another's frames. Fixed-width
+        # sequence ids ended that, but the substring behaviour is contract and
+        # stays. autoescape neutralises % and _ in user input.
         conditions.append(ImageRecord.search_text.contains(query.q.lower(), autoescape=True))
 
     if query.collection:
@@ -58,8 +60,8 @@ def apply_filters(
     if query.release:
         conditions.append(Release.version == query.release)
 
-    if query.video:
-        conditions.append(ImageRecord.video_id == query.video)
+    if query.sequence:
+        conditions.append(ImageRecord.sequence_id == query.sequence)
 
     if query.segmented is not None:
         conditions.append(ImageRecord.has_mask.is_(query.segmented))

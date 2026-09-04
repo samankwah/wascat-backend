@@ -52,7 +52,7 @@ class ImageRecordOut(BaseModel):
     id: str
     collection: str
     release: str
-    videoId: str  # noqa: N815
+    sequenceId: str  # noqa: N815
     frameIndex: int  # noqa: N815
 
     cloudFraction: float | None = None  # noqa: N815
@@ -101,7 +101,7 @@ class ReleaseOut(BaseModel):
 
 
 class MaskRegistration(BaseModel):
-    videoId: str  # noqa: N815
+    sequenceId: str  # noqa: N815
     scale: Annotated[
         float,
         Field(description="Mask size relative to the frame it segments. 1 when registered."),
@@ -116,7 +116,7 @@ class CollectionOut(BaseModel):
     kicker: str
     description: str
     coverage: str
-    videoIds: list[str]  # noqa: N815
+    sequenceIds: list[str]  # noqa: N815
     images: int
     artifacts: int
     withSource: int  # noqa: N815

@@ -123,7 +123,7 @@ async def replace_artifact(
             "byte-for-byte identical."
         )
 
-    object_key = keys.frame_key(record.video_id, record.frame_index, artifact_type)
+    object_key = keys.frame_key(record.sequence_id, record.frame_index, artifact_type)
 
     # Object storage first. A stored object with no row is rubbish to collect;
     # a row pointing at a missing object is a broken record.
@@ -216,7 +216,7 @@ async def _write_derivatives(
 
     for derivative in derivatives:
         key = keys.derivative_key(
-            record.video_id,
+            record.sequence_id,
             record.frame_index,
             f"{artifact_type}-{derivative.kind}",
             derivative.width,
