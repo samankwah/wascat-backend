@@ -1,6 +1,6 @@
 {
   "_readme": [
-    "Per-sequence provenance for the all-sky capture videos.",
+    "Per-sequence provenance for the all-sky capture sequences.",
     "",
     "'frames' and 'geometry' are measured from the delivered files and are filled in.",
     "Everything else is editorial and must come from the capture team. Leave a field",
@@ -15,23 +15,23 @@
     "latitude / longitude  decimal degrees of the camera.",
     "instrument All-sky camera make/model.",
     "collection Slug grouping sequences captured at the same site. Sequences that",
-    "           share a slug become one catalogue collection. Defaults to the video."
+    "           share a slug become one catalogue collection. Defaults to the sequence."
   ],
   "license": null,
   "citation": null,
   "doi": null,
   "release": "1.0",
   "sequences": {
-    "vid1":  { "frames": 170, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid2":  { "frames": 454, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid3":  { "frames": 49,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid4":  { "frames": 23,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid5":  { "frames": 26,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid6":  { "frames": 15,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid7":  { "frames": 73,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid8":  { "frames": 45,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid9":  { "frames": 3,   "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid10": { "frames": 90,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
-    "vid11": { "frames": 68,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null }
+    "seq-001":  { "frames": 170, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-002":  { "frames": 454, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-003":  { "frames": 49,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-004":  { "frames": 23,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-005":  { "frames": 26,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-006":  { "frames": 15,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-007":  { "frames": 73,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-008":  { "frames": 45,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-009":  { "frames": 3,   "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-010": { "frames": 90,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-011": { "frames": 68,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null }
   }
 }
