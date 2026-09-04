@@ -13,12 +13,31 @@ Docker Desktop has to be running; `tasks.ps1 up` will start it if it is not.
 .\tasks.ps1 up        # PostgreSQL + MinIO
 .\tasks.ps1 migrate
 uv run wascat db seed --frames ..\wascat-frontend\public\frames
-uv run wascat users create you@example.org --role admin
+uv run wascat users create you@example.org --role admin   # prints a password once
 .\tasks.ps1 dev       # http://localhost:8000, docs at /api/v1/docs
 ```
 
 `uv run wascat doctor` reports on Python, the database, object storage,
 migrations and configuration when something is not working.
+
+## Accounts
+
+The first one is made here, because the dashboard needs an account to sign in
+with. Everything after that is done in the dashboard, under **People**.
+
+```powershell
+uv run wascat users list                      # who exists, and their roles
+uv run wascat users create you@example.org --role admin
+uv run wascat users passwd you@example.org    # locked out: prints a new one, ends their sessions
+uv run wascat users grant you@example.org --role admin
+```
+
+There is no sign-up. Accounts are granted, not self-served, and no mail is ever
+sent to a sign-in address - it is an identifier, not a destination. A password
+is generated and shown once; if it is lost, reset it rather than recovering it.
+
+Roles: `admin` (everything, including publishing and managing people),
+`curator` (edits the catalogue and vocabularies), `viewer` (read-only).
 
 ## What the archive holds
 

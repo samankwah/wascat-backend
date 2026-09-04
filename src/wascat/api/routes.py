@@ -14,9 +14,10 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 
-from wascat.api.deps import current_claims, verify_csrf
+from wascat.api.deps import assert_access_not_withdrawn, current_claims, verify_csrf
 from wascat.domains.catalog.admin_router import router as catalog_admin_router
 from wascat.domains.catalog.router import router as catalog_router
+from wascat.domains.iam.admin_router import router as users_admin_router
 from wascat.domains.iam.auth_router import router as auth_router
 from wascat.domains.vocab.admin_router import router as vocab_admin_router
 
@@ -29,11 +30,22 @@ admin_public_router = APIRouter(prefix="/api/v1/admin")
 admin_public_router.include_router(auth_router)
 
 # Everything else behind a session.
+#
+# `assert_access_not_withdrawn` is mounted here rather than per route for the
+# same reason authentication is: a new endpoint should be protected by where it
+# sits, not by whoever remembers the decorator. It is what makes disabling an
+# account or changing a role take effect on the next request instead of when
+# the access token happens to expire.
 admin_router = APIRouter(
     prefix="/api/v1/admin",
-    dependencies=[Depends(current_claims), Depends(verify_csrf)],
+    dependencies=[
+        Depends(current_claims),
+        Depends(assert_access_not_withdrawn),
+        Depends(verify_csrf),
+    ],
 )
 admin_router.include_router(catalog_admin_router)
 admin_router.include_router(vocab_admin_router)
+admin_router.include_router(users_admin_router)
 
 __all__ = ["admin_public_router", "admin_router", "public_router"]
