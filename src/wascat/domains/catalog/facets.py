@@ -158,6 +158,16 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
         if value
     ]
 
+    # Also open-ended: unlike SEASON/TIME_OF_DAY, SKY_CLASS is not a closed
+    # vocabulary the public query schema validates against, so - like
+    # locations - this lists only the terms actually in use rather than every
+    # seeded vocabulary row.
+    sky_class_counts = await _counts_by(session, ImageRecord.sky_class_label)
+    sky_classes = [
+        {"value": value, "count": count}
+        for value, count in sorted((v, c) for v, c in sky_class_counts.items() if v)
+    ]
+
     return {
         "collections": collections,
         "sequences": sequences,
@@ -166,5 +176,6 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
         "artifacts": artifacts,
         "seasons": seasons,
         "timesOfDay": times_of_day,
+        "skyClasses": sky_classes,
         "locations": locations,
     }

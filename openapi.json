@@ -2674,6 +2674,13 @@
             "type": "array",
             "title": "Timesofday"
           },
+          "skyClasses": {
+            "items": {
+              "$ref": "#/components/schemas/FacetValue"
+            },
+            "type": "array",
+            "title": "Skyclasses"
+          },
           "locations": {
             "items": {
               "$ref": "#/components/schemas/FacetValue"
@@ -2691,6 +2698,7 @@
           "artifacts",
           "seasons",
           "timesOfDay",
+          "skyClasses",
           "locations"
         ],
         "title": "FacetsOut"
@@ -2922,6 +2930,17 @@
               }
             ],
             "title": "Timeofday"
+          },
+          "skyClass": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skyclass"
           },
           "instrument": {
             "anyOf": [

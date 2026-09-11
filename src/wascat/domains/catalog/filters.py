@@ -104,6 +104,9 @@ def apply_filters(
             )
         )
 
+    if query.sky_class:
+        conditions.append(ImageRecord.sky_class_label == query.sky_class)
+
     if query.artifact:
         conditions.append(
             exists(

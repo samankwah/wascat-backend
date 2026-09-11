@@ -195,6 +195,8 @@ def record_to_json(
         payload["season"] = record.season_label
     if record.time_of_day_label:
         payload["timeOfDay"] = record.time_of_day_label
+    if record.sky_class_label:
+        payload["skyClass"] = record.sky_class_label
     if record.instrument:
         payload["instrument"] = record.instrument
 

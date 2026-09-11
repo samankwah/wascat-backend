@@ -302,6 +302,11 @@ async def import_catalogue(
         slug = image["collection"]
         release = releases_by_slug[slug]
         fraction = image.get("cloudFraction")
+        # The catalogue has never carried a per-image skyClass - it comes from
+        # the per-sequence provenance file instead, same as site/instrument
+        # above. It is a curator's read of the sequence's dominant condition,
+        # not a per-frame measurement, so every frame in the sequence shares it.
+        sequence_meta = sequences.get(image["sequenceId"]) or {}
         record_rows.append(
             {
                 "id": image["id"],
@@ -321,6 +326,7 @@ async def import_catalogue(
                 "location_label": image.get("location"),
                 "season_label": image.get("season"),
                 "time_of_day_label": image.get("timeOfDay"),
+                "sky_class_label": image.get("skyClass") or sequence_meta.get("skyClass"),
                 "condition_tags": [],
                 "provenance": image.get("provenance", {}),
             }

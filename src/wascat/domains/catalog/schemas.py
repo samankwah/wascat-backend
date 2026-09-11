@@ -89,6 +89,7 @@ class ImageRecordOut(BaseModel):
     coordinates: Coordinates | None = None
     season: str | None = None
     timeOfDay: str | None = None  # noqa: N815
+    skyClass: str | None = None  # noqa: N815
     instrument: str | None = None
 
 
@@ -161,6 +162,7 @@ class FacetsOut(BaseModel):
     artifacts: list[FacetValue]
     seasons: list[FacetValue]
     timesOfDay: list[FacetValue]  # noqa: N815
+    skyClasses: list[FacetValue]  # noqa: N815
     locations: list[FacetValue]
 
 

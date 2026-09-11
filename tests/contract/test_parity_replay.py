@@ -133,7 +133,17 @@ OPAQUE_FIELDS = {"nextCursor", "next"}
 #    bundled catalogue, which it no longer holds; the database produces them in
 #    the query that already counts the frames. Additive, and the alternative
 #    was shipping every record to the browser to average it there.
-ADDITIVE_FIELDS = {"publishedAt", "meanCloudCoverOktas", "maskRegistration"}
+# 4. `skyClasses` on the facets response, and `skyClass` on a record.
+#    Sky classification did not exist in the recorded implementation at all -
+#    there was nothing to record. Both are new and additive, the latter
+#    absent rather than present until a record actually carries a sky_class.
+ADDITIVE_FIELDS = {
+    "publishedAt",
+    "meanCloudCoverOktas",
+    "maskRegistration",
+    "skyClasses",
+    "skyClass",
+}
 
 
 def normalise(value: Any) -> Any:
