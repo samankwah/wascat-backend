@@ -193,9 +193,9 @@ async def import_catalogue(
             session.add(collection)
             report.collections += 1
 
-        # Editorial fields are copied only when the catalogue supplies them.
-        # All of them are null today, which is exactly the gap the dashboard
-        # exists to close.
+        # Editorial fields are copied only when the catalogue or the
+        # provenance file (below) supplies them. Left null, that's exactly
+        # the gap the dashboard exists to close.
         collection.title = entry.get("title")
         # Ordering comes from the catalogue. Zero-padded slugs sort correctly
         # on their own now, but position stays explicit so a curator can group
@@ -214,6 +214,26 @@ async def import_catalogue(
         if coordinates:
             collection.latitude = Decimal(str(coordinates["latitude"]))
             collection.longitude = Decimal(str(coordinates["longitude"]))
+
+        # The generated catalogue rarely carries these - they come from the
+        # per-sequence provenance file instead, keyed by sequence rather than
+        # by collection. Fall back to the first of this collection's
+        # sequences that has one set, and only where the catalogue didn't
+        # already supply a value.
+        for sequence_id in entry.get("sequenceIds", []):
+            sequence_meta = sequences.get(sequence_id) or {}
+            if not collection.location_name and sequence_meta.get("site"):
+                collection.location_name = sequence_meta["site"]
+            if not collection.instrument and sequence_meta.get("instrument"):
+                collection.instrument = sequence_meta["instrument"]
+            if (
+                collection.latitude is None
+                and sequence_meta.get("latitude") is not None
+                and sequence_meta.get("longitude") is not None
+            ):
+                collection.latitude = Decimal(str(sequence_meta["latitude"]))
+                collection.longitude = Decimal(str(sequence_meta["longitude"]))
+
         await session.flush()
 
         release = (

@@ -14,8 +14,8 @@
   "body": {
     "data": {
       "slug": "seq-001",
-      "title": "Capture sequence 01",
-      "shortTitle": "Sequence 01",
+      "title": "Kumasi, Ghana",
+      "shortTitle": "Kumasi, Ghana",
       "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 01",
       "description": "323 all-sky frames from capture sequence 01. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 2–3,611 · 223 of 323 segmented",
@@ -44,11 +44,17 @@
           "scale": 1,
           "corrected": false
         }
-      ]
+      ],
+      "locationName": "Kumasi, Ghana",
+      "location": "Kumasi, Ghana · 6.6885, -1.6244",
+      "coordinates": {
+        "latitude": 6.6885,
+        "longitude": -1.6244
+      }
     },
     "meta": {
       "apiVersion": "1.0",
-      "generatedAt": "<GENERATED_AT>"
+      "generatedAt": "2026-09-11T20:54:05.543Z"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/collections/seq-001"
