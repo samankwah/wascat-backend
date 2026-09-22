@@ -47,6 +47,39 @@ class TestTheGraphHasOneHead:
             f"down_revision onto the other so the history is linear."
         )
 
+    def test_the_head_is_the_newest_revision(self) -> None:
+        """A new revision must be appended to the head, never spliced behind it.
+
+        Splicing is how the invented site names survived two fixes. Both
+        chained the cleanup behind a revision production had already applied,
+        so `alembic upgrade head` found the database at the head, had nothing
+        to do, and exited clean - a green deploy that changed nothing, twice.
+
+        A migration only runs on a database that has not yet passed the
+        revision it is chained to, and a deploy can move that pointer while a
+        fix is in review. Appending is the only placement that is safe without
+        knowing what every environment has applied, which is not something
+        this repository can check or a reviewer can be asked to track.
+
+        Creation order comes from the filename, which alembic's own template
+        date-stamps, so the newest file must be the head.
+        """
+        script = script_directory()
+        (head,) = script.get_heads()
+        by_age = sorted(
+            script.walk_revisions(),
+            key=lambda revision: Path(revision.path).name,
+        )
+        newest = by_age[-1]
+        assert head == newest.revision, (
+            f"the head is {head}, but the newest revision is {newest.revision} "
+            f"({Path(newest.path).name}). A revision has been spliced into the "
+            f"middle of the history rather than appended to the end, so any "
+            f"database already past that point will skip it and "
+            f"`alembic upgrade head` will report success having done nothing. "
+            f"Chain the new revision's down_revision to {head} instead."
+        )
+
     def test_every_revision_is_reachable_from_it(self) -> None:
         """No orphan chains hanging off a revision nobody points at."""
         script = script_directory()
