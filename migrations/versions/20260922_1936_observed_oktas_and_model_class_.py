@@ -9,6 +9,13 @@ which is derived from the segmentation mask and pinned to `cloud_fraction` by
 the `okta_formula` check. Both are served; where they disagree, that is a fact
 about the segmentation, not an error to reconcile away.
 
+This follows d3b1c7a49f20 rather than 4f2b8c7d1e05. It was written against
+the latter, and #6 then moved the cleanup to sit there too, which left two
+revisions chained to the same parent - two heads, and `alembic upgrade head`
+refusing to pick one. Chaining this behind the cleanup makes the history
+linear again. The two do not interact: one clears invented values off
+existing rows, the other adds a column and two tables.
+
 `prediction_models` + `image_class_predictions` - what a classifier said about
 a frame, stored as the whole probability vector rather than a winning label. A
 sky holds several genera at once, so one row per class is both the honest
@@ -16,7 +23,7 @@ shape and the queryable one. Nothing here runs inference: the archive records
 model output the same way it records delivered masks.
 
 Revision ID: 89aa875b8008
-Revises: 4f2b8c7d1e05
+Revises: d3b1c7a49f20
 Created: 2026-09-22 19:36:17.225127
 """
 
@@ -26,7 +33,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "89aa875b8008"
-down_revision: str | None = "4f2b8c7d1e05"
+down_revision: str | None = "d3b1c7a49f20"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
