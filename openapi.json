@@ -1713,6 +1713,27 @@
         "title": "BulkImageEdit",
         "description": "Apply the same provenance to many frames.\n\nA capture team supplies a site or an instrument for a whole sequence at\nonce, not frame by frame; doing it one request at a time would be both slow\nand a worse audit trail."
       },
+      "ClassProbabilityOut": {
+        "properties": {
+          "skyClass": {
+            "type": "string",
+            "title": "Skyclass",
+            "description": "A SKY_CLASS vocabulary label, e.g. 'Stratocumulus'."
+          },
+          "probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Probability"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skyClass",
+          "probability"
+        ],
+        "title": "ClassProbabilityOut"
+      },
       "CollectionCreate": {
         "properties": {
           "title": {
@@ -2806,6 +2827,19 @@
             ],
             "title": "Cloudcoveroktas"
           },
+          "observedCloudCoverOktas": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observedcloudcoveroktas"
+          },
           "maskScale": {
             "type": "number",
             "title": "Maskscale",
@@ -2942,6 +2976,20 @@
             ],
             "title": "Skyclass"
           },
+          "predictions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PredictionOut"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Predictions"
+          },
           "instrument": {
             "anyOf": [
               {
@@ -2973,7 +3021,7 @@
           "sortKey"
         ],
         "title": "ImageRecordOut",
-        "description": "One frame.\n\n``cloudFraction`` and ``cloudCoverOktas`` are absent, not null, on a frame\nthat carries no mask: cloud cover is measured from the mask, so without one\nthere is no measurement to report. They are never defaulted to zero, which\nwould invent a clear sky."
+        "description": "One frame.\n\n``cloudFraction`` and ``cloudCoverOktas`` are absent, not null, on a frame\nthat carries no mask: cloud cover is measured from the mask, so without one\nthere is no measurement to report. They are never defaulted to zero, which\nwould invent a clear sky.\n\n``observedCloudCoverOktas`` is the separate, human-supplied count that\ntravels with the observer's cloud-genus label. It is never reconciled\nagainst the measured pair: the two can and do differ, and which one a\nreader wants depends on what they are checking.\n\n``predictions`` appears on the single-record read only. The list endpoints\nomit it rather than serialise one entry per class per model for every card\non the page."
       },
       "ImageRecordWrite": {
         "properties": {
@@ -3082,6 +3130,19 @@
             ],
             "title": "Skyclass"
           },
+          "observedCloudCoverOktas": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observedcloudcoveroktas"
+          },
           "conditionTags": {
             "anyOf": [
               {
@@ -3112,7 +3173,7 @@
         "additionalProperties": false,
         "type": "object",
         "title": "ImageRecordWrite",
-        "description": "Provenance a curator supplies for a frame.\n\nNothing here can invent a measurement: cloud cover comes from the mask and\nis not settable. What a person knows and a pipeline does not - where the\ncamera was, when it was pointed at the sky, what it was - is what this\ncarries."
+        "description": "Provenance a curator supplies for a frame.\n\nNothing here can invent a measurement: the cloud cover derived from the\nmask is not settable, and there is no field for it. What a person knows\nand a pipeline does not - where the camera was, when it was pointed at the\nsky, what it was, what they saw when they looked up - is what this\ncarries.\n\n``observedCloudCoverOktas`` is the one number here, and it is an\nobservation rather than a measurement: a count a person read off the sky,\ncorrecting or supplying what the label table loaded. It writes to its own\ncolumn and leaves ``cloudCoverOktas`` alone."
       },
       "Links": {
         "properties": {
@@ -3236,6 +3297,63 @@
           "limit"
         ],
         "title": "PageMeta"
+      },
+      "PredictionModelOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "The model's own version string: a tag, a date or a commit."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "version"
+        ],
+        "title": "PredictionModelOut",
+        "description": "The classifier a probability vector came from."
+      },
+      "PredictionOut": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/PredictionModelOut"
+          },
+          "classes": {
+            "items": {
+              "$ref": "#/components/schemas/ClassProbabilityOut"
+            },
+            "type": "array",
+            "title": "Classes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "classes"
+        ],
+        "title": "PredictionOut",
+        "description": "One model's reading of one frame.\n\n``classes`` is the whole vector, ranked by probability descending - every\nclass the model scored, not just the winner. An all-sky frame routinely\nholds several genera at once, so the runners-up are the point: they are\nwhat makes the reading comparable with the observer's own."
       },
       "ReleaseCreate": {
         "properties": {
