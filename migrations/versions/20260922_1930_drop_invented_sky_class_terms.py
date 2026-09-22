@@ -13,12 +13,13 @@ terms the label table uses, so the vocabulary ends up matching the archive's
 own codes rather than a list someone guessed in advance.
 
 Only unreferenced terms are removed. A term some record still carries is left
-alone and reported by `wascat doctor` instead: a migration that silently
-unclassifies records would be exactly the kind of invisible data loss the
-vocabulary's merge-never-delete rule exists to prevent.
+alone: a migration that silently unclassifies records would be exactly the
+kind of invisible data loss the vocabulary's merge-never-delete rule exists to
+prevent. d3b1c7a49f20 runs first and clears the invented sky classes off the
+records, which is what leaves these nine unreferenced and removable.
 
 Revision ID: 4f2b8c7d1e05
-Revises: c1a4e9f2b6d3
+Revises: d3b1c7a49f20
 Created: 2026-09-22 19:30
 """
 
@@ -28,7 +29,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "4f2b8c7d1e05"
-down_revision: str | None = "c1a4e9f2b6d3"
+down_revision: str | None = "d3b1c7a49f20"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
