@@ -15,8 +15,8 @@
     "data": [
       {
         "slug": "seq-001",
-        "title": "Kumasi, Ghana",
-        "shortTitle": "Kumasi, Ghana",
+        "title": "Capture sequence 01",
+        "shortTitle": "Sequence 01",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 01",
         "description": "323 all-sky frames from capture sequence 01. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 2–3,611 · 223 of 323 segmented",
@@ -37,12 +37,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Kumasi, Ghana",
-        "location": "Kumasi, Ghana · 6.6885, -1.6244",
-        "coordinates": {
-          "latitude": 6.6885,
-          "longitude": -1.6244
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 323,
@@ -53,8 +47,8 @@
       },
       {
         "slug": "seq-002",
-        "title": "Accra, Ghana",
-        "shortTitle": "Accra, Ghana",
+        "title": "Capture sequence 02",
+        "shortTitle": "Sequence 02",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 02",
         "description": "688 all-sky frames from capture sequence 02. 588 carry a binary cloud mask and a measured cloud cover, 134 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–10,240 · 588 of 688 segmented",
@@ -75,12 +69,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Accra, Ghana",
-        "location": "Accra, Ghana · 5.6037, -0.187",
-        "coordinates": {
-          "latitude": 5.6037,
-          "longitude": -0.187
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 688,
@@ -91,8 +79,8 @@
       },
       {
         "slug": "seq-003",
-        "title": "Tamale, Ghana",
-        "shortTitle": "Tamale, Ghana",
+        "title": "Capture sequence 03",
+        "shortTitle": "Sequence 03",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 03",
         "description": "166 all-sky frames from capture sequence 03. 66 carry a binary cloud mask and a measured cloud cover, 17 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,004 · 66 of 166 segmented",
@@ -113,12 +101,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Tamale, Ghana",
-        "location": "Tamale, Ghana · 9.4034, -0.8393",
-        "coordinates": {
-          "latitude": 9.4034,
-          "longitude": -0.8393
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 166,
@@ -129,8 +111,8 @@
       },
       {
         "slug": "seq-004",
-        "title": "Ouagadougou, Burkina Faso",
-        "shortTitle": "Ouagadougou, Burkina Faso",
+        "title": "Capture sequence 04",
+        "shortTitle": "Sequence 04",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 04",
         "description": "132 all-sky frames from capture sequence 04. 32 carry a binary cloud mask and a measured cloud cover, 9 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–570 · 32 of 132 segmented",
@@ -151,12 +133,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Ouagadougou, Burkina Faso",
-        "location": "Ouagadougou, Burkina Faso · 12.3714, -1.5197",
-        "coordinates": {
-          "latitude": 12.3714,
-          "longitude": -1.5197
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 132,
@@ -167,8 +143,8 @@
       },
       {
         "slug": "seq-005",
-        "title": "Lagos, Nigeria",
-        "shortTitle": "Lagos, Nigeria",
+        "title": "Capture sequence 05",
+        "shortTitle": "Sequence 05",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 05",
         "description": "136 all-sky frames from capture sequence 05. 36 carry a binary cloud mask and a measured cloud cover, 10 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–521 · 36 of 136 segmented",
@@ -189,12 +165,6 @@
             "corrected": true
           }
         ],
-        "locationName": "Lagos, Nigeria",
-        "location": "Lagos, Nigeria · 6.5244, 3.3792",
-        "coordinates": {
-          "latitude": 6.5244,
-          "longitude": 3.3792
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 136,
@@ -205,8 +175,8 @@
       },
       {
         "slug": "seq-006",
-        "title": "Abuja, Nigeria",
-        "shortTitle": "Abuja, Nigeria",
+        "title": "Capture sequence 06",
+        "shortTitle": "Sequence 06",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 06",
         "description": "119 all-sky frames from capture sequence 06. 19 carry a binary cloud mask and a measured cloud cover, 4 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–293 · 19 of 119 segmented",
@@ -227,12 +197,6 @@
             "corrected": true
           }
         ],
-        "locationName": "Abuja, Nigeria",
-        "location": "Abuja, Nigeria · 9.0765, 7.3986",
-        "coordinates": {
-          "latitude": 9.0765,
-          "longitude": 7.3986
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 119,
@@ -243,8 +207,8 @@
       },
       {
         "slug": "seq-007",
-        "title": "Ibadan, Nigeria",
-        "shortTitle": "Ibadan, Nigeria",
+        "title": "Capture sequence 07",
+        "shortTitle": "Sequence 07",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 07",
         "description": "206 all-sky frames from capture sequence 07. 106 carry a binary cloud mask and a measured cloud cover, 33 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,835 · 106 of 206 segmented",
@@ -265,12 +229,6 @@
             "corrected": true
           }
         ],
-        "locationName": "Ibadan, Nigeria",
-        "location": "Ibadan, Nigeria · 7.3775, 3.947",
-        "coordinates": {
-          "latitude": 7.3775,
-          "longitude": 3.947
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 206,
@@ -281,8 +239,8 @@
       },
       {
         "slug": "seq-008",
-        "title": "Bobo-Dioulasso, Burkina Faso",
-        "shortTitle": "Bobo-Dioulasso, Burkina Faso",
+        "title": "Capture sequence 08",
+        "shortTitle": "Sequence 08",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 08",
         "description": "161 all-sky frames from capture sequence 08. 61 carry a binary cloud mask and a measured cloud cover, 16 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 3–884 · 61 of 161 segmented",
@@ -303,12 +261,6 @@
             "corrected": true
           }
         ],
-        "locationName": "Bobo-Dioulasso, Burkina Faso",
-        "location": "Bobo-Dioulasso, Burkina Faso · 11.1771, -4.2979",
-        "coordinates": {
-          "latitude": 11.1771,
-          "longitude": -4.2979
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 161,
@@ -319,8 +271,8 @@
       },
       {
         "slug": "seq-009",
-        "title": "Takoradi, Ghana",
-        "shortTitle": "Takoradi, Ghana",
+        "title": "Capture sequence 09",
+        "shortTitle": "Sequence 09",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 09",
         "description": "68 all-sky frames from capture sequence 09. 6 carry a binary cloud mask and a measured cloud cover, 3 of them without the source frame. A further 62 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–88 · 6 of 68 segmented",
@@ -341,12 +293,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Takoradi, Ghana",
-        "location": "Takoradi, Ghana · 4.8845, -1.7554",
-        "coordinates": {
-          "latitude": 4.8845,
-          "longitude": -1.7554
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 68,
@@ -357,8 +303,8 @@
       },
       {
         "slug": "seq-010",
-        "title": "Kano, Nigeria",
-        "shortTitle": "Kano, Nigeria",
+        "title": "Capture sequence 10",
+        "shortTitle": "Sequence 10",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 10",
         "description": "219 all-sky frames from capture sequence 10. 119 carry a binary cloud mask and a measured cloud cover, 29 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–1,834 · 119 of 219 segmented",
@@ -379,12 +325,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Kano, Nigeria",
-        "location": "Kano, Nigeria · 12.0022, 8.592",
-        "coordinates": {
-          "latitude": 12.0022,
-          "longitude": 8.592
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 219,
@@ -395,8 +335,8 @@
       },
       {
         "slug": "seq-011",
-        "title": "Koudougou, Burkina Faso",
-        "shortTitle": "Koudougou, Burkina Faso",
+        "title": "Capture sequence 11",
+        "shortTitle": "Sequence 11",
         "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 11",
         "description": "204 all-sky frames from capture sequence 11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
         "coverage": "Frames 0–2,120 · 104 of 204 segmented",
@@ -417,12 +357,6 @@
             "corrected": false
           }
         ],
-        "locationName": "Koudougou, Burkina Faso",
-        "location": "Koudougou, Burkina Faso · 12.253, -2.362",
-        "coordinates": {
-          "latitude": 12.253,
-          "longitude": -2.362
-        },
         "currentRelease": {
           "version": "1.0",
           "images": 204,
@@ -434,7 +368,7 @@
     ],
     "meta": {
       "apiVersion": "1.0",
-      "generatedAt": "2026-09-11T20:54:05.488Z",
+      "generatedAt": "<GENERATED_AT>",
       "count": 11
     },
     "links": {

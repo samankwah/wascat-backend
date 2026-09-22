@@ -16,57 +16,57 @@
       "collections": [
         {
           "value": "seq-001",
-          "label": "Kumasi, Ghana",
+          "label": "Sequence 01",
           "count": 323
         },
         {
           "value": "seq-002",
-          "label": "Accra, Ghana",
+          "label": "Sequence 02",
           "count": 688
         },
         {
           "value": "seq-003",
-          "label": "Tamale, Ghana",
+          "label": "Sequence 03",
           "count": 166
         },
         {
           "value": "seq-004",
-          "label": "Ouagadougou, Burkina Faso",
+          "label": "Sequence 04",
           "count": 132
         },
         {
           "value": "seq-005",
-          "label": "Lagos, Nigeria",
+          "label": "Sequence 05",
           "count": 136
         },
         {
           "value": "seq-006",
-          "label": "Abuja, Nigeria",
+          "label": "Sequence 06",
           "count": 119
         },
         {
           "value": "seq-007",
-          "label": "Ibadan, Nigeria",
+          "label": "Sequence 07",
           "count": 206
         },
         {
           "value": "seq-008",
-          "label": "Bobo-Dioulasso, Burkina Faso",
+          "label": "Sequence 08",
           "count": 161
         },
         {
           "value": "seq-009",
-          "label": "Takoradi, Ghana",
+          "label": "Sequence 09",
           "count": 68
         },
         {
           "value": "seq-010",
-          "label": "Kano, Nigeria",
+          "label": "Sequence 10",
           "count": 219
         },
         {
           "value": "seq-011",
-          "label": "Koudougou, Burkina Faso",
+          "label": "Sequence 11",
           "count": 204
         }
       ],
@@ -236,7 +236,7 @@
     },
     "meta": {
       "apiVersion": "1.0",
-      "generatedAt": "2026-09-11T20:54:05.642Z"
+      "generatedAt": "<GENERATED_AT>"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/facets"

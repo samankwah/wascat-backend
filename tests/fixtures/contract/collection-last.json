@@ -14,8 +14,8 @@
   "body": {
     "data": {
       "slug": "seq-011",
-      "title": "Koudougou, Burkina Faso",
-      "shortTitle": "Koudougou, Burkina Faso",
+      "title": "Capture sequence 11",
+      "shortTitle": "Sequence 11",
       "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 11",
       "description": "204 all-sky frames from capture sequence 11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 0–2,120 · 104 of 204 segmented",
@@ -44,17 +44,11 @@
           "scale": 1,
           "corrected": false
         }
-      ],
-      "locationName": "Koudougou, Burkina Faso",
-      "location": "Koudougou, Burkina Faso · 12.253, -2.362",
-      "coordinates": {
-        "latitude": 12.253,
-        "longitude": -2.362
-      }
+      ]
     },
     "meta": {
       "apiVersion": "1.0",
-      "generatedAt": "2026-09-11T20:54:05.587Z"
+      "generatedAt": "<GENERATED_AT>"
     },
     "links": {
       "self": "https://wascat.example.org/api/v1/collections/seq-011"

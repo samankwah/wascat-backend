@@ -15,28 +15,23 @@
     "latitude / longitude  decimal degrees of the camera.",
     "instrument All-sky camera make/model.",
     "collection Slug grouping sequences captured at the same site. Sequences that",
-    "           share a slug become one catalogue collection. Defaults to the sequence.",
-    "skyClass   A curator's visual read of the sequence's dominant sky condition -",
-    "           one of the vocabulary_terms rows for SKY_CLASS. Coarse by nature:",
-    "           it describes what the sequence mostly looked like, not a per-frame",
-    "           measurement, and is not itself validated against the vocabulary at",
-    "           import time the way SEASON/TIME_OF_DAY are."
+    "           share a slug become one catalogue collection. Defaults to the sequence."
   ],
   "license": null,
   "citation": null,
   "doi": null,
   "release": "1.0",
   "sequences": {
-    "seq-001":  { "frames": 170, "geometry": "A", "collection": null, "site": "Kumasi, Ghana",              "latitude": 6.6885,  "longitude": -1.6244, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Cirrus" },
-    "seq-002":  { "frames": 454, "geometry": "A", "collection": null, "site": "Accra, Ghana",               "latitude": 5.6037,  "longitude": -0.1870, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Cirrus" },
-    "seq-003":  { "frames": 49,  "geometry": "A", "collection": null, "site": "Tamale, Ghana",              "latitude": 9.4034,  "longitude": -0.8393, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Stratocumulus" },
-    "seq-004":  { "frames": 23,  "geometry": "A", "collection": null, "site": "Ouagadougou, Burkina Faso",  "latitude": 12.3714, "longitude": -1.5197, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Haze / Dust" },
-    "seq-005":  { "frames": 26,  "geometry": "B", "collection": null, "site": "Lagos, Nigeria",             "latitude": 6.5244,  "longitude": 3.3792,  "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Overcast" },
-    "seq-006":  { "frames": 15,  "geometry": "B", "collection": null, "site": "Abuja, Nigeria",             "latitude": 9.0765,  "longitude": 7.3986,  "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Haze / Dust" },
-    "seq-007":  { "frames": 73,  "geometry": "B", "collection": null, "site": "Ibadan, Nigeria",            "latitude": 7.3775,  "longitude": 3.9470,  "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Overcast" },
-    "seq-008":  { "frames": 45,  "geometry": "B", "collection": null, "site": "Bobo-Dioulasso, Burkina Faso","latitude": 11.1771, "longitude": -4.2979, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Haze / Dust" },
-    "seq-009":  { "frames": 3,   "geometry": "A", "collection": null, "site": "Takoradi, Ghana",            "latitude": 4.8845,  "longitude": -1.7554, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Overcast" },
-    "seq-010": { "frames": 90,  "geometry": "A", "collection": null, "site": "Kano, Nigeria",               "latitude": 12.0022, "longitude": 8.5920,  "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Stratus / Nimbostratus" },
-    "seq-011": { "frames": 68,  "geometry": "A", "collection": null, "site": "Koudougou, Burkina Faso",     "latitude": 12.2530, "longitude": -2.3620, "startedAt": null, "frameIntervalSeconds": null, "instrument": null, "skyClass": "Overcast" }
+    "seq-001":  { "frames": 170, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-002":  { "frames": 454, "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-003":  { "frames": 49,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-004":  { "frames": 23,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-005":  { "frames": 26,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-006":  { "frames": 15,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-007":  { "frames": 73,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-008":  { "frames": 45,  "geometry": "B", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-009":  { "frames": 3,   "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-010": { "frames": 90,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null },
+    "seq-011": { "frames": 68,  "geometry": "A", "collection": null, "site": null, "latitude": null, "longitude": null, "startedAt": null, "frameIntervalSeconds": null, "instrument": null }
   }
 }
