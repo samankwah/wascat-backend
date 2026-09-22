@@ -29,6 +29,22 @@ def render_record(row: RecordRow) -> dict[str, Any]:
     )
 
 
+def render_record_detail(row: RecordRow) -> dict[str, Any]:
+    """The single-record payload: everything `render_record` gives, plus the
+    model predictions.
+
+    Separate from `render_record` rather than a flag on it so that a caller
+    cannot ask for predictions off a row that was loaded without them and
+    trigger a lazy load per class inside the response.
+    """
+    return record_to_json(
+        row.record,
+        collection_slug=row.collection_slug,
+        release_version=row.release_version,
+        include_predictions=True,
+    )
+
+
 async def render_collection(session: AsyncSession, collection: Collection) -> dict[str, Any]:
     stats = await repository.collection_stats(session, collection.id)
     cover = await repository.cover_record(session, collection.id)

@@ -37,8 +37,9 @@ from wascat.domains.catalog.models import (
     ReleaseStatus,
 )
 
-#: The record fields a curator may set, and the column each maps to. Cloud
-#: cover is deliberately absent.
+#: The record fields a curator may set, and the column each maps to. The
+#: measured cloud cover is deliberately absent; the observed one is not the
+#: same thing and has its own column.
 RECORD_FIELDS: dict[str, str] = {
     "captured_at": "captured_at",
     "latitude": "latitude",
@@ -48,6 +49,7 @@ RECORD_FIELDS: dict[str, str] = {
     "season": "season_label",
     "time_of_day": "time_of_day_label",
     "sky_class": "sky_class_label",
+    "observed_cloud_cover_oktas": "observed_cloud_cover_oktas",
     "custom": "custom",
 }
 

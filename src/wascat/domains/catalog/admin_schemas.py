@@ -47,10 +47,16 @@ class CollectionCreate(CollectionWrite):
 class ImageRecordWrite(BaseModel):
     """Provenance a curator supplies for a frame.
 
-    Nothing here can invent a measurement: cloud cover comes from the mask and
-    is not settable. What a person knows and a pipeline does not - where the
-    camera was, when it was pointed at the sky, what it was - is what this
+    Nothing here can invent a measurement: the cloud cover derived from the
+    mask is not settable, and there is no field for it. What a person knows
+    and a pipeline does not - where the camera was, when it was pointed at the
+    sky, what it was, what they saw when they looked up - is what this
     carries.
+
+    ``observedCloudCoverOktas`` is the one number here, and it is an
+    observation rather than a measurement: a count a person read off the sky,
+    correcting or supplying what the label table loaded. It writes to its own
+    column and leaves ``cloudCoverOktas`` alone.
     """
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
@@ -63,6 +69,9 @@ class ImageRecordWrite(BaseModel):
     season: str | None = Field(default=None, max_length=80)
     time_of_day: str | None = Field(default=None, alias="timeOfDay", max_length=80)
     sky_class: str | None = Field(default=None, alias="skyClass", max_length=80)
+    observed_cloud_cover_oktas: Annotated[int | None, Field(ge=0, le=8)] = Field(
+        default=None, alias="observedCloudCoverOktas"
+    )
     condition_tags: list[str] | None = Field(default=None, alias="conditionTags")
     custom: dict[str, object] | None = None
 
