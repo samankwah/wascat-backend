@@ -108,7 +108,7 @@ async def get_image(
     return envelope(
         request,
         {
-            **(service.render_record(row) if row else {"id": record.id}),
+            **(service.render_record_detail(row) if row else {"id": record.id}),
             "editable": release is not None and release.status is ReleaseStatus.DRAFT,
             "retiredAt": record.retired_at.isoformat().replace("+00:00", "Z")
             if record.retired_at
@@ -146,7 +146,7 @@ async def update_image(
     await db.commit()
 
     row = await repository.get_image(db, record_id, include_drafts=True)
-    return envelope(request, service.render_record(row) if row else {"id": record.id})
+    return envelope(request, service.render_record_detail(row) if row else {"id": record.id})
 
 
 @router.post("/images/bulk", summary="Apply provenance to many records")
