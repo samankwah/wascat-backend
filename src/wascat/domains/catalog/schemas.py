@@ -40,6 +40,39 @@ class ArtifactOut(BaseModel):
     mediaType: str  # noqa: N815
 
 
+class PredictionModelOut(BaseModel):
+    """The classifier a probability vector came from."""
+
+    slug: str
+    name: str
+    version: Annotated[
+        str, Field(description="The model's own version string: a tag, a date or a commit.")
+    ]
+    description: str | None = None
+
+
+class ClassProbabilityOut(BaseModel):
+    skyClass: Annotated[  # noqa: N815
+        str, Field(description="A SKY_CLASS vocabulary label, e.g. 'Stratocumulus'.")
+    ]
+    probability: Annotated[float, Field(ge=0, le=1)]
+
+
+class PredictionOut(BaseModel):
+    """One model's reading of one frame.
+
+    ``classes`` is the whole vector, ranked by probability descending - every
+    class the model scored, not just the winner. An all-sky frame routinely
+    holds several genera at once, so the runners-up are the point: they are
+    what makes the reading comparable with the observer's own.
+    """
+
+    model_config = ConfigDict(protected_namespaces=())
+
+    model: PredictionModelOut
+    classes: list[ClassProbabilityOut]
+
+
 class ImageRecordOut(BaseModel):
     """One frame.
 
@@ -47,6 +80,15 @@ class ImageRecordOut(BaseModel):
     that carries no mask: cloud cover is measured from the mask, so without one
     there is no measurement to report. They are never defaulted to zero, which
     would invent a clear sky.
+
+    ``observedCloudCoverOktas`` is the separate, human-supplied count that
+    travels with the observer's cloud-genus label. It is never reconciled
+    against the measured pair: the two can and do differ, and which one a
+    reader wants depends on what they are checking.
+
+    ``predictions`` appears on the single-record read only. The list endpoints
+    omit it rather than serialise one entry per class per model for every card
+    on the page.
     """
 
     id: str
@@ -57,6 +99,7 @@ class ImageRecordOut(BaseModel):
 
     cloudFraction: float | None = None  # noqa: N815
     cloudCoverOktas: Annotated[int | None, Field(ge=0, le=8)] = None  # noqa: N815
+    observedCloudCoverOktas: Annotated[int | None, Field(ge=0, le=8)] = None  # noqa: N815
 
     maskScale: Annotated[  # noqa: N815
         float,
@@ -90,6 +133,7 @@ class ImageRecordOut(BaseModel):
     season: str | None = None
     timeOfDay: str | None = None  # noqa: N815
     skyClass: str | None = None  # noqa: N815
+    predictions: list[PredictionOut] | None = None
     instrument: str | None = None
 
 

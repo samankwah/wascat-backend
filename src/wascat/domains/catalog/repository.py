@@ -20,6 +20,7 @@ from wascat.domains.catalog.filters import apply_cursor, apply_filters, apply_or
 from wascat.domains.catalog.models import (
     Artifact,
     Collection,
+    ImageClassPrediction,
     ImageRecord,
     Release,
     ReleaseStatus,
@@ -120,7 +121,17 @@ async def list_images(
 async def get_image(
     session: AsyncSession, record_id: str, *, include_drafts: bool = False
 ) -> RecordRow | None:
-    stmt = _base_select().where(ImageRecord.id == record_id, ImageRecord.retired_at.is_(None))
+    # Predictions are loaded here and nowhere else. One row per class per model
+    # is cheap for a single frame and ruinous for a page of twenty-four, which
+    # is why the list select above does not ask for them and why
+    # `render_record` only renders them when told to.
+    stmt = (
+        _base_select()
+        .options(
+            selectinload(ImageRecord.predictions).selectinload(ImageClassPrediction.model),
+        )
+        .where(ImageRecord.id == record_id, ImageRecord.retired_at.is_(None))
+    )
     if not include_drafts:
         stmt = stmt.where(Release.status != ReleaseStatus.DRAFT)
     row = (await session.execute(stmt)).first()

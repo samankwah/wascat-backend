@@ -10,7 +10,9 @@ from wascat.domains.audit.models import AuditEvent
 from wascat.domains.catalog.models import (
     Artifact,
     Collection,
+    ImageClassPrediction,
     ImageRecord,
+    PredictionModel,
     Release,
     ReleaseStatus,
 )
@@ -31,11 +33,13 @@ __all__ = [
     "AuditEvent",
     "Base",
     "Collection",
+    "ImageClassPrediction",
     "ImageRecord",
     "IngestRun",
     "IngestStatus",
     "LoginAttempt",
     "Permission",
+    "PredictionModel",
     "RefreshSession",
     "Release",
     "ReleaseStatus",

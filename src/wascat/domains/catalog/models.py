@@ -175,6 +175,14 @@ class ImageRecord(Base):
     # Measurement. Both NULL together or both set together; never invented.
     cloud_fraction: Mapped[Decimal | None] = mapped_column(Numeric(9, 6), nullable=True)
     cloud_cover_oktas: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    # The observer's total cloud cover, read off the sky by a person and
+    # supplied in the label table alongside the cloud genus. It is a separate
+    # column rather than a source for cloud_cover_oktas above: that one is
+    # derived from the segmentation mask and pinned to cloud_fraction by
+    # `okta_formula`, so writing a human count into it would make the archive
+    # claim a measurement it never made. Where the two disagree, both are
+    # served and the disagreement is the interesting part.
+    observed_cloud_cover_oktas: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
     # Scale at which the mask was delivered relative to its source frame. 1 for
     # correctly registered sequences; >1 where the mask was rendered larger, in
     # which case the viewer scales it back. Masks are stored as delivered.
@@ -246,6 +254,14 @@ class ImageRecord(Base):
     season_term: Mapped[VocabularyTerm | None] = relationship(foreign_keys=[season_id])
     time_of_day_term: Mapped[VocabularyTerm | None] = relationship(foreign_keys=[time_of_day_id])
     sky_class_term: Mapped[VocabularyTerm | None] = relationship(foreign_keys=[sky_class_id])
+    # Not eager: the list endpoint never renders a probability vector, and
+    # loading eleven classes per card would multiply every Explore page by
+    # eleven. The single-record read asks for them explicitly.
+    predictions: Mapped[list[ImageClassPrediction]] = relationship(
+        back_populates="image",
+        cascade="all, delete-orphan",
+        order_by="(ImageClassPrediction.model_id, ImageClassPrediction.probability.desc())",
+    )
 
     __table_args__ = (
         # -- Domain invariants, enforced by the database -------------------
@@ -269,6 +285,12 @@ class ImageRecord(Base):
             "cloud_cover_oktas IS NULL"
             " OR cloud_cover_oktas = least(8, greatest(0, round(cloud_fraction * 8)::int))",
             name="okta_formula",
+        ),
+        # The observed count is free of that formula - it is not derived from
+        # anything - but it is still a synoptic okta and so still eighths.
+        CheckConstraint(
+            "observed_cloud_cover_oktas IS NULL OR observed_cloud_cover_oktas BETWEEN 0 AND 8",
+            name="observed_okta_range",
         ),
         # 10: identifier formats.
         CheckConstraint(r"id ~ '^WAS-[A-Z0-9-]+$'", name="id_format"),
@@ -368,3 +390,80 @@ class Artifact(Base):
     # behind a CDN is a config change rather than a data migration. With an
     # empty base it renders "/frames/seq-001/2-source.jpg", the same path the
     # site serves and the seed uploads to.
+
+
+class PredictionModel(Base):
+    """A classifier whose output the archive stores.
+
+    The archive does not run inference - it records what a model said, the
+    same way it records what the segmentation pipeline delivered. Keeping the
+    model as a row rather than a string means two models can score the same
+    frame and be compared, and means a model's identity survives being
+    retrained: a new weights version is a new row, not an edit.
+    """
+
+    __tablename__ = "prediction_models"
+
+    id: Mapped[uuid_pk]
+    slug: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str]
+    # Free-form because the archive does not own the model's release scheme:
+    # a git sha, a date and "v2" are all legitimate here.
+    version: Mapped[str]
+    description: Mapped[str | None]
+    trained_at: Mapped[datetime | None]
+    position: Mapped[int] = mapped_column(default=0, server_default=text("0"))
+
+    created_at: Mapped[ts_created]
+    updated_at: Mapped[ts_updated]
+    retired_at: Mapped[datetime | None]
+
+    __table_args__ = (
+        CheckConstraint(r"slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'", name="model_slug_format"),
+        Index("ix_prediction_models_position", "position", "slug"),
+    )
+
+
+class ImageClassPrediction(Base):
+    """One class's probability, for one frame, from one model.
+
+    Stored as the whole vector rather than a winning label: a real sky holds
+    several genera at once, so "Cumulus" alone throws away most of what the
+    model said. One row per class keeps the vector queryable - "every frame
+    where Cumulonimbus scored above 0.3" is an index scan, not a JSON scan.
+    """
+
+    __tablename__ = "image_class_predictions"
+
+    id: Mapped[uuid_pk]
+    image_id: Mapped[str] = mapped_column(ForeignKey("image_records.id", ondelete="CASCADE"))
+    model_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("prediction_models.id", ondelete="CASCADE")
+    )
+    sky_class_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("vocabulary_terms.id", ondelete="SET NULL")
+    )
+    # Denormalised alongside the FK, the same bargain ImageRecord.sky_class_label
+    # strikes: the vocabulary service keeps it in step through rename and merge,
+    # and the read path skips a join per class per frame.
+    sky_class_label: Mapped[str]
+    # Five decimal places: enough to keep a softmax tail distinguishable from
+    # zero, exact rather than float so a stored vector still sums to 1.
+    probability: Mapped[Decimal] = mapped_column(Numeric(6, 5))
+
+    created_at: Mapped[ts_created]
+
+    image: Mapped[ImageRecord] = relationship(back_populates="predictions")
+    model: Mapped[PredictionModel] = relationship()
+    sky_class_term: Mapped[VocabularyTerm | None] = relationship(foreign_keys=[sky_class_id])
+
+    __table_args__ = (
+        # One score per class per model per frame. Re-ingesting a model's
+        # output updates in place rather than accumulating duplicates.
+        UniqueConstraint("image_id", "model_id", "sky_class_label", name="uq_prediction_class"),
+        CheckConstraint("probability >= 0 AND probability <= 1", name="probability_range"),
+        # The read path is always "this frame, this model, ranked".
+        Index("ix_predictions_image_model", "image_id", "model_id", "probability"),
+        # And the cross-archive one: "where did this class score high".
+        Index("ix_predictions_class_probability", "model_id", "sky_class_label", "probability"),
+    )

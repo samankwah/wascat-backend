@@ -15,13 +15,21 @@ returned them, so moving them would have changed the payload.
 
 from __future__ import annotations
 
+import uuid
+from collections import defaultdict
 from typing import TYPE_CHECKING, Any
 
 from wascat.core.config import get_settings
 from wascat.core.jsformat import bytes_to_size, iso_z, js_number, locale_int, okta_label
 
 if TYPE_CHECKING:
-    from wascat.domains.catalog.models import Artifact, Collection, ImageRecord, Release
+    from wascat.domains.catalog.models import (
+        Artifact,
+        Collection,
+        ImageClassPrediction,
+        ImageRecord,
+        Release,
+    )
 
 # The public `artifacts[]` array carries the frame and its mask only.
 # Derivatives are additive rows used by the dashboard and would change
@@ -124,8 +132,58 @@ def build_sort_key(*, captured_at: Any, sequence_number: int, frame_index: int) 
     return f"{sequence_number:03d}-{frame_index:07d}"
 
 
+def record_predictions(record: ImageRecord) -> list[dict[str, Any]]:
+    """Every model's full probability vector for this frame, ranked.
+
+    One entry per model, each carrying every class that model scored - not a
+    winning label. A sky holds several genera at once, so the top-1 is the
+    least interesting thing a classifier says about an all-sky frame, and a
+    reader comparing the model against the observer's own reading needs the
+    runners-up to do it.
+
+    Classes sort by probability descending, then by label so a tie is stable.
+    Models sort by their curated position.
+    """
+    by_model: dict[uuid.UUID, list[ImageClassPrediction]] = defaultdict(list)
+    for prediction in record.predictions:
+        by_model[prediction.model_id].append(prediction)
+
+    entries: list[tuple[int, str, dict[str, Any]]] = []
+    for predictions in by_model.values():
+        model = predictions[0].model
+        if model.retired_at is not None:
+            continue
+        ranked = sorted(predictions, key=lambda p: (-p.probability, p.sky_class_label))
+        entries.append(
+            (
+                model.position,
+                model.slug,
+                {
+                    "model": {
+                        "slug": model.slug,
+                        "name": model.name,
+                        "version": model.version,
+                        **({"description": model.description} if model.description else {}),
+                    },
+                    "classes": [
+                        {
+                            "skyClass": p.sky_class_label,
+                            "probability": js_number(p.probability),
+                        }
+                        for p in ranked
+                    ],
+                },
+            )
+        )
+    return [entry for _, _, entry in sorted(entries, key=lambda e: (e[0], e[1]))]
+
+
 def record_to_json(
-    record: ImageRecord, *, collection_slug: str, release_version: str
+    record: ImageRecord,
+    *,
+    collection_slug: str,
+    release_version: str,
+    include_predictions: bool = False,
 ) -> dict[str, Any]:
     """Serialise one image record.
 
@@ -133,6 +191,11 @@ def record_to_json(
     frame has no cloud cover to report, and reporting `null` would invite a
     client to render it as zero - which is precisely the clear sky the archive
     must never invent.
+
+    `include_predictions` is off by default because the list endpoints do not
+    render probability vectors: switching it on there would load and serialise
+    one row per class per frame per model on every Explore page. The
+    single-record read turns it on and loads `predictions` eagerly to match.
     """
     artifacts = _public_artifacts(record)
     by_type = {artifact.type: artifact for artifact in artifacts}
@@ -154,6 +217,11 @@ def record_to_json(
     if record.cloud_fraction is not None:
         payload["cloudFraction"] = js_number(record.cloud_fraction)
         payload["cloudCoverOktas"] = oktas
+    # The observer's own count, which travels with the cloud genus in the
+    # label table. Independent of the measured pair above: a frame can have
+    # one, the other, both or neither, and the two are never reconciled.
+    if record.observed_cloud_cover_oktas is not None:
+        payload["observedCloudCoverOktas"] = record.observed_cloud_cover_oktas
 
     payload["maskScale"] = js_number(record.mask_scale)
     payload["width"] = record.width
@@ -197,6 +265,10 @@ def record_to_json(
         payload["timeOfDay"] = record.time_of_day_label
     if record.sky_class_label:
         payload["skyClass"] = record.sky_class_label
+    if include_predictions:
+        predictions = record_predictions(record)
+        if predictions:
+            payload["predictions"] = predictions
     if record.instrument:
         payload["instrument"] = record.instrument
 

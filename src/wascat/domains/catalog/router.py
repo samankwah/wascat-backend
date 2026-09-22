@@ -81,7 +81,7 @@ async def get_image(
     row = await repository.get_image(session, record_id)
     if row is None:
         raise NotFoundError("Image record not found")
-    return envelope(request, service.render_record(row))
+    return envelope(request, service.render_record_detail(row))
 
 
 @router.get(
