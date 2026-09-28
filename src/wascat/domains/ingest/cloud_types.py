@@ -9,7 +9,8 @@ it can never disagree about what `SC` means.
 The list is the ten genera of the WMO International Cloud Atlas, plus the two
 non-genus conditions an all-sky record still has to be able to say: a sky with
 no cloud in it, and the Harmattan haze the archive's SEASON vocabulary already
-names. Nothing else is here. A code the table uses that is not in this map is
+names. It also carries the combined codes observers write for a sky of two
+genera together - `CuSc` for cumulus with stratocumulus. Nothing else is here. A code the table uses that is not in this map is
 an error the operator is shown, not a term this module invents a label for -
 seeding a guessed vocabulary in advance is how the previous sky-class list
 ended up describing data nobody had looked at.
@@ -33,6 +34,7 @@ CLOUD_GENERA: dict[str, str] = {
     "ST": "Stratus",
     "CU": "Cumulus",
     "CB": "Cumulonimbus",
+    "CUSC": "Cumulus / Stratocumulus",
     "CL": "Clear sky",
     "HZ": "Haze / Dust",
 }

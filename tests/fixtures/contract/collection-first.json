@@ -14,8 +14,8 @@
   "body": {
     "data": {
       "slug": "seq-001",
-      "title": "Capture sequence 01",
-      "shortTitle": "Sequence 01",
+      "title": "Cirrus",
+      "shortTitle": "Cirrus",
       "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 01",
       "description": "323 all-sky frames from capture sequence 01. 223 carry a binary cloud mask and a measured cloud cover, 53 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 2–3,611 · 223 of 323 segmented",

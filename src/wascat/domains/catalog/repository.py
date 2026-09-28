@@ -162,6 +162,10 @@ class CollectionStats:
     #: Per-sequence mask registration: the scale each sequence's masks were
     #: delivered at relative to the frames they segment.
     mask_registration: list[tuple[str, float]]
+    #: The observed cloud type, when every labelled frame in the collection
+    #: carries the same one. None when nothing is labelled or the labels
+    #: disagree - a collection is only named after a cloud type it is.
+    sky_class: str | None = None
 
 
 async def collection_stats(session: AsyncSession, collection_id: Any) -> CollectionStats:
@@ -226,6 +230,19 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         for sequence_id, scale in (await session.execute(registration_stmt)).all()
     ]
 
+    sky_class_stmt = (
+        select(ImageRecord.sky_class_label)
+        .where(
+            ImageRecord.collection_id == collection_id,
+            ImageRecord.retired_at.is_(None),
+            ImageRecord.release_id.in_(_published_releases(collection_id)),
+            ImageRecord.sky_class_label.is_not(None),
+        )
+        .group_by(ImageRecord.sky_class_label)
+        .limit(2)
+    )
+    sky_classes = list((await session.execute(sky_class_stmt)).scalars().all())
+
     return CollectionStats(
         sequence_ids=sequence_ids,
         images=images or 0,
@@ -237,6 +254,7 @@ async def collection_stats(session: AsyncSession, collection_id: Any) -> Collect
         total_bytes=int(total_bytes or 0),
         mean_oktas=float(mean_oktas) if mean_oktas is not None else None,
         mask_registration=mask_registration,
+        sky_class=sky_classes[0] if len(sky_classes) == 1 else None,
     )
 
 

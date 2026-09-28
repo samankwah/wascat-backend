@@ -280,6 +280,27 @@
         }
       }
     },
+    "/api/v1/stats": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Archive-wide statistics",
+        "operationId": "catalog_get_stats",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/auth/login": {
       "post": {
         "tags": [
@@ -2031,6 +2052,18 @@
             "title": "Maskregistration",
             "default": []
           },
+          "skyClass": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skyclass",
+            "description": "Observed cloud type, when every labelled frame shares one."
+          },
           "locationName": {
             "anyOf": [
               {
@@ -2211,6 +2244,18 @@
             "type": "array",
             "title": "Maskregistration",
             "default": []
+          },
+          "skyClass": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skyclass",
+            "description": "Observed cloud type, when every labelled frame shares one."
           },
           "locationName": {
             "anyOf": [
@@ -2724,6 +2769,54 @@
         ],
         "title": "FacetsOut"
       },
+      "GrowthPoint": {
+        "properties": {
+          "month": {
+            "type": "string",
+            "title": "Month"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "cumulative": {
+            "type": "integer",
+            "title": "Cumulative"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month",
+          "count",
+          "cumulative"
+        ],
+        "title": "GrowthPoint"
+      },
+      "GrowthSeries": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "enum": [
+              "capturedAt",
+              "capturedOrIngested"
+            ],
+            "title": "Basis"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GrowthPoint"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "basis",
+          "items"
+        ],
+        "title": "GrowthSeries"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2736,6 +2829,45 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HourBreakdown": {
+        "properties": {
+          "hasTimestamps": {
+            "type": "boolean",
+            "title": "Hastimestamps"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HourCount"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hasTimestamps",
+          "items"
+        ],
+        "title": "HourBreakdown"
+      },
+      "HourCount": {
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "title": "Hour"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hour",
+          "count"
+        ],
+        "title": "HourCount"
       },
       "ImageEnvelope": {
         "properties": {
@@ -3518,6 +3650,166 @@
           "status"
         ],
         "title": "ReleaseTransition"
+      },
+      "StatsBreakdown": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "title": "Basis"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/StatsCount"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "basis",
+          "items"
+        ],
+        "title": "StatsBreakdown"
+      },
+      "StatsCount": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "count"
+        ],
+        "title": "StatsCount"
+      },
+      "StatsEnvelope": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/StatsOut"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "StatsEnvelope"
+      },
+      "StatsOut": {
+        "properties": {
+          "totals": {
+            "$ref": "#/components/schemas/StatsTotals"
+          },
+          "byLocation": {
+            "$ref": "#/components/schemas/StatsBreakdown"
+          },
+          "cloudTypes": {
+            "$ref": "#/components/schemas/StatsBreakdown"
+          },
+          "byHourUtc": {
+            "$ref": "#/components/schemas/HourBreakdown"
+          },
+          "coverageHistogram": {
+            "items": {
+              "$ref": "#/components/schemas/StatsCount"
+            },
+            "type": "array",
+            "title": "Coveragehistogram"
+          },
+          "growth": {
+            "$ref": "#/components/schemas/GrowthSeries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "totals",
+          "byLocation",
+          "cloudTypes",
+          "byHourUtc",
+          "coverageHistogram",
+          "growth"
+        ],
+        "title": "StatsOut"
+      },
+      "StatsTotals": {
+        "properties": {
+          "images": {
+            "type": "integer",
+            "title": "Images"
+          },
+          "sites": {
+            "type": "integer",
+            "title": "Sites"
+          },
+          "sitesBasis": {
+            "type": "string",
+            "enum": [
+              "locations",
+              "collections"
+            ],
+            "title": "Sitesbasis"
+          },
+          "processedPct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processedpct"
+          },
+          "avgCoveragePct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avgcoveragepct"
+          },
+          "measured": {
+            "type": "integer",
+            "title": "Measured"
+          }
+        },
+        "type": "object",
+        "required": [
+          "images",
+          "sites",
+          "sitesBasis",
+          "measured"
+        ],
+        "title": "StatsTotals"
       },
       "UserCreate": {
         "properties": {

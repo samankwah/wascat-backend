@@ -125,6 +125,15 @@ async def client(seeded_engine) -> AsyncIterator[httpx.AsyncClient]:  # type: ig
 #    frontend's Release type already declares it optional, and suppressing a
 #    true fact to match a fixture would be the wrong way round.
 #
+# 3. Collections are named by cloud type. The recorded implementation titled
+#    each one after its sequence number ("Capture sequence 01"); they now carry
+#    the name the curator gave in seed/provenance.json ("Cirrus"). Rewritten
+#    like 0, not exempted: 37 strings across 4 files - `title` and
+#    `shortTitle` on collections and the collections facet's `label` - and
+#    nothing else. A name several collections share carries its sequence
+#    numbers in the facet ("Altostratus · 04") so the filter can tell them
+#    apart. The kicker and the sequences facet still say "Sequence NN".
+#
 # Anything not listed here is compared exactly.
 
 OPAQUE_FIELDS = {"nextCursor", "next"}

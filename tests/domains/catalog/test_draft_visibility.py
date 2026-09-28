@@ -27,6 +27,7 @@ from wascat.domains.catalog.models import (
     ReleaseStatus,
 )
 from wascat.domains.catalog.query import parse_image_query
+from wascat.domains.catalog.stats import build_stats
 
 pytestmark = pytest.mark.db
 
@@ -148,6 +149,26 @@ class TestPublicReads:
         # Facets that disagreed with the listings would be worse than either
         # being wrong on its own.
         assert entry["count"] == 1
+
+    async def test_stats_count_only_published_records(
+        self, session: AsyncSession, archive: tuple[Collection, ImageRecord, ImageRecord]
+    ) -> None:
+        collection, _, _ = archive
+        stats = await build_stats(session)
+        facets = await build_facets(session)
+        # The Statistics page and the Explore filters describe one archive.
+        assert stats["totals"]["images"] == sum(item["count"] for item in facets["segmentation"])
+        # Unmeasured frames - these fixtures have no cloud fraction - are not
+        # a coverage reading; least() ignoring NULL once filed them at 80-100%.
+        assert (
+            sum(item["count"] for item in stats["coverageHistogram"])
+            == (stats["totals"]["measured"])
+        )
+        if stats["byLocation"]["basis"] == "collections":
+            entry = next(
+                item for item in stats["byLocation"]["items"] if item["value"] == collection.slug
+            )
+            assert entry["count"] == 1
 
 
 class TestTheDashboardSeesDrafts:

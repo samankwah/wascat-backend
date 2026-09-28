@@ -121,6 +121,14 @@ class TestStringFields:
         assert caught.value.details == {"sequence": ["Invalid"]}
 
 
+class TestCloudType:
+    def test_is_read_as_a_trimmed_name(self) -> None:
+        assert parse_image_query({"cloudType": " Altostratus "}).cloud_type == "Altostratus"
+
+    def test_blank_is_absent(self) -> None:
+        assert parse_image_query({"cloudType": ""}).cloud_type is None
+
+
 class TestDates:
     def test_accepts_a_calendar_date(self) -> None:
         assert parse_image_query({"from": "2026-03-14"}).date_from == "2026-03-14"

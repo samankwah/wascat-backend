@@ -57,6 +57,11 @@ def apply_filters(
     if query.collection:
         conditions.append(Collection.slug == query.collection)
 
+    if query.cloud_type:
+        # The collection's name, not the per-frame sky class: this is the
+        # cloud type the curator named the sequence after.
+        conditions.append(Collection.title == query.cloud_type)
+
     if query.release:
         conditions.append(Release.version == query.release)
 

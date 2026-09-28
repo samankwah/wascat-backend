@@ -58,6 +58,9 @@ class ImageQuery:
     time: str | None = None
     location: str | None = None
     sky_class: str | None = None
+    #: A collection's cloud-type name ("Altostratus"): every sequence the
+    #: curator named after that type, however many there are.
+    cloud_type: str | None = None
     artifact: str | None = None
     date_from: str | None = None
     date_to: str | None = None
@@ -195,6 +198,7 @@ def parse_image_query(params: Mapping[str, str]) -> ImageQuery:
     time_of_day = parser.read("time", lambda raw: _enum(raw, TIMES_OF_DAY))
     location = parser.read("location", lambda raw: _string(raw, max_length=80))
     sky_class = parser.read("skyClass", lambda raw: _string(raw, max_length=80))
+    cloud_type = parser.read("cloudType", lambda raw: _string(raw, max_length=80))
     artifact = parser.read("artifact", lambda raw: _enum(raw, ARTIFACT_TYPES))
     date_from = parser.read("from", _iso_date)
     date_to = parser.read("to", _iso_date)
@@ -218,6 +222,7 @@ def parse_image_query(params: Mapping[str, str]) -> ImageQuery:
         time=time_of_day,
         location=location or None,
         sky_class=sky_class or None,
+        cloud_type=cloud_type or None,
         artifact=artifact,
         date_from=date_from,
         date_to=date_to,

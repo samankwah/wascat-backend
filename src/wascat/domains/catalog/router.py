@@ -1,7 +1,7 @@
 """The public read API.
 
-Six GET endpoints, byte-compatible with the Next.js route handlers they
-replace. The responses are built as plain dicts and serialised verbatim rather
+Seven GET endpoints; the first six are byte-compatible with the Next.js route
+handlers they replaced, and /stats was added after. The responses are built as plain dicts and serialised verbatim rather
 than passed through a response model, because the envelope's key set, its
 omission of unmeasured fields and its number rendering are all contract; a
 Pydantic round-trip would quietly normalise them.
@@ -27,7 +27,9 @@ from wascat.domains.catalog.schemas import (
     ImageEnvelope,
     ImagePage,
     ReleaseListEnvelope,
+    StatsEnvelope,
 )
+from wascat.domains.catalog.stats import build_stats
 
 router = APIRouter(prefix="/api/v1", tags=["catalog"])
 
@@ -137,3 +139,12 @@ async def list_releases(
 )
 async def get_facets(request: Request, session: AsyncSession = SessionDep) -> CanonicalJSONResponse:
     return envelope(request, await build_facets(session))
+
+
+@router.get(
+    "/stats",
+    summary="Archive-wide statistics",
+    responses={200: {"model": StatsEnvelope}},
+)
+async def get_stats(request: Request, session: AsyncSession = SessionDep) -> CanonicalJSONResponse:
+    return envelope(request, await build_stats(session))

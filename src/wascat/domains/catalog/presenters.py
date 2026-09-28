@@ -339,14 +339,19 @@ def collection_to_json(
     releases: list[dict[str, Any]],
     mean_oktas: float | None = None,
     mask_registration: list[tuple[str, float]] | None = None,
+    sky_class: str | None = None,
 ) -> dict[str, Any]:
     sequence_names = ", ".join(sequence_label(s) for s in sequence_ids)
     location_name = collection.location_name
+    # The curator's name wins, then a site name, then the cloud type every
+    # labelled frame agrees on, then the sequence number. The kicker keeps the
+    # number either way.
+    name = collection.title or location_name or sky_class
 
     payload: dict[str, Any] = {
         "slug": collection.slug,
-        "title": location_name or f"Capture sequence {sequence_names}",
-        "shortTitle": location_name or f"Sequence {sequence_names}",
+        "title": name or f"Capture sequence {sequence_names}",
+        "shortTitle": name or f"Sequence {sequence_names}",
         "kicker": f"ALL-SKY CLOUD SEGMENTATION · SEQUENCE {sequence_names}",
         "description": build_collection_description(
             images=images,
@@ -378,6 +383,8 @@ def collection_to_json(
         ],
     }
 
+    if sky_class:
+        payload["skyClass"] = sky_class
     if location_name:
         payload["locationName"] = location_name
         if collection.latitude is not None and collection.longitude is not None:

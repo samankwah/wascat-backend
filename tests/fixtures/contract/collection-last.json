@@ -14,8 +14,8 @@
   "body": {
     "data": {
       "slug": "seq-011",
-      "title": "Capture sequence 11",
-      "shortTitle": "Sequence 11",
+      "title": "Cumulus",
+      "shortTitle": "Cumulus",
       "kicker": "ALL-SKY CLOUD SEGMENTATION · SEQUENCE 11",
       "description": "204 all-sky frames from capture sequence 11. 104 carry a binary cloud mask and a measured cloud cover, 36 of them without the source frame. A further 100 frames are sampled evenly from the rest of the sequence and have not been segmented yet.",
       "coverage": "Frames 0–2,120 · 104 of 204 segmented",

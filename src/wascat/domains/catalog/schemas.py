@@ -175,6 +175,10 @@ class CollectionOut(BaseModel):
         Field(description="Mean measured cover across the segmented frames."),
     ] = None
     maskRegistration: list[MaskRegistration] = []  # noqa: N815
+    skyClass: Annotated[  # noqa: N815
+        str | None,
+        Field(description="Observed cloud type, when every labelled frame shares one."),
+    ] = None
 
     locationName: str | None = None  # noqa: N815
     location: str | None = None
@@ -208,6 +212,56 @@ class FacetsOut(BaseModel):
     timesOfDay: list[FacetValue]  # noqa: N815
     skyClasses: list[FacetValue]  # noqa: N815
     locations: list[FacetValue]
+
+
+class StatsTotals(BaseModel):
+    images: int
+    sites: int
+    sitesBasis: Literal["locations", "collections"]  # noqa: N815
+    processedPct: float | None = None  # noqa: N815
+    avgCoveragePct: float | None = None  # noqa: N815
+    measured: int
+
+
+class StatsCount(BaseModel):
+    value: str | None = None
+    label: str
+    count: int
+
+
+class StatsBreakdown(BaseModel):
+    basis: str
+    items: list[StatsCount]
+
+
+class HourCount(BaseModel):
+    hour: int
+    count: int
+
+
+class HourBreakdown(BaseModel):
+    hasTimestamps: bool  # noqa: N815
+    items: list[HourCount]
+
+
+class GrowthPoint(BaseModel):
+    month: str
+    count: int
+    cumulative: int
+
+
+class GrowthSeries(BaseModel):
+    basis: Literal["capturedAt", "capturedOrIngested"]
+    items: list[GrowthPoint]
+
+
+class StatsOut(BaseModel):
+    totals: StatsTotals
+    byLocation: StatsBreakdown  # noqa: N815
+    cloudTypes: StatsBreakdown  # noqa: N815
+    byHourUtc: HourBreakdown  # noqa: N815
+    coverageHistogram: list[StatsCount]  # noqa: N815
+    growth: GrowthSeries
 
 
 # ---------------------------------------------------------------------------
@@ -276,6 +330,12 @@ class ReleaseListEnvelope(BaseModel):
 
 class FacetsEnvelope(BaseModel):
     data: FacetsOut
+    meta: Meta
+    links: Links
+
+
+class StatsEnvelope(BaseModel):
+    data: StatsOut
     meta: Meta
     links: Links
 
