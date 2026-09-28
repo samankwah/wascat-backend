@@ -6,6 +6,9 @@ for the same frames. Neither creates a record and neither touches a
 measurement: they add what a person saw and what a model said, next to what
 the segmentation pipeline delivered.
 
+``provenance`` puts the capture team's per-sequence station, coordinates and
+timing from ``seed/provenance.json`` onto every frame of each sequence.
+
 ``backfill`` adds the delivered frames the original catalogue left out. The
 TypeScript pipeline sampled 100 unsegmented frames per sequence because
 keeping all of them would have added ~360 MB to a git repository - a
@@ -26,6 +29,7 @@ import typer
 from wascat.core.db import dispose_engine, get_sessionmaker
 from wascat.domains.ingest import backfill as backfill_service
 from wascat.domains.ingest import labels as labels_service
+from wascat.domains.ingest import provenance as provenance_service
 from wascat.storage.factory import close_store, get_store
 
 ingest_app = typer.Typer(no_args_is_help=True)
@@ -266,6 +270,48 @@ async def _predictions(*, table: Path, slug: str, version: str, name: str, dry_r
 
     typer.echo(f"Model {slug} version {version}.")
     _report(report.summary(), report.terms_created, report.unknown_tags, dry_run=dry_run)
+
+
+PROVENANCE_ARGUMENT = typer.Argument(
+    Path(__file__).resolve().parents[3] / "seed" / "provenance.json",
+    help="The per-sequence provenance file.",
+)
+
+
+@ingest_app.command("provenance")
+def provenance(
+    path: Path = PROVENANCE_ARGUMENT,
+    dry_run: bool = LABELS_DRY_RUN_OPTION,
+) -> None:
+    """Apply station, coordinates and capture times from the provenance file.
+
+    Each frame's capture time is startedAt + frameIndex x frameIntervalSeconds.
+    Fields the file leaves empty are left as they are in the database.
+    """
+    if not path.is_file():
+        typer.secho(f"No such file: {path}", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    try:
+        sequences = provenance_service.parse_provenance(path)
+    except (provenance_service.ProvenanceError, ValueError) as error:
+        typer.secho(str(error), fg=typer.colors.RED)
+        raise typer.Exit(1) from None
+    asyncio.run(_provenance(sequences, dry_run=dry_run))
+
+
+async def _provenance(
+    sequences: list[provenance_service.SequenceProvenance], *, dry_run: bool
+) -> None:
+    try:
+        async with get_sessionmaker()() as session:
+            report = await provenance_service.apply_provenance(session, sequences, dry_run=dry_run)
+            if not dry_run:
+                await session.commit()
+    finally:
+        await dispose_engine()
+    typer.secho(report.summary(), fg=typer.colors.GREEN if not dry_run else typer.colors.BLUE)
+    if dry_run:
+        typer.echo("Dry run: nothing written.")
 
 
 def _report(
