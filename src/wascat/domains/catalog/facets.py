@@ -12,6 +12,7 @@ A plain GROUP BY would drop every zero and quietly change that. See risk R11.
 
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any
 
 from sqlalchemy import func, select
@@ -58,6 +59,7 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
         select(
             Collection.position,
             Collection.slug,
+            Collection.title,
             Collection.location_name,
             ImageRecord.sequence_id,
             func.count(ImageRecord.id),
@@ -65,16 +67,20 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
         .join(ImageRecord, ImageRecord.collection_id == Collection.id)
         .where(ImageRecord.retired_at.is_(None), _published())
         .group_by(
-            Collection.position, Collection.slug, Collection.location_name, ImageRecord.sequence_id
+            Collection.position,
+            Collection.slug,
+            Collection.title,
+            Collection.location_name,
+            ImageRecord.sequence_id,
         )
         .order_by(Collection.position, Collection.slug)
     )
     per_collection: dict[str, dict[str, Any]] = {}
-    for _, slug, location_name, sequence_id, count in (
+    for _, slug, title, location_name, sequence_id, count in (
         await session.execute(collection_stmt)
     ).all():
         entry = per_collection.setdefault(
-            slug, {"label": location_name, "sequences": [], "count": 0}
+            slug, {"label": title or location_name, "sequences": [], "count": 0}
         )
         entry["sequences"].append(sequence_label(sequence_id))
         entry["count"] += count
@@ -82,12 +88,21 @@ async def build_facets(session: AsyncSession) -> dict[str, list[Facet]]:
     collections = [
         {
             "value": slug,
-            # shortTitle: the site name once supplied, the sequence list until then.
+            # shortTitle: the curator's name or site name once supplied, the
+            # sequence list until then.
             "label": entry["label"] or f"Sequence {', '.join(sorted(set(entry['sequences'])))}",
             "count": entry["count"],
         }
         for slug, entry in per_collection.items()
     ]
+    # Several sequences can show the same cloud type, and a dropdown of three
+    # identical "Altostratus" entries cannot be chosen between. Only the
+    # repeated names carry their sequence numbers; a unique one stays as is.
+    label_counts = Counter(facet["label"] for facet in collections)
+    for facet in collections:
+        if label_counts[facet["label"]] > 1:
+            numbers = ", ".join(sorted(set(per_collection[facet["value"]]["sequences"])))
+            facet["label"] = f"{facet['label']} · {numbers}"
 
     # -- sequences ---------------------------------------------------------
     # Ordered by the identifier itself: it is zero-padded and fixed width, so

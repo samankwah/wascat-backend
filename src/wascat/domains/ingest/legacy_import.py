@@ -222,6 +222,10 @@ async def import_catalogue(
         # already supply a value.
         for sequence_id in entry.get("sequenceIds", []):
             sequence_meta = sequences.get(sequence_id) or {}
+            # The catalogue's own title is generated ("Sequence 01"); a name
+            # the curator gave the sequence replaces it.
+            if sequence_meta.get("title") and collection.title == entry.get("title"):
+                collection.title = sequence_meta["title"]
             if not collection.location_name and sequence_meta.get("site"):
                 collection.location_name = sequence_meta["site"]
             if not collection.instrument and sequence_meta.get("instrument"):

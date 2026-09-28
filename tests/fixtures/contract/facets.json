@@ -16,57 +16,57 @@
       "collections": [
         {
           "value": "seq-001",
-          "label": "Sequence 01",
+          "label": "Cirrus",
           "count": 323
         },
         {
           "value": "seq-002",
-          "label": "Sequence 02",
+          "label": "Cirrostratus",
           "count": 688
         },
         {
           "value": "seq-003",
-          "label": "Sequence 03",
+          "label": "Stratocumulus",
           "count": 166
         },
         {
           "value": "seq-004",
-          "label": "Sequence 04",
+          "label": "Altostratus · 04",
           "count": 132
         },
         {
           "value": "seq-005",
-          "label": "Sequence 05",
+          "label": "Altostratus · 05",
           "count": 136
         },
         {
           "value": "seq-006",
-          "label": "Sequence 06",
+          "label": "Nimbostratus",
           "count": 119
         },
         {
           "value": "seq-007",
-          "label": "Sequence 07",
+          "label": "Altocumulus",
           "count": 206
         },
         {
           "value": "seq-008",
-          "label": "Sequence 08",
+          "label": "Cirrocumulus",
           "count": 161
         },
         {
           "value": "seq-009",
-          "label": "Sequence 09",
+          "label": "Stratus",
           "count": 68
         },
         {
           "value": "seq-010",
-          "label": "Sequence 10",
+          "label": "Cumulonimbus",
           "count": 219
         },
         {
           "value": "seq-011",
-          "label": "Sequence 11",
+          "label": "Cumulus",
           "count": 204
         }
       ],

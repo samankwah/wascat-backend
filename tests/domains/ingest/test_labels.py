@@ -20,13 +20,18 @@ from sqlalchemy import select
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from wascat.core.pagination import Cursor
+from wascat.domains.catalog import repository as catalog_repository
+from wascat.domains.catalog import service as catalog_service
 from wascat.domains.catalog.models import (
     Artifact,
     Collection,
     ImageClassPrediction,
     ImageRecord,
     Release,
+    ReleaseStatus,
 )
+from wascat.domains.catalog.query import parse_image_query
 from wascat.domains.ingest import cloud_types, labels
 from wascat.domains.vocab.models import VocabKind, VocabularyTerm
 
@@ -102,7 +107,7 @@ async def make_record(
     await session.flush()
 
     if status == "PUBLISHED":
-        release.status = "PUBLISHED"
+        release.status = ReleaseStatus.PUBLISHED
         release.published_at = datetime.now(UTC)
         release.current = True
         await session.flush()
@@ -149,6 +154,13 @@ class TestReadingTheLabelTable:
         table = write(tmp_path, "labels.csv", "WAS-V11-F1,SC,9\n")
         with pytest.raises(labels.LabelFormatError, match="eighths"):
             labels.parse_labels(table)
+
+    def test_a_combined_code_is_read_as_one_sky(self, tmp_path: Path) -> None:
+        # How the observer writes cumulus with stratocumulus: one code, two genera.
+        table = write(tmp_path, "labels.csv", "WAS-V11-F1877,CuSc,07\n")
+        (row,) = labels.parse_labels(table)
+        assert row.code == "CUSC"
+        assert cloud_types.label_for(row.code) == "Cumulus / Stratocumulus"
 
     def test_an_unknown_cloud_code_names_itself_and_the_known_ones(self, tmp_path: Path) -> None:
         table = write(tmp_path, "labels.csv", "WAS-V11-F1,XX,04\n")
@@ -255,6 +267,119 @@ class TestApplyingLabels:
         )
         await session.refresh(record)
         assert (record.sky_class_label, record.observed_cloud_cover_oktas) == ("Cumulus", 3)
+
+
+async def add_sibling(session: AsyncSession, record: ImageRecord, frame_index: int) -> ImageRecord:
+    """A second frame in the same draft release as `record`."""
+    sibling = ImageRecord(
+        id=f"{record.id}-{frame_index}",
+        release_id=record.release_id,
+        collection_id=record.collection_id,
+        sequence_id=TEST_SEQUENCE,
+        frame_index=frame_index,
+        width=640,
+        height=360,
+    )
+    session.add(sibling)
+    await session.flush()
+    session.add(
+        Artifact(
+            image_id=sibling.id,
+            type="source",
+            media_type="image/jpeg",
+            object_key=f"frames/{TEST_SEQUENCE}/{sibling.id}-source.jpg",
+            checksum="c" * 64,
+            bytes=1024,
+        )
+    )
+    await session.flush()
+    return sibling
+
+
+async def publish(session: AsyncSession, record: ImageRecord) -> None:
+    release = await session.get(Release, record.release_id)
+    assert release is not None
+    release.status = ReleaseStatus.PUBLISHED
+    release.published_at = datetime.now(UTC)
+    release.current = True
+    await session.flush()
+
+
+async def rendered_title(session: AsyncSession, record: ImageRecord) -> tuple[str, str | None]:
+    collection = await session.get(Collection, record.collection_id)
+    assert collection is not None
+    payload = await catalog_service.render_collection(session, collection)
+    return payload["shortTitle"], payload.get("skyClass")
+
+
+class TestNamingACollectionByItsCloudType:
+    async def test_frames_that_agree_name_the_collection(self, session: AsyncSession) -> None:
+        first = await make_record(session, frame_index=1)
+        second = await add_sibling(session, first, 2)
+        await labels.apply_labels(
+            session,
+            [labels.LabelRow(first.id, "CUSC", 7, 1), labels.LabelRow(second.id, "CUSC", 7, 2)],
+        )
+        await publish(session, first)
+        assert await rendered_title(session, first) == (
+            "Cumulus / Stratocumulus",
+            "Cumulus / Stratocumulus",
+        )
+
+    async def test_an_unlabelled_frame_does_not_block_the_name(self, session: AsyncSession) -> None:
+        first = await make_record(session, frame_index=1)
+        await add_sibling(session, first, 2)
+        await labels.apply_labels(session, [labels.LabelRow(first.id, "SC", 7, 1)])
+        await publish(session, first)
+        assert (await rendered_title(session, first))[0] == "Stratocumulus"
+
+    async def test_frames_that_disagree_keep_the_sequence_name(self, session: AsyncSession) -> None:
+        first = await make_record(session, frame_index=1)
+        second = await add_sibling(session, first, 2)
+        await labels.apply_labels(
+            session,
+            [labels.LabelRow(first.id, "SC", 7, 1), labels.LabelRow(second.id, "CU", 3, 2)],
+        )
+        await publish(session, first)
+        assert await rendered_title(session, first) == ("Sequence 920", None)
+
+    async def test_no_labels_keep_the_sequence_name(self, session: AsyncSession) -> None:
+        record = await make_record(session, status="PUBLISHED")
+        assert await rendered_title(session, record) == ("Sequence 920", None)
+
+    async def test_a_curator_title_wins_over_the_labels(self, session: AsyncSession) -> None:
+        record = await make_record(session, frame_index=1)
+        await labels.apply_labels(session, [labels.LabelRow(record.id, "SC", 7, 1)])
+        await publish(session, record)
+        collection = await session.get(Collection, record.collection_id)
+        assert collection is not None
+        collection.title = "Altocumulus"
+        await session.flush()
+        assert await rendered_title(session, record) == ("Altocumulus", "Stratocumulus")
+
+
+class TestFilteringByCloudType:
+    async def test_every_sequence_named_after_the_type_matches(self, session: AsyncSession) -> None:
+        # Two sequences both named Altostratus, one named Cirrus: the filter
+        # returns the frames of both Altostratus ones and none of the other.
+        first = await make_record(session, frame_index=1)
+        second = await make_record(session, frame_index=2)
+        other = await make_record(session, frame_index=3)
+        for record, title in ((first, "Altostratus"), (second, "Altostratus"), (other, "Cirrus")):
+            collection = await session.get(Collection, record.collection_id)
+            assert collection is not None
+            collection.title = title
+        await session.flush()
+
+        page = await catalog_repository.list_images(
+            session,
+            parse_image_query({"cloudType": "Altostratus", "limit": "100"}),
+            Cursor(),
+            include_drafts=True,
+        )
+        ids = {row.record.id for row in page.rows}
+        assert {first.id, second.id} <= ids
+        assert other.id not in ids
 
 
 class TestReadingProbabilities:
