@@ -226,8 +226,9 @@ async def import_catalogue(
             # the curator gave the sequence replaces it.
             if sequence_meta.get("title") and collection.title == entry.get("title"):
                 collection.title = sequence_meta["title"]
-            if not collection.location_name and sequence_meta.get("site"):
-                collection.location_name = sequence_meta["site"]
+            site = sequence_meta.get("station") or sequence_meta.get("site")
+            if not collection.location_name and site:
+                collection.location_name = site
             if not collection.instrument and sequence_meta.get("instrument"):
                 collection.instrument = sequence_meta["instrument"]
             if (
