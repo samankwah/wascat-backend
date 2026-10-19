@@ -50,6 +50,7 @@ RECORD_FIELDS: dict[str, str] = {
     "time_of_day": "time_of_day_label",
     "sky_class": "sky_class_label",
     "observed_cloud_cover_oktas": "observed_cloud_cover_oktas",
+    "visibility_m": "visibility_m",
     "custom": "custom",
 }
 

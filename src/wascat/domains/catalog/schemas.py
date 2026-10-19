@@ -100,6 +100,17 @@ class ImageRecordOut(BaseModel):
     cloudFraction: float | None = None  # noqa: N815
     cloudCoverOktas: Annotated[int | None, Field(ge=0, le=8)] = None  # noqa: N815
     observedCloudCoverOktas: Annotated[int | None, Field(ge=0, le=8)] = None  # noqa: N815
+    visibilityM: Annotated[  # noqa: N815
+        int | None,
+        Field(
+            ge=0,
+            le=100000,
+            description=(
+                "Horizontal visibility the station reported at capture time, in "
+                "metres. Absent until a report is attached; never estimated."
+            ),
+        ),
+    ] = None
 
     maskScale: Annotated[  # noqa: N815
         float,

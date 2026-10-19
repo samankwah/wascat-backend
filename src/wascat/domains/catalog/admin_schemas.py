@@ -56,7 +56,8 @@ class ImageRecordWrite(BaseModel):
     ``observedCloudCoverOktas`` is the one number here, and it is an
     observation rather than a measurement: a count a person read off the sky,
     correcting or supplying what the label table loaded. It writes to its own
-    column and leaves ``cloudCoverOktas`` alone.
+    column and leaves ``cloudCoverOktas`` alone. ``visibilityM`` is the same
+    kind of value: the station's reported visibility, in metres.
     """
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
@@ -71,6 +72,9 @@ class ImageRecordWrite(BaseModel):
     sky_class: str | None = Field(default=None, alias="skyClass", max_length=80)
     observed_cloud_cover_oktas: Annotated[int | None, Field(ge=0, le=8)] = Field(
         default=None, alias="observedCloudCoverOktas"
+    )
+    visibility_m: Annotated[int | None, Field(ge=0, le=100000)] = Field(
+        default=None, alias="visibilityM"
     )
     condition_tags: list[str] | None = Field(default=None, alias="conditionTags")
     custom: dict[str, object] | None = None
