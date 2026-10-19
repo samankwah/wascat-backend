@@ -211,6 +211,24 @@ class TestWhatACuratorMaySet:
         await session.refresh(record)
         assert record.sort_key.startswith("2026-03-14T09:00:00")
 
+    async def test_a_reported_visibility_is_stored_in_metres(self, session: AsyncSession) -> None:
+        collection, release = await make_draft(session)
+        record = await add_record(session, collection, release)
+
+        await admin_service.update_record(session, record, ImageRecordWrite(visibilityM=8000))
+        assert record.visibility_m == 8000
+
+        await admin_service.update_record(
+            session, record, ImageRecordWrite.model_validate({"visibilityM": None})
+        )
+        assert record.visibility_m is None
+
+    async def test_an_impossible_visibility_is_rejected(self) -> None:
+        with pytest.raises(Exception, match="visibilityM"):
+            ImageRecordWrite(visibilityM=-1)
+        with pytest.raises(Exception, match="visibilityM"):
+            ImageRecordWrite(visibilityM=100001)
+
 
 class TestBulkEditing:
     async def test_applies_to_every_editable_record(self, session: AsyncSession) -> None:

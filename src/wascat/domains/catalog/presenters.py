@@ -222,6 +222,10 @@ def record_to_json(
     # one, the other, both or neither, and the two are never reconciled.
     if record.observed_cloud_cover_oktas is not None:
         payload["observedCloudCoverOktas"] = record.observed_cloud_cover_oktas
+    # The station's reported visibility. Omitted rather than null, like every
+    # unreported value, so no client can read it as zero.
+    if record.visibility_m is not None:
+        payload["visibilityM"] = record.visibility_m
 
     payload["maskScale"] = js_number(record.mask_scale)
     payload["width"] = record.width

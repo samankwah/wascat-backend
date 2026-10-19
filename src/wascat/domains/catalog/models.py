@@ -183,6 +183,10 @@ class ImageRecord(Base):
     # claim a measurement it never made. Where the two disagree, both are
     # served and the disagreement is the interesting part.
     observed_cloud_cover_oktas: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    # Horizontal visibility the station reported at capture time, in metres,
+    # as a METAR or SYNOP carries it. Supplied with the frame, never estimated
+    # from it, and NULL until a report is attached.
+    visibility_m: Mapped[int | None] = mapped_column(nullable=True)
     # Scale at which the mask was delivered relative to its source frame. 1 for
     # correctly registered sequences; >1 where the mask was rendered larger, in
     # which case the viewer scales it back. Masks are stored as delivered.
@@ -291,6 +295,10 @@ class ImageRecord(Base):
         CheckConstraint(
             "observed_cloud_cover_oktas IS NULL OR observed_cloud_cover_oktas BETWEEN 0 AND 8",
             name="observed_okta_range",
+        ),
+        CheckConstraint(
+            "visibility_m IS NULL OR visibility_m BETWEEN 0 AND 100000",
+            name="visibility_range",
         ),
         # 10: identifier formats.
         CheckConstraint(r"id ~ '^WAS-[A-Z0-9-]+$'", name="id_format"),
