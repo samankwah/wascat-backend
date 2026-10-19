@@ -38,6 +38,12 @@ SECURITY_HEADERS = {
 
 PUBLIC_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=3600"
 
+# Read only by Vercel's CDN, which does not forward it. The frontend caches
+# these responses itself and drops them on /api/revalidate - but its refetch
+# would otherwise be answered from Vercel's copy, so an edit stayed invisible
+# for the full s-maxage. Browsers and other caches still get Cache-Control.
+PLATFORM_CDN_CACHE_CONTROL = "no-store"
+
 
 class RequestContextMiddleware(BaseHTTPMiddleware):
     """Attach a request id so logs and audit rows can be correlated."""
@@ -79,6 +85,8 @@ class CorsPolicyMiddleware(BaseHTTPMiddleware):
         else:
             response.headers["Access-Control-Allow-Origin"] = "*"
             response.headers.setdefault("Cache-Control", PUBLIC_CACHE_CONTROL)
+            if response.headers["Cache-Control"] == PUBLIC_CACHE_CONTROL:
+                response.headers["Vercel-CDN-Cache-Control"] = PLATFORM_CDN_CACHE_CONTROL
 
         return response
 
