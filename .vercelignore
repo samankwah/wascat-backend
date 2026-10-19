@@ -1,0 +1,15 @@
+# Only src/ and the Python manifests are needed at runtime. Migrations run from
+# a workstation (`uv run alembic upgrade head`), never on a cold start.
+.env
+.env.*
+!.env.example
+tests/
+seed/
+migrations/
+alembic.ini
+docker-compose.yml
+Dockerfile
+render.yaml
+tasks.ps1
+openapi.json
+.storage/

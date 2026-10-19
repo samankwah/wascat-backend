@@ -136,3 +136,7 @@ markers = [
     "db: requires a PostgreSQL database",
     "slow: runs over the full frame archive",
 ]
+
+# Vercel builds the ASGI app below into a single Python function. See vercel.json.
+[tool.vercel]
+entrypoint = "wascat.main:app"

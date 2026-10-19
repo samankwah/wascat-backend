@@ -41,6 +41,13 @@ async def _run_checks() -> int:
         typer.echo(f"{WARN}{version} (this project pins 3.13)")
 
     typer.echo("\nPostgreSQL")
+    url = settings.database_url
+    host = url.hosts()[0]
+    if host.get("port") == 6543 and not settings.db_pgbouncer:
+        typer.echo(f"{BAD}port 6543 is a transaction pooler - set WASCAT_DB_PGBOUNCER=true")
+        failures += 1
+    if "supabase" in (host.get("host") or "") and "ssl=" not in (url.query or ""):
+        typer.echo(f"{WARN}Supabase URL without ?ssl=require - TLS is attempted but not enforced")
     engine = create_engine()
     try:
         async with engine.connect() as conn:
@@ -72,6 +79,27 @@ async def _run_checks() -> int:
                 typer.echo(f"{OK if present else BAD}extension {extension}")
                 failures += 0 if present else 1
 
+            # Supabase exposes `public` over its REST API to these roles, whose
+            # key is public. Any table they can touch is readable by anyone.
+            exposed = (
+                await conn.execute(
+                    text(
+                        "SELECT r.rolname, count(*) FROM pg_roles r"
+                        " CROSS JOIN pg_tables t"
+                        " WHERE r.rolname IN ('anon', 'authenticated')"
+                        "   AND t.schemaname = 'public'"
+                        "   AND has_table_privilege("
+                        "         r.oid, format('%I.%I', t.schemaname, t.tablename),"
+                        "         'SELECT, INSERT, UPDATE, DELETE')"
+                        " GROUP BY r.rolname ORDER BY r.rolname"
+                    )
+                )
+            ).all()
+            for role, count in exposed:
+                typer.echo(f"{BAD}role {role} can access {count} table(s) via the Supabase API")
+                typer.echo("        run: wascat db upgrade (revokes it)")
+                failures += 1
+
             records = (
                 await conn.execute(
                     text(
@@ -87,7 +115,10 @@ async def _run_checks() -> int:
                 typer.echo(f"{WARN}no image records - run: wascat db seed --frames <dir>")
     except Exception as exc:
         typer.echo(f"{BAD}{type(exc).__name__}: {exc}")
-        typer.echo("        is the database running?  .\tasks.ps1 up")
+        if host.get("host") in ("localhost", "127.0.0.1"):
+            typer.echo("        is the database running?  .\\tasks.ps1 up")
+        else:
+            typer.echo("        check WASCAT_DATABASE_URL: host, password, ?ssl=require")
         failures += 1
     finally:
         await engine.dispose()
@@ -107,7 +138,7 @@ async def _run_checks() -> int:
             typer.echo(f"{OK}bucket {store.bucket} at {settings.s3_endpoint_url}")
         except Exception as exc:
             typer.echo(f"{BAD}{type(exc).__name__}: {exc}")
-            typer.echo("        is MinIO running?  .\tasks.ps1 up")
+            typer.echo("        is MinIO running?  .\\tasks.ps1 up")
             failures += 1
         finally:
             await store.close()

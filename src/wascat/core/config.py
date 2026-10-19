@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     db_echo: bool = False
     db_pool_size: int = 10
     db_max_overflow: int = 20
+    # Set when the URL points at a transaction-pooling PgBouncer, e.g.
+    # Supabase's pooler on port 6543. Session pooler / direct (5432) don't
+    # need it. See create_engine in core/db.py.
+    db_pgbouncer: bool = False
 
     # -- Public URLs -------------------------------------------------------
     # The frontend proxies /api/* to this service, so the request the backend

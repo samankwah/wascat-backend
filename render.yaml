@@ -1,5 +1,6 @@
 # Render Blueprint: `render blueprint launch` (or "New +" -> "Blueprint" in
-# the dashboard) reads this and provisions both resources below in one pass.
+# the dashboard) reads this and provisions the web service below. The
+# database is not on Render: it's a Supabase project (see README "Deploy").
 #
 # Every WASCAT_* var mirrors .env.example. Three kinds of value here:
 #  - a literal, for anything that's the same in every deploy of this service
@@ -10,22 +11,11 @@
 #    (the R2 credentials, the two public URLs) - Render prompts for these
 #    once in the dashboard and leaves them alone on every redeploy after
 #
-# WASCAT_DATABASE_URL is `sync: false`, not `fromDatabase`, even though the
-# Postgres instance below is created by this same blueprint: Render's
-# `connectionString` property is a plain postgresql://... URL, and the app's
-# fully-async engine needs the driver named explicitly - postgresql+asyncpg://
-# - or SQLAlchemy falls back to the sync driver (psycopg2), which isn't even
-# installed, and startup fails with "ModuleNotFoundError: No module named
-# 'psycopg2'". `fromDatabase` also auto-resyncs on every render.yaml push
-# ("all future updates... will be synced automatically"), which would just
-# overwrite a manually-corrected value back to the broken one - `sync: false`
-# is set once and left alone.
-
-databases:
-  - name: wascat-db
-    databaseName: wascat
-    user: wascat
-    plan: free
+# WASCAT_DATABASE_URL is `sync: false`: Supabase hands out a plain
+# postgresql://... URL, and the app's fully-async engine needs the driver
+# named explicitly - postgresql+asyncpg:// - or SQLAlchemy falls back to the
+# sync driver (psycopg2), which isn't even installed, and startup fails with
+# "ModuleNotFoundError: No module named 'psycopg2'".
 
 services:
   - type: web
@@ -40,13 +30,18 @@ services:
       - key: WASCAT_DEBUG
         value: "false"
 
-      # Postgres. Set once, from the wascat-db service's own "Info" tab:
-      # copy its "Internal Database URL" (not "External" - Internal is free,
-      # private-network traffic, and this service and that database always
-      # share a region) and insert "+asyncpg" right after "postgresql", e.g.
-      # postgresql+asyncpg://wascat:<password>@<host>/wascat
+      # Postgres on Supabase. Set once, from the project's "Connect" ->
+      # "Session pooler" string (IPv4; the direct db.<ref>.supabase.co host is
+      # IPv6-only and unreachable from Render). Insert "+asyncpg" after
+      # "postgresql" and append ?ssl=require, e.g.
+      # postgresql+asyncpg://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres?ssl=require
       - key: WASCAT_DATABASE_URL
         sync: false
+      # Supabase's free tier caps connections; keep the per-process pool small.
+      - key: WASCAT_DB_POOL_SIZE
+        value: "5"
+      - key: WASCAT_DB_MAX_OVERFLOW
+        value: "5"
 
       # Public URLs - the frontend's real Netlify origin, set once it exists
       # (see the plan's "Wiring the two services together" section).

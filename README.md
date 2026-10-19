@@ -118,18 +118,58 @@ by using the filesystem object store; the ones that need PostgreSQL are marked
 
 ## Deploy
 
-`Dockerfile` and `render.yaml` deploy this as a Render web service with a
-managed Postgres, one Blueprint launch (`render blueprint launch`, or
-**New → Blueprint** in the dashboard, pointed at this repo). Object storage
-is external - any S3-compatible endpoint, set via the `WASCAT_S3_*` vars
-that already default to MinIO locally.
+The API runs on Vercel as a single Python function. `pyproject.toml`'s
+`[tool.vercel]` names the entrypoint, `vercel.json` pins it to `dub1`, next to
+the database, and `.vercelignore` keeps tests, seed data and migrations out of
+the bundle. Postgres is a Supabase project, and object storage is any
+S3-compatible endpoint (Cloudflare R2 in production).
 
-`render.yaml` documents which vars it can generate itself
-(`WASCAT_SECRET_KEY`) and which need a real value pasted in once
-(`WASCAT_DATABASE_URL`'s driver prefix, the object-store credentials, and
-the frontend's public URL for `WASCAT_PUBLIC_BASE_URL` /
-`WASCAT_ADMIN_ORIGINS` / `WASCAT_FRONTEND_REVALIDATE_URL`) - nothing this
-service needs is invented at deploy time.
+Database (Supabase):
+
+1. In the project, copy **Connect → Transaction pooler** (port 6543). It suits
+   serverless, where every instance would otherwise hold its own pool.
+2. Turn it into `postgresql+asyncpg://…:6543/postgres?ssl=require`, and set
+   `WASCAT_DB_PGBOUNCER=true` beside it, which turns off asyncpg's
+   prepared-statement cache. From a workstation, the session pooler (5432)
+   works without the flag.
+3. Run migrations from a workstation before deploying code that needs them:
+   `uv run alembic upgrade head`, then `uv run wascat doctor`. Vercel never
+   runs them; a cold start must not race another one to migrate.
+4. Supabase also serves `public` over its REST API to the `anon` key. This
+   service never uses that API, so migration `3c9f1a7e2b80` revokes those
+   roles' access and `doctor` fails if any comes back. Turning off **Data API**
+   in the project settings closes it at the edge as well.
+
+Tests still need a local Postgres (`docker compose up`), because they create
+and drop databases.
+
+Vercel project environment variables (Production):
+
+| Variable | Value |
+| --- | --- |
+| `WASCAT_ENVIRONMENT` | `production` |
+| `WASCAT_DATABASE_URL` | the transaction-pooler URL from step 2 (secret) |
+| `WASCAT_DB_PGBOUNCER` | `true` |
+| `WASCAT_SECRET_KEY` | 48+ random characters (secret) |
+| `WASCAT_PUBLIC_BASE_URL` | the frontend's origin, e.g. `https://wascat-frontend.netlify.app` |
+| `WASCAT_ADMIN_ORIGINS` | `["https://wascat-frontend.netlify.app"]` |
+| `WASCAT_S3_ENDPOINT_URL`, `WASCAT_S3_ACCESS_KEY`, `WASCAT_S3_SECRET_KEY` | from the R2 API token (secret) |
+| `WASCAT_S3_BUCKET` / `WASCAT_S3_REGION` | `wascat` / `auto` |
+| `WASCAT_FRONTEND_REVALIDATE_URL` | `https://wascat-frontend.netlify.app/api/revalidate` |
+| `WASCAT_MAX_UPLOAD_BYTES` | `4000000` |
+| `WASCAT_FRONTEND_REVALIDATE_SECRET` | must equal the frontend's `WASCAT_REVALIDATE_SECRET` (secret) |
+
+The frontend's `WASCAT_API_ORIGIN` then points at the Vercel deployment's
+URL.
+
+Vercel caps a request body at 4.5 MB, below `WASCAT_MAX_UPLOAD_BYTES`' 32 MB
+default, so set it to `4000000` there (4 MB, leaving room for the multipart
+framing). A larger frame then gets the API's own error rather than a bare 413
+from the platform. Bulk ingest goes through the CLI from a workstation,
+which has no such limit.
+
+`Dockerfile` (and `render.yaml`, for Render) still build the same app as a
+long-running container, should it ever need a host other than Vercel.
 
 `WASCAT_ENVIRONMENT=production` makes the app refuse to start on a
 development default: see `Settings._refuse_dev_defaults_in_production` in

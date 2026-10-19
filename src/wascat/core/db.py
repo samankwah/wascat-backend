@@ -18,6 +18,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase, mapped_column
+from sqlalchemy.pool import NullPool
 
 from wascat.core.config import get_settings
 
@@ -75,17 +76,31 @@ _sessionmaker: async_sessionmaker[AsyncSession] | None = None
 
 def create_engine(url: str | None = None) -> AsyncEngine:
     settings = get_settings()
+    pool_kwargs: dict[str, Any]
+    if settings.db_pgbouncer:
+        # Behind a transaction-pooling PgBouncer (e.g. Supabase on 6543) a
+        # backend connection is shared between clients, so asyncpg's
+        # prepared-statement caches must be off, statement names must be
+        # unique, and pooling is left to PgBouncer. Otherwise queries fail
+        # intermittently with "prepared statement already exists". See risk R18.
+        pool_kwargs = {
+            "poolclass": NullPool,
+            "connect_args": {
+                "statement_cache_size": 0,
+                "prepared_statement_cache_size": 0,
+                "prepared_statement_name_func": lambda: f"__asyncpg_{uuid.uuid4()}__",
+            },
+        }
+    else:
+        pool_kwargs = {
+            "pool_size": settings.db_pool_size,
+            "max_overflow": settings.db_max_overflow,
+            "pool_pre_ping": True,
+        }
     return create_async_engine(
         url or settings.database_url_str,
         echo=settings.db_echo,
-        pool_size=settings.db_pool_size,
-        max_overflow=settings.db_max_overflow,
-        pool_pre_ping=True,
-        # NOTE: if a transaction-pooling PgBouncer is ever put in front of
-        # Postgres, asyncpg's prepared-statement cache must be disabled
-        # (statement_cache_size=0) and the pool switched to NullPool, or
-        # queries fail intermittently with "prepared statement already
-        # exists". See risk R18.
+        **pool_kwargs,
     )
 
 
