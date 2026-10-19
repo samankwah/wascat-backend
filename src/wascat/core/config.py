@@ -22,6 +22,9 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
         frozen=True,
+        # A failed validation otherwise echoes every input, secrets included,
+        # into the error - and so into the platform's logs.
+        hide_input_in_errors=True,
     )
 
     environment: Environment = "local"
