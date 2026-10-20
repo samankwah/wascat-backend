@@ -158,8 +158,10 @@ Vercel project environment variables (Production):
 | `WASCAT_FRONTEND_REVALIDATE_URL` | `https://wascat-frontend.netlify.app/api/revalidate` |
 | `WASCAT_MAX_UPLOAD_BYTES` | `4000000` |
 | `WASCAT_FRONTEND_REVALIDATE_SECRET` | must equal the frontend's `WASCAT_REVALIDATE_SECRET` (secret) |
-| `WASCAT_RESEND_API_KEY` | Resend API key for data request mail (secret); without it mail is logged, not sent |
-| `WASCAT_MAIL_FROM` | e.g. `WASCAT <data@your-domain>`, on a domain verified in Resend |
+| `WASCAT_RESEND_API_KEY` | Resend API key for data request mail (secret); used in preference to SMTP |
+| `WASCAT_SMTP_HOST`, `WASCAT_SMTP_PORT` | SMTP instead, which needs no domain: e.g. `smtp.gmail.com` and `587` |
+| `WASCAT_SMTP_USERNAME`, `WASCAT_SMTP_PASSWORD` | the SMTP account; for Gmail, its address and an app password (secret) |
+| `WASCAT_MAIL_FROM` | e.g. `WASCAT <data@your-domain>`, on a domain verified in Resend, or the Gmail address itself. With no mail set up, messages are logged, not sent |
 | `WASCAT_MAIL_REPLY_TO` | optional, where requesters' replies go |
 | `WASCAT_DATA_ACCESS_DAYS` | how long an approved download link works (default `7`) |
 

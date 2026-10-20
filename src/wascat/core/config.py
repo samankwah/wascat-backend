@@ -89,11 +89,18 @@ class Settings(BaseSettings):
     frontend_revalidate_secret: str = ""
 
     # -- Mail ---------------------------------------------------------------
-    # Sent through Resend. With no key, messages are written to the log
-    # instead, so local development and the tests never send real mail.
+    # Sent through Resend when it has a key, otherwise through SMTP when that
+    # is set. With neither, messages are written to the log instead, so local
+    # development and the tests never send real mail.
     resend_api_key: str = ""
-    # e.g. "WASCAT <data@wascat.org>" - the address must be on a domain
-    # verified in Resend.
+    # Any SMTP server; for Gmail, smtp.gmail.com with an app password.
+    # Port 465 is TLS from the start; any other port upgrades with STARTTLS.
+    smtp_host: str = ""
+    smtp_port: int = Field(default=587, ge=1, le=65535)
+    smtp_username: str = ""
+    smtp_password: str = ""
+    # e.g. "WASCAT <data@wascat.org>". With Resend the address must be on a
+    # domain verified there; with Gmail it must be the account's own address.
     mail_from: str = ""
     mail_reply_to: str = ""
 
