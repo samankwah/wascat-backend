@@ -9,8 +9,10 @@ A failure never propagates. The caller gets the error text back to record
 alongside whatever it was notifying about, so a mail outage costs a resend
 from the dashboard rather than a lost data request.
 
-With no API key configured the message is logged instead, which is what local
-development and the tests want.
+With no API key configured nothing can be sent. The message is logged, and
+the call reports that as a failure rather than a success, so nothing records
+an email as delivered that never left: the dashboard shows it did not go, and
+it can be resent once mail is set up.
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ from wascat.core.config import get_settings
 from wascat.core.logging import get_logger
 
 RESEND_URL = "https://api.resend.com/emails"
+NOT_CONFIGURED = "mail is not configured (set WASCAT_RESEND_API_KEY and WASCAT_MAIL_FROM)"
 TIMEOUT_SECONDS = 8.0
 
 log = get_logger(__name__)
@@ -58,7 +61,7 @@ async def send(message: Message) -> str | None:
             to=list(message.to),
             subject=message.subject,
         )
-        return None
+        return NOT_CONFIGURED
 
     payload: dict[str, object] = {
         "from": settings.mail_from,
