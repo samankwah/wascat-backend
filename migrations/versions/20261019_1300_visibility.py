@@ -13,6 +13,10 @@ be stored exactly as reported. The upper bound is generous rather than tied to
 one format: METAR caps at 9999 ("10 km or more") and SYNOP reports beyond
 70 km.
 
+Written on 2026-09-30, but chained after 3c9f1a7e2b80 when the two were
+separated on 2026-10-19, so the filename carries that date: the newest file
+must be the head (see tests/test_migrations.py).
+
 Revision ID: 5b8e2c4a9d17
 Revises: 3c9f1a7e2b80
 Created: 2026-09-30 12:00
