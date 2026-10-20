@@ -38,6 +38,9 @@ SECURITY_HEADERS = {
 
 PUBLIC_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=3600"
 
+#: Public, but never cached: data request submissions and private download links.
+PRIVATE_PREFIX = "/api/v1/data-requests"
+
 # Read only by Vercel's CDN, which does not forward it. The frontend caches
 # these responses itself and drops them on /api/revalidate - but its refetch
 # would otherwise be answered from Vercel's copy, so an edit stayed invisible
@@ -84,6 +87,11 @@ class CorsPolicyMiddleware(BaseHTTPMiddleware):
             response.headers["Cache-Control"] = "no-store"
         else:
             response.headers["Access-Control-Allow-Origin"] = "*"
+            # Only a read can be shared. A submission's answer, and anything on
+            # a requester's private download link, must never come back from a
+            # cache - errors included, which carry no headers of their own.
+            if request.method not in ("GET", "HEAD") or request.url.path.startswith(PRIVATE_PREFIX):
+                response.headers["Cache-Control"] = "no-store"
             response.headers.setdefault("Cache-Control", PUBLIC_CACHE_CONTROL)
             if response.headers["Cache-Control"] == PUBLIC_CACHE_CONTROL:
                 response.headers["Vercel-CDN-Cache-Control"] = PLATFORM_CDN_CACHE_CONTROL

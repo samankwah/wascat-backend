@@ -150,5 +150,9 @@ async def _run_checks() -> int:
     else:
         typer.echo(f"{WARN}WASCAT_PUBLIC_BASE_URL unset - links.self will echo this host")
     typer.echo(f"{OK}asset base URL: {settings.public_asset_base_url or '(relative)'}")
+    if settings.resend_api_key and settings.mail_from:
+        typer.echo(f"{OK}mail: Resend, from {settings.mail_from}")
+    else:
+        typer.echo(f"{WARN}mail not configured - data request emails are logged, not sent")
 
     return failures
