@@ -26,6 +26,7 @@ from wascat.domains.iam.models import (
     user_roles,
 )
 from wascat.domains.ingest.models import IngestRun, IngestStatus, SequenceReference
+from wascat.domains.requests.models import DataRequest, DataRequestStatus
 from wascat.domains.vocab.models import VocabKind, VocabularyAlias, VocabularyTerm
 
 __all__ = [
@@ -33,6 +34,8 @@ __all__ = [
     "AuditEvent",
     "Base",
     "Collection",
+    "DataRequest",
+    "DataRequestStatus",
     "ImageClassPrediction",
     "ImageRecord",
     "IngestRun",

@@ -29,6 +29,7 @@ VOCAB_WRITE = "vocab:write"
 INGEST_RUN = "ingest:run"
 USER_MANAGE = "user:manage"
 AUDIT_READ = "audit:read"
+REQUEST_REVIEW = "request:review"
 
 ALL_PERMISSIONS: tuple[tuple[str, str], ...] = (
     (CATALOG_READ, "View image records, collections and releases in the dashboard"),
@@ -39,6 +40,7 @@ ALL_PERMISSIONS: tuple[tuple[str, str], ...] = (
     (INGEST_RUN, "Start ingest runs and backfills"),
     (USER_MANAGE, "Manage users and role assignments"),
     (AUDIT_READ, "Read the audit log"),
+    (REQUEST_REVIEW, "Review data requests and send or decline the data"),
 )
 
 #: Seeded roles. `curator` is the day-to-day editorial role: it can change the

@@ -32,7 +32,15 @@ TAGS_METADATA = [
         "name": "admin:auth",
         "description": "Signing in and out of the dashboard.",
     },
+    {
+        "name": "data requests",
+        "description": (
+            "Asking for a collection's data, and downloading it through the private, "
+            "expiring link an approved request is mailed."
+        ),
+    },
     {"name": "admin", "description": "Authenticated dashboard operations."},
+    {"name": "admin:requests", "description": "Reviewing data requests."},
 ]
 
 

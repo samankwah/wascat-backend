@@ -158,6 +158,10 @@ Vercel project environment variables (Production):
 | `WASCAT_FRONTEND_REVALIDATE_URL` | `https://wascat-frontend.netlify.app/api/revalidate` |
 | `WASCAT_MAX_UPLOAD_BYTES` | `4000000` |
 | `WASCAT_FRONTEND_REVALIDATE_SECRET` | must equal the frontend's `WASCAT_REVALIDATE_SECRET` (secret) |
+| `WASCAT_RESEND_API_KEY` | Resend API key for data request mail (secret); without it mail is logged, not sent |
+| `WASCAT_MAIL_FROM` | e.g. `WASCAT <data@your-domain>`, on a domain verified in Resend |
+| `WASCAT_MAIL_REPLY_TO` | optional, where requesters' replies go |
+| `WASCAT_DATA_ACCESS_DAYS` | how long an approved download link works (default `7`) |
 
 The frontend's `WASCAT_API_ORIGIN` then points at the Vercel deployment's
 URL.

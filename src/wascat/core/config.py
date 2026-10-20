@@ -88,6 +88,19 @@ class Settings(BaseSettings):
     frontend_revalidate_url: str = ""
     frontend_revalidate_secret: str = ""
 
+    # -- Mail ---------------------------------------------------------------
+    # Sent through Resend. With no key, messages are written to the log
+    # instead, so local development and the tests never send real mail.
+    resend_api_key: str = ""
+    # e.g. "WASCAT <data@wascat.org>" - the address must be on a domain
+    # verified in Resend.
+    mail_from: str = ""
+    mail_reply_to: str = ""
+
+    # -- Data requests ------------------------------------------------------
+    # How long an approved requester's private download link works.
+    data_access_days: int = Field(default=7, ge=1, le=30)
+
     @field_validator("public_base_url", "public_asset_base_url")
     @classmethod
     def _strip_trailing_slash(cls, value: str) -> str:

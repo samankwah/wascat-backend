@@ -19,10 +19,13 @@ from wascat.domains.catalog.admin_router import router as catalog_admin_router
 from wascat.domains.catalog.router import router as catalog_router
 from wascat.domains.iam.admin_router import router as users_admin_router
 from wascat.domains.iam.auth_router import router as auth_router
+from wascat.domains.requests.admin_router import router as requests_admin_router
+from wascat.domains.requests.router import router as requests_router
 from wascat.domains.vocab.admin_router import router as vocab_admin_router
 
 public_router = APIRouter()
 public_router.include_router(catalog_router)
+public_router.include_router(requests_router)
 
 # Open: signing in cannot require a session, and refresh proves itself with the
 # refresh cookie rather than an access token.
@@ -47,5 +50,6 @@ admin_router = APIRouter(
 admin_router.include_router(catalog_admin_router)
 admin_router.include_router(vocab_admin_router)
 admin_router.include_router(users_admin_router)
+admin_router.include_router(requests_admin_router)
 
 __all__ = ["admin_public_router", "admin_router", "public_router"]
