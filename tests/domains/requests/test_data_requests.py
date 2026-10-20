@@ -419,3 +419,21 @@ class TestHttpSurface:
             .all()
         )
         assert [event.action for event in events] == ["data_request.approve"]
+
+
+class TestUnconfiguredMail:
+    async def test_without_a_key_nothing_is_recorded_as_sent(
+        self, session: AsyncSession, collection: Collection, people: dict[str, User]
+    ) -> None:
+        # The real mailer, unconfigured: the request is kept, and nobody is told it was emailed.
+        request = await submit(session, collection)
+        await service.announce(session, request)
+        assert request.admins_notified_at is None
+        assert request.last_mail_error == mail.NOT_CONFIGURED
+
+        await service.approve(
+            session, request, DataRequestApprove(), reviewer_id=people["admin"].id
+        )
+        assert request.status is DataRequestStatus.APPROVED
+        assert request.requester_notified_at is None
+        assert request.last_mail_error == mail.NOT_CONFIGURED
